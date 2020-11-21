@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+  <!-- <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script> -->
+  <link rel="stylesheet" href="static/styles/normalize.css">
+  <link rel="stylesheet" href="static/styles/cavepaint.css">
+  <link rel="stylesheet" href="static/styles/styles.css">
+
+  <title> Nanite: {{ pagetitle }} </title>
+
+  {% block head_content %}
+
+  {% endblock %}
+
+</head>
+
+<body>
+
+  <div id="nav">
+      <nav class="thick border">
+          <ul class="navbar two-column">
+              <li class="nav-item">
+                <a class="nav-link" href="/options">Project Options</a> 
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/dummy">Dummy</a> 
+              </li>
+          </ul>
+      </nav>
+    </div>
+
+    <h1>{{pagetitle}}</h1>
+  
+  <div id="main" class="dashed border">
+    {% block content %} 
+
+    {% endblock %}
+  </div>
+
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div id="main-content" class="container">
+  {% for project in projects %}
+  <div id="project-{{x}}">
+    <p>Project Name: {{ project.name }}</p>
+    <p>Project Filepath: {{ project.filepath }}</p>
+    <p>Target Word Count: {{ project.targetwordcount }}</p>
+    <p>Target End Date: {{ project.targetenddate }}</p>
+    <p><a href="#">Edit</a></p>
+  </div>
+{% endfor %}
+
+  <div id="new-project">
+    <form action="/new-project" method="post">
+      <fieldset> 
+          <legend>Add a new project here:</legend>
+            <label>Project Name: </label><input type="text" name="projectname" required><br/>
+            <label>File/folder Path:</label><input type="text" name="filepath" required><br/>
+            <label>Target Word Count:</label><input type="text" name="targetwordcount" required><br/>
+            <label>Target End Date:</label><input type="text" name="targetenddate" required><br/>
+            <input type="submit" value="Add New Project">
+      </fieldset> 
+    </form>
+  </div>  
+</div>
+{% endblock %}
