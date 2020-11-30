@@ -2,18 +2,22 @@
 ################# URLs ################
 ####################################### 
 
-from flask import render_template, make_response
+from flask import render_template
 from flask import request, redirect
 from math import ceil
 import datetime
 
-from helper import load_projects_options, get_projects
-from views import current_project_id, current_project
+from helper import load_projects_options, get_projects, get_project, get_current_project_id
+
 from front_end import app
 
 
 @app.route('/')
 def index():
+    # Get Current project
+    current_project_id = int(get_current_project_id())
+    current_project = get_project(current_project_id)
+
     wctoday = 0 # TODO: get today's word count
     daysleft = datetime.datetime.strptime(str(current_project["targetenddate"]),'%y%m%d') - datetime.datetime.today()
     daysleft = int(daysleft.days)
@@ -43,18 +47,3 @@ def pg_stats():
 @app.route('/charts')
 def pg_charts():
     return render_template('charts.html', pagetitle='Charts')
-
-#######################################
-################ FORMS ################
-####################################### 
-
-
-@app.route('/setcookie', methods = ['POST', 'GET'])
-def setcookie():
-    if request.method == 'POST':
-        current_project_id = request.form['currentproject']
-
-    resp = make_response(render_template('home.html'))
-    resp.set_cookie('currentproject', current_project_id)
-
-    return resp
