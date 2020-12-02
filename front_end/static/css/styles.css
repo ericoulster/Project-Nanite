@@ -1,8 +1,9 @@
+/* DEBUG / SETUP */
+
 nav {
     display: block;
-    
-    margin: 1rem;
-    border: 3px dashed skyblue;
+    margin: 0.5rem;
+    border: 1px dashed skyblue;
 }
 
 nav::before {
@@ -16,9 +17,8 @@ nav::before {
 
 div {
     display: block;
-    
-    margin: 1rem;
-    border: 3px dashed skyblue;
+    margin: 0.5rem;
+    border: 1px dashed skyblue;
 }
 
 div::before {
@@ -32,9 +32,8 @@ div::before {
 
 p {
     display: block;
-    
-    margin: 1rem;
-    border: 3px dashed skyblue;
+    margin: 0.5rem;
+    border: 1px dashed skyblue;
 }
 
 p::before {
@@ -48,9 +47,8 @@ p::before {
 
 li {
     display: block;
-    
-    margin: 1rem;
-    border: 3px dashed skyblue;
+    margin: 0.5rem;
+    border: 1px dashed skyblue;
 }
 
 li::before {
@@ -64,9 +62,8 @@ li::before {
 
 a {
     display: block;
-    
-    margin: 1rem;
-    border: 3px dashed skyblue;
+    margin: 0.5rem;
+    border: 1px dashed skyblue;
 }
 
 a::before {
@@ -79,5 +76,61 @@ a::before {
 }
 
 
+/* CSS RESET HERE */
 
+
+/* BASICS */
+
+body {
+    font-family: cursive, sans-serif;
+    font-size: large;
+}
+
+/* BUTTONS */
+
+button, input[type="submit"] {
+    color: white;
+    background-color: #074EE8;
+    border-radius: 3px;
+    font-size: larger;
+}
+
+/* GRID */
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 0px 0px;
+    grid-template-areas:
+      "side main main main"
+      ". . . ."
+      ". . . .";
+  }
+  .side { grid-area: side; background-color: #cccccc; }
+  .main { grid-area: main; }
+  
+  @media all and (-ms-high-contrast:none) {
+  
+  .grid-container {
+    display: -ms-grid;
+    -ms-grid-columns: 1fr 1fr 1fr 1fr;
+    -ms-grid-rows: 1fr 1fr 1fr;
+    gap: 0px 0px;
+  }
+  
+  .side {
+    -ms-grid-row: 1;
+    -ms-grid-row-span: 1;
+    -ms-grid-column: 1;
+    -ms-grid-column-span: 1;
+  }
+  
+  .main {
+    -ms-grid-row: 1;
+    -ms-grid-row-span: 1;
+    -ms-grid-column: 2;
+    -ms-grid-column-span: 4;
+  }
+  
+  }
 

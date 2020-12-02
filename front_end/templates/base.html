@@ -14,9 +14,9 @@
 
 </head>
 
-<body>
+<body class="grid-container">
 
-  <div id="nav">
+  <div id="nav" class="side">
       <nav>
           <ul class="navbar">
             <li class="nav-item">
@@ -28,10 +28,10 @@
           </ul>
       </nav>
     </div>
-
-    <h1>{{pagetitle}}</h1>
   
-  <div id="main">
+  <div id="main" class="main">
+    <h1>{{pagetitle}}</h1>
+    
     {% block content %} 
 
     {% endblock %}

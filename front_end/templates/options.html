@@ -10,6 +10,12 @@
           <legend>Add a new project here:</legend>
             <label>Project Name: </label><input type="text" name="name" value="{{ project.name }}" required disabled><br/>
             <label>File/folder Path:</label><input type="text" name="filepath" value="{{ project.filepath }}" required disabled><br/>
+            <label>Files of type:</label>
+              <select name="filetype" selected="{{ project.filetype }}" required disabled>
+                <option value="txt">txt</option>
+                <option value="rtf">rtf</option>
+                <option value="docx">docx</option>
+              </select><br/>
             <label>Target Word Count:</label><input type="text" name="targetwordcount" value="{{ project.targetwordcount }}" required disabled><br/>
             <label>Target End Date:</label><input type="text" name="targetenddate" value="{{ project.targetenddate }}" required disabled><br/>
             <input type="submit" value="Update Project" disabled>
@@ -33,11 +39,17 @@
 {% endfor %}
 
   <div id="new-project">
-    <form action="/project-options" method="post">
+    <form action="/options" method="post">
       <fieldset> 
           <legend>Add a new project here:</legend>
             <label>Project Name: </label><input type="text" name="name" required><br/>
             <label>File/folder Path:</label><input type="text" name="filepath" required><br/>
+            <label>Files of type:</label>
+            <select name="filetype" required>
+              <option value="txt">txt</option>
+              <option value="rtf">rtf</option>
+              <option value="docx">docx</option>
+            </select><br/>
             <label>Target Word Count:</label><input type="text" name="targetwordcount" required><br/>
             <label>Target End Date:</label><input type="text" name="targetenddate" required><br/>
             <input type="submit" value="Add New Project">

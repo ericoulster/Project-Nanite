@@ -76,21 +76,23 @@ def filepull(project_path, filetype='txt', isDirectory=False):
 
 # Input is from front-end (name, target, path, filetype, and now deadline
 
-def wordmeta_set(name, target, path, filetype, deadline):
+def wordmeta_set(projectid, name, target, path, filetype, deadline):
     
-    df = pd.read_csv('wordcount_meta.csv', index_col='Project Name')
+    df = pd.read_csv('wordcount_meta.csv', index_col='Project ID')
     
-    if df.index.str.match('^' + str(name) +'$').any() == True:
+    # if df.index.str.match('^' + str(projectid) +'$').any() == True:
+    if df.index.astype(str).str.match('^' + str(projectid) +'$').any() == True:
+        # TODO: this currently throws error when there are no projects listed
         new_row = pd.DataFrame.from_records({
-            'Project Name':name, 'Latest Target':target, 'Project Path':path, 'Filetype':filetype, 'Deadline':deadline
-        }, index=[0]).set_index('Project Name')
+            'Project ID':projectid, 'Project Name':name, 'Latest Target':target, 'Project Path':path, 'Filetype':filetype, 'Deadline':deadline
+        }, index=[0]).set_index('Project ID')
         df.update(new_row)
         df.to_csv('wordcount_meta.csv', index=True)
         
     else:
         new_row = pd.DataFrame.from_records({
-            'Project Name':name, 'Latest Target':target, 'Project Path':path, 'Filetype':filetype, 'Deadline':deadline
-        }, index=[0]).set_index('Project Name')
+            'Project ID':projectid, 'Project Name':name, 'Latest Target':target, 'Project Path':path, 'Filetype':filetype, 'Deadline':deadline
+        }, index=[0]).set_index('Project ID')
         df = df.append(new_row)
         df.to_csv('wordcount_meta.csv', index=True)
 
