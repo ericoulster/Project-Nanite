@@ -7,18 +7,19 @@
   <div id="project-{{idx}}">
     <form id="project-{{idx}}-form" action="/project-options/{{idx}}" method="POST">
       <fieldset> 
-          <legend>Add a new project here:</legend>
-            <label>Project Name: </label><input type="text" name="name" value="{{ project.name }}" required disabled><br/>
-            <label>File/folder Path:</label><input type="text" name="filepath" value="{{ project.filepath }}" required disabled><br/>
+          <legend>{{ project.name }}</legend>
+            <input type="text" name="projectid" value="{{idx}}" class="formfield" hidden required disabled><br/>
+            <label>Project Name: </label><input type="text" name="name" value="{{ project.name }}" class="formfield" required disabled><br/>
+            <label>File/folder Path:</label><input type="text" name="filepath" value="{{ project.filepath }}" class="formfield" required disabled><br/>
             <label>Files of type:</label>
-              <select name="filetype" selected="{{ project.filetype }}" required disabled>
+              <select name="filetype" selected="{{ project.filetype }}" class="formfield" required disabled>
                 <option value="txt">txt</option>
                 <option value="rtf">rtf</option>
                 <option value="docx">docx</option>
               </select><br/>
-            <label>Target Word Count:</label><input type="text" name="targetwordcount" value="{{ project.targetwordcount }}" required disabled><br/>
-            <label>Target End Date:</label><input type="text" name="targetenddate" value="{{ project.targetenddate }}" required disabled><br/>
-            <input type="submit" value="Update Project" disabled>
+            <label>Target Word Count:</label><input type="text" name="targetwordcount" value="{{ project.targetwordcount }}" class="formfield" required disabled><br/>
+            <label>Target End Date:</label><input type="text" name="targetenddate" value="{{ project.targetenddate }}" class="formfield" required disabled><br/>
+            <input type="submit" value="Update Project" class="formfield" disabled>
       </fieldset> 
     </form>
     <p>
@@ -29,7 +30,7 @@
       
       
       <button onclick="alert(document.cookie);">Cookie Alert</button></p>
-    <p><button onclick="pr = document.querySelectorAll('div#project-{{idx}} > form#project-{{idx}}-form input'); pr.forEach(function(x){x.toggleAttribute('disabled')})">Edit Project</button>
+    <p><button onclick="pr = document.querySelectorAll('div#project-{{idx}} > form#project-{{idx}}-form .formfield'); pr.forEach(function(x){x.toggleAttribute('disabled')})">Edit Project</button>
       <form action = "/project-options/{{idx}}/del" method = "POST">
         <input type="hidden" name="delproject" value="{{idx}}">
         <input type="submit" value="Delete Project">

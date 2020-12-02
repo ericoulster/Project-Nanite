@@ -10,7 +10,7 @@ def get_current_project_id():
     currentproject = request.cookies.get('currentproject')
 
     if not currentproject:
-        currentproject = 0
+        currentproject = False
 
     return currentproject
 
@@ -38,3 +38,9 @@ def get_projects():
 def get_project(p_id):
     projects = get_projects()
     return projects[p_id] # returns a single project and its options
+
+def check_and_extract(parameter, formdata):
+    if parameter in formdata:
+        return formdata[parameter] 
+    else:
+        return None

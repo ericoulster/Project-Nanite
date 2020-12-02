@@ -7,22 +7,29 @@ from flask        import request, redirect, url_for, make_response
 from math         import ceil
 from datetime     import datetime
 
-from wordcounter_funcs import wordmeta_set, wordcount, filepull
-from helper            import load_projects_options, get_projects, get_project, get_current_project_id
+from wordcounter_funcs import wordmeta_set, wordcount, filepull, wordcount_update
+from helper            import load_projects_options, get_projects, get_project, get_current_project_id, check_and_extract
 from front_end         import app
 
 
 @app.route('/')
 def index():
     # Get Current project
-    current_project_id = int(get_current_project_id())
-    current_project = get_project(current_project_id)
+    current_project_id = get_current_project_id() #returns a full string, or False
 
-    wctoday = 0 # TODO when it becomes possible to get meta: wordcount(filepull(current_project['filepath'], filetype='txt', isDirectory=False))
-    daysleft = datetime.strptime(str(current_project["targetenddate"]),'%y%m%d') - datetime.today()
-    daysleft = int(daysleft.days)
-    wordsleft = current_project["targetwordcount"] - wctoday
-    wctoday_suggested_target =  ceil(wordsleft / daysleft)
+    if current_project_id is False: # i.e. there is no current_project_id
+        current_project = {"name":"No Project: Create one now!","todaystargetwordcount":0}
+        wctoday = 0
+        wctoday_suggested_target = 0
+    else: # If there is a current_project_id
+        current_project_id = int(current_project_id)
+        current_project = get_project(current_project_id)
+
+        wctoday = 0 # TODO when it becomes possible to get meta: wordcount(filepull(current_project['filepath'], filetype='txt', isDirectory=False))
+        daysleft = datetime.strptime(str(current_project["targetenddate"]),'%y%m%d') - datetime.today()
+        daysleft = int(daysleft.days)
+        wordsleft = current_project["targetwordcount"] - wctoday
+        wctoday_suggested_target =  ceil(wordsleft / daysleft)
 
     return render_template('home.html', \
         pagetitle='Home', \
@@ -74,25 +81,32 @@ def pg_charts():
 def change_project_options(project_num): # for a single project
     if request.method == 'POST':
         
-        # These variable might or might not have values depending on which form is filled to update a record (home page or options page)
-        # TODO: HANDLE THIS
+        pr_id = check_and_extract('projectid', request.form)
+        wc_target_today = check_and_extract('wc_target_today', request.form)
+        projectname = check_and_extract('name', request.form)
+        filepath = check_and_extract('filepath', request.form)
+        filetype = check_and_extract('filetype', request.form)
+        targetwordcount = check_and_extract('targetwordcount', request.form)
+        targetenddate = check_and_extract('targetenddate', request.form)
 
-        wc_target_today = request.form['wctoday_target_new'] 
-        projectname = request.form['name']
-        filepath = request.form['filepath']
-        targetwordcount = request.form['targetwordcount']
-        targetenddate = request.form['targetenddate']
-
-        # TODO: change details for a single existing project
+        if wc_target_today is not None:
+            #TODO: run function to update today's target only: does this exist?
+            pass
+        
+        if projectname is not None: # AND the others?
+            # SEND THESE TO BACK END
+            # TODO: this function currently just adds a new row, rather than updating the existing one
+            wordmeta_set(pr_id, projectname, targetwordcount, filepath, filetype, targetenddate)
 
         ## DEBUGGING ##
-        print('Function run: change_project_options: change details for a single existing project')
+        print('Function run: change_project_options: change details for a single existing project\n')
+        print(f'Submitted Values: {wc_target_today} | {pr_id} | {projectname} | {filepath} | {filetype} | {targetwordcount} | {targetenddate}')
         ## ##
         return redirect(request.referrer)
 
 @app.route('/project-options/<int:project_num>/del', methods=['POST'])
 def delete_project_options(project_num): # for a single project 
-    # TODO: delete a project
+    # TODO: delete a project: function doesn't exist
 
     ## DEBUGGING ##
     print(f"Function run: delete_project_options: delete project {str(project_num)}")
@@ -100,6 +114,7 @@ def delete_project_options(project_num): # for a single project
     return redirect(request.referrer)
 
 #### Cookie for Current Project ####
+
 @app.route('/current-project', methods = ['POST'])
 def current_project_cookie():
     current_project_id = request.form['currentproject']
