@@ -76,25 +76,45 @@ def filepull(project_path, filetype='txt', isDirectory=False):
 
 # Input is from front-end (name, target, path, filetype, and now deadline
 
-def wordmeta_set(projectid, name, target, path, filetype, deadline):
+def wordmeta_set(name, target, path, filetype, deadline):
     
-    df = pd.read_csv('wordcount_meta.csv', index_col='Project ID')
+    df = pd.read_csv('wordcount_meta.csv', index_col='Project Name')
+    # Consolidate these options later on.
     
-    # if df.index.str.match('^' + str(projectid) +'$').any() == True:
-    if df.index.astype(str).str.match('^' + str(projectid) +'$').any() == True:
-        # TODO: this currently throws error when there are no projects listed
+    if df.empty is True:
         new_row = pd.DataFrame.from_records({
-            'Project ID':projectid, 'Project Name':name, 'Latest Target':target, 'Project Path':path, 'Filetype':filetype, 'Deadline':deadline
-        }, index=[0]).set_index('Project ID')
+            'Project Name':name, 'Latest Target':target, 'Project Path':path, 'Filetype':filetype, 'Deadline':deadline,
+        }, index=[0]).set_index('Project Name')
+        df = df.append(new_row)
+        df.to_csv('wordcount_meta.csv', index=True)
+    
+    elif df.index.str.match('^' + str(name) +'$').any() == True:
+        new_row = pd.DataFrame.from_records({
+            'Project Name':name, 'Latest Target':target, 'Project Path':path, 'Filetype':filetype, 'Deadline':deadline
+        }, index=[0]).set_index('Project Name')
         df.update(new_row)
         df.to_csv('wordcount_meta.csv', index=True)
         
     else:
         new_row = pd.DataFrame.from_records({
-            'Project ID':projectid, 'Project Name':name, 'Latest Target':target, 'Project Path':path, 'Filetype':filetype, 'Deadline':deadline
-        }, index=[0]).set_index('Project ID')
+            'Project Name':name, 'Latest Target':target, 'Project Path':path, 'Filetype':filetype, 'Deadline':deadline
+        }, index=[0]).set_index('Project Name')
         df = df.append(new_row)
         df.to_csv('wordcount_meta.csv', index=True)
+
+# Input is from front-end (takes name, returns wordcounts as a dict)
+
+def wordmeta_pull(name):
+    df = pd.read_csv('wordcount_meta.csv', index_col='Project Name')
+    
+    if df.index.str.match('^' + str(name) +'$').any() == True:
+        val_row = df[df.index == str(name)]
+        return val_row.to_dict()
+        
+    else:
+        #needed: error handling
+        print("name not in system")
+        
 
 
 # Input is project name and daily wordcount, writes an update to the wordcount file
@@ -122,3 +142,32 @@ def wordcount_update(name, dailywords):
     else:      
         df = df.combine_first(new_row)
     df.to_csv(str(name) + '_wordcount.csv', index=True)
+
+# Input is the old name (from system) and new name (input field). Changes name in back-end.
+
+def wordmeta_rename(name, new_name):
+    df = pd.read_csv('wordcount_meta.csv')
+    if df.empty is True:
+        pass
+    
+    elif df['Project Name'].str.match('^' + str(name) +'$').any() == True:
+        df['Project Name'] = np.where(df[['Project Name']] == str(name), str(new_name), df[['Project Name']])
+        df.to_csv('wordcount_meta.csv', index=False)
+        
+    else:
+        pass
+
+# takes in name of project, deletes it.
+
+def wordmeta_delete(name):
+    df = pd.read_csv('wordcount_meta.csv', index_col='Project Name')
+    if df.empty is True:
+        pass
+    
+    elif df.index.str.match('^' + str(name) +'$').any() == True:
+        df = df.drop(labels=str(name), axis=0)
+        df.to_csv('wordcount_meta.csv', index=True)
+        
+    else:
+        pass
+        
