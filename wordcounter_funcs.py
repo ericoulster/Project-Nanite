@@ -154,7 +154,7 @@ def wordmeta_rename(name, new_name):
     
     elif df['Project Name'].str.match('^' + str(name) +'$').any() == True:
         df['Project Name'] = np.where(df[['Project Name']] == str(name), str(new_name), df[['Project Name']])
-        #TODO: np doesn't exist, this throws an error
+        #TODO: variable np doesn't exist, this throws an error
         df.to_csv('wordcount_meta.csv', index=False)
         
     else:
