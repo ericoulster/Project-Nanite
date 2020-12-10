@@ -120,6 +120,7 @@ def wordmeta_pull(name):
 # Input is project name and daily wordcount, writes an update to the wordcount file
 
 def wordcount_update(name, dailywords):
+    #TODO: this produces a csv file with date, overall target and actual wordcount, and wants to update the actual wordcount (dailywords -> actual word count). Actual word count is collected by the back end and only displayed in the front.
     datestamp = date.today().strftime("%d/%m/%Y")
     
     if os.path.exists(str(name) + '_wordcount.csv') == False:
@@ -137,7 +138,8 @@ def wordcount_update(name, dailywords):
             'Date': datestamp, 'Wordcount':dailywords, 'Target':meta_df.loc[name]['Latest Target']
         }, index=[0]).set_index('Date')
     
-    if (df.index[-1] == date.today().strftime("%d/%m/%Y")) is True:
+    if (df.index[-1] == date.today().strftime("%d/%m/%Y")) is True: 
+        # TODO: This throws an error when empty AND is failing to overwrite an existing row
         df.update(new_row)
     else:      
         df = df.combine_first(new_row)
@@ -152,6 +154,7 @@ def wordmeta_rename(name, new_name):
     
     elif df['Project Name'].str.match('^' + str(name) +'$').any() == True:
         df['Project Name'] = np.where(df[['Project Name']] == str(name), str(new_name), df[['Project Name']])
+        #TODO: np doesn't exist, this throws an error
         df.to_csv('wordcount_meta.csv', index=False)
         
     else:
@@ -160,6 +163,7 @@ def wordmeta_rename(name, new_name):
 # takes in name of project, deletes it.
 
 def wordmeta_delete(name):
+    #TODO: add deletion of relevant _wordcount.csv if it exists
     df = pd.read_csv('wordcount_meta.csv', index_col='Project Name')
     if df.empty is True:
         pass

@@ -4,7 +4,9 @@
   <!-- <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script> -->
   <!-- <link rel="stylesheet" href="static/styles/normalize.css"> -->
   <!-- <link rel="stylesheet" href="static/styles/cavepaint.css"> -->
-  <link rel="stylesheet" href="static/css/styles.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
 
   <title> Nanite: {{ pagetitle }} </title>
 
@@ -14,21 +16,11 @@
 
 </head>
 
-<body class="grid-container">
+<body class="{{pagetitle.lower().replace(' ', '-')}} grid-container">
+    {% block sidebar %} 
 
-  <div id="nav" class="side">
-      <nav>
-          <ul class="navbar">
-            <li class="nav-item">
-              <a class="nav-link" href="/">Home</a> 
-            </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/options">Project Options</a> 
-              </li>
-          </ul>
-      </nav>
-    </div>
-  
+    {% endblock %}
+
   <div id="main" class="main">
     <h1>{{pagetitle}}</h1>
     

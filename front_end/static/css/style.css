@@ -67,7 +67,7 @@ a {
 }
 
 a::before {
-    content: "li";
+    content: "a";
     position: relative;
     top: 0px;
     left: 0px;
@@ -75,6 +75,9 @@ a::before {
     font-size: 0.7rem;
 }
 
+input {
+    margin: 5px;
+}
 
 /* CSS RESET HERE */
 
@@ -82,13 +85,13 @@ a::before {
 /* BASICS */
 
 body {
-    font-family: cursive, sans-serif;
+    font-family: 'IBM Plex Sans', cursive, sans-serif;
     font-size: large;
 }
 
 /* BUTTONS */
 
-button, input[type="submit"] {
+button, input[type="submit"], a.btn {
     color: white;
     background-color: #074EE8;
     border-radius: 3px;
@@ -139,3 +142,31 @@ input[type="submit"]:disabled {
   
   }
 
+/* HOME PAGE */
+
+.home #main-content{
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+
+.home .nanite-welcome-image {
+    width: 300px;
+    height: 300px;
+    background: #cccccc;
+}
+
+.home div h1, .home div p {
+    text-align: center;
+}
+
+/* WELCOME PAGE */
+
+.instruction-img {
+    width:100%;
+}
+
+/* PROJECT OPTIONS */
+.project-form.existing-project .formfields {
+    display: flex;
+}

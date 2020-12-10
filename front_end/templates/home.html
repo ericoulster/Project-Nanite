@@ -1,17 +1,29 @@
-{% extends 'base.html' %}
+<!doctype html>
+<html>
+<head>
+  <link rel="stylesheet" href={{ url_for('static', filename='css/style.css') }}>
 
-{% block content %}
+  <title> Nanite: {{ pagetitle }} </title>
 
-<div id="main-content" class="container">
-    <div>Project Name: {{projectname}} </div>
-<div>Today's Word Count: {{WCtoday}}</div>
-    <div>     
-      <form action="/project-options/{{current_project_id}}" method="POST">
-      <fieldset> 
-            <label>Today's Target Word Count is {{wctoday_target}}. Set a new target? </label><input type="text" name="wctoday_target_new" value="{{wctoday_suggested_target}}"><br/>
-            <input type="submit" value="Set Target">
-      </fieldset> 
-    </form> </div>
+  {% block head_content %}
 
-</div>
-{% endblock %}
+  {% endblock %}
+
+</head>
+
+<body class="{{pagetitle.lower().replace(' ', '-')}} ">
+  
+  <div id="main" class="main">   
+
+    <div id="main-content" class="container">
+      <div class="nanite-welcome-image"></div>
+      <div class="nanite-welcome-text"><h1>Nanite</h1><p>Increase your writing productivity in a fun and engaging way.</p></div>
+      <div class="nanite-start-button"><a role="button" class="btn" href={{url_for('pg_welcome')}}>Let's Get Started</a></div>
+      <div class="skip"><a href={{url_for('pg_options')}}>Skip to Projects</a></div>
+    </div>
+
+  </div>
+
+</body>
+
+</html>

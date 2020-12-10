@@ -1,0 +1,17 @@
+{% extends 'base-onboarding.html' %}
+
+{% block content %}
+
+<div id="main-content" class="container">
+    <div>     
+      <form action="/welcome" method="POST">
+        <legend>First, tell us a bit about yourself</legend>
+      <fieldset> 
+        <label>What is your first name?</label><br/><input type="text" name="username"><br/>
+        <input type="submit" value="Next ->">
+      </fieldset> 
+    </form> 
+    <img class="instruction-img" src="{{url_for('static', filename='imgs/instruction_img.png')}}"/>
+  </div>
+</div>
+{% endblock %}

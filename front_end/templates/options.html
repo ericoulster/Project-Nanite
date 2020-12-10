@@ -1,26 +1,39 @@
-{% extends 'base.html' %}
+{% extends 'base-app.html' %}
 
 {% block content %}
 
 <div id="main-content" class="container">
+  <div id="projectslist" class="projectslist">
   {% for idx, project in projects %}
   <div id="project-{{idx}}">
-    <form id="project-{{idx}}-form" action="/project-options/{{idx}}" method="POST">
-      <fieldset> 
-          <legend>{{ project.name }}</legend>
-            <input type="text" name="projectid" value="{{idx}}" class="formfield" hidden required disabled><br/>
-            <label>Project Name: </label><input type="text" name="name" value="{{ project.name }}" class="formfield" required disabled><br/>
-            <label>File/folder Path:</label><input type="text" name="filepath" value="{{ project.filepath }}" class="formfield" required disabled><br/>
-            <label>Files of type:</label>
-              <select name="filetype" selected="{{ project.filetype }}" class="formfield" required disabled>
-                <option value="txt">txt</option>
-                <option value="rtf">rtf</option>
-                <option value="docx">docx</option>
-              </select><br/>
-            <label>Target Word Count:</label><input type="text" name="targetwordcount" value="{{ project.targetwordcount }}" class="formfield" required disabled><br/>
-            <label>Target End Date:</label><input type="text" name="targetenddate" value="{{ project.targetenddate }}" class="formfield" required disabled><br/>
-            <input type="submit" value="Update Project" class="formfield" disabled>
-      </fieldset> 
+    <form id="project-{{idx}}-form" action="/project-options/{{idx}}" method="POST" class="project-form existing-project">
+      <div class="formfields">
+        <fieldset> 
+            <legend>{{ project.name }}: Setup</legend>
+              <input type="text" name="projectid" value="{{idx}}" class="formfield" hidden required disabled>
+              <label>Project Name: </label><input type="text" name="name" value="{{ project.name }}" class="formfield" required disabled><br/>
+              <label>File/folder Path:</label><input type="text" name="filepath" value="{{ project.filepath }}" class="formfield" required disabled><br/>
+              <label>Files of type:</label>
+                <select name="filetype" selected="{{ project.filetype }}" class="formfield" required disabled>
+                  <option value="txt">txt</option>
+                  <option value="rtf">rtf</option>
+                  <option value="docx">docx</option>
+                </select><br/>
+        </fieldset>
+        <fieldset> 
+          <legend>Goals</legend>
+              <label>Word Count Goal:</label><input type="text" name="targetwordcount" value="{{ project.targetwordcount }}" class="formfield" required disabled> words
+              <div class="regularity selection" style="display:inline-block;">
+                <input type="radio" id="daily" name="wordcountreg-{{idx}}" value="daily" class="formfield" disabled>
+                <label for="daily">Daily</label>
+                <input type="radio" id="total" name="wordcountreg-{{idx}}" value="total" class="formfield" disabled>
+                <label for="total">Total</label>
+              </div>
+              <br/>
+              <label>Goal End Date:</label><input type="text" name="targetenddate" value="{{ project.targetenddate }}" class="formfield" required disabled><br/>
+          </fieldset>
+      </div>
+          <input type="submit" value="Update Project" class="formfield" disabled> 
     </form>
     <p>
       <form action = "/current-project" method = "POST">
@@ -32,18 +45,20 @@
       <button onclick="alert(document.cookie);">Cookie Alert</button></p>
     <p><button onclick="pr = document.querySelectorAll('div#project-{{idx}} > form#project-{{idx}}-form .formfield'); pr.forEach(function(x){x.toggleAttribute('disabled')})">Edit Project</button>
       <form action = "/project-options/{{idx}}/del" method = "POST">
-        <input type="hidden" name="delproject" value="{{idx}}">
+        <input type="text" name="delproject_name" value="{{ project.name }}" class="formfield" required hidden>
+        <input type="hidden" name="delproject_id" value="{{idx}}">
         <input type="submit" value="Delete Project">
      </form>
     </p>
   </div>
-{% endfor %}
+  {% endfor %}
+  </div>
 
   <div id="new-project">
-    <form action="/options" method="post">
+    <form class="project-form new-project" action="/options" method="post">
       <fieldset> 
           <legend>Add a new project here:</legend>
-            <label>Project Name: </label><input type="text" name="name" required><br/>
+            <label>What's the name of your project?</label><input type="text" name="name" required><br/>
             <label>File/folder Path:</label><input type="text" name="filepath" required><br/>
             <label>Files of type:</label>
             <select name="filetype" required>
@@ -51,8 +66,13 @@
               <option value="rtf">rtf</option>
               <option value="docx">docx</option>
             </select><br/>
-            <label>Target Word Count:</label><input type="text" name="targetwordcount" required><br/>
-            <label>Target End Date:</label><input type="text" name="targetenddate" required><br/>
+            <label>What's your writing goal?</label><input type="text" name="targetwordcount" required> words            
+            <input type="radio" id="daily" name="wordcountreg-new" value="daily" checked>
+            <label for="daily">Daily</label>
+            <input type="radio" id="total" name="wordcountreg-new" value="total">
+            <label for="total">Total</label><br/><br/>
+            <label>Goal Start Date:</label><input type="text" name="targetstartdate" required><br/>
+            <label>Goal End Date:</label><input type="text" name="targetenddate" required><br/>
             <input type="submit" value="Add New Project">
       </fieldset> 
     </form>
