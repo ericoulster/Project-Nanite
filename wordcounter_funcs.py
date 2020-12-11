@@ -6,6 +6,7 @@ import fileinput
 import csv
 from datetime import date
 
+import numpy as np
 import pandas as pd
 
 from striprtf.striprtf import rtf_to_text
@@ -154,7 +155,6 @@ def wordmeta_rename(name, new_name):
     
     elif df['Project Name'].str.match('^' + str(name) +'$').any() == True:
         df['Project Name'] = np.where(df[['Project Name']] == str(name), str(new_name), df[['Project Name']])
-        #TODO: variable np doesn't exist, this throws an error
         df.to_csv('wordcount_meta.csv', index=False)
         
     else:
