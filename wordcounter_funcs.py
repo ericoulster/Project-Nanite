@@ -163,7 +163,6 @@ def wordmeta_rename(name, new_name):
 # takes in name of project, deletes it.
 
 def wordmeta_delete(name):
-    #TODO: add deletion of relevant _wordcount.csv if it exists
     df = pd.read_csv('wordcount_meta.csv', index_col='Project Name')
     if df.empty is True:
         pass
@@ -171,7 +170,7 @@ def wordmeta_delete(name):
     elif df.index.str.match('^' + str(name) +'$').any() == True:
         df = df.drop(labels=str(name), axis=0)
         df.to_csv('wordcount_meta.csv', index=True)
-        
+        os.remove(str(name) + '_wordcount.csv')
     else:
         pass
         
