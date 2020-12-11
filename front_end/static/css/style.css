@@ -1,109 +1,6 @@
-/* DEBUG / SETUP */
-
-nav {
-    display: block;
-    margin: 0.5rem;
-    border: 1px dashed skyblue;
-}
-
-nav::before {
-    content: "nav";
-    position: relative;
-    top: 0px;
-    left: 0px;
-    background: skyblue;
-    font-size: 0.7rem;
-}
-
-div {
-    display: block;
-    margin: 0.5rem;
-    border: 1px dashed skyblue;
-}
-
-div::before {
-    content: "div";
-    position: relative;
-    top: 0px;
-    left: 0px;
-    background: skyblue;
-    font-size: 0.7rem;
-}
-
-p {
-    display: block;
-    margin: 0.5rem;
-    border: 1px dashed skyblue;
-}
-
-p::before {
-    content: "p";
-    position: relative;
-    top: 0px;
-    left: 0px;
-    background: skyblue;
-    font-size: 0.7rem;
-}
-
-li {
-    display: block;
-    margin: 0.5rem;
-    border: 1px dashed skyblue;
-}
-
-li::before {
-    content: "li";
-    position: relative;
-    top: 0px;
-    left: 0px;
-    background: skyblue;
-    font-size: 0.7rem;
-}
-
-a {
-    display: block;
-    margin: 0.5rem;
-    border: 1px dashed skyblue;
-}
-
-a::before {
-    content: "a";
-    position: relative;
-    top: 0px;
-    left: 0px;
-    background: skyblue;
-    font-size: 0.7rem;
-}
-
-input {
-    margin: 5px;
-}
-
-/* CSS RESET HERE */
-
-
-/* BASICS */
-
-body {
-    font-family: 'IBM Plex Sans', cursive, sans-serif;
-    font-size: large;
-}
-
-/* BUTTONS */
-
-button, input[type="submit"], a.btn {
-    color: white;
-    background-color: #074EE8;
-    border-radius: 3px;
-    font-size: larger;
-}
-
-input[type="submit"]:disabled {
-    background-color: rgba(239, 239, 239, 0.3);
-    color:rgba(16, 16, 16, 0.3);
-}
-
-/* GRID */
+/* ///////////////////////////////// */
+/* /// Sitewide Styles /// */
+/* Layout: Grid */
 .grid-container {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -142,7 +39,47 @@ input[type="submit"]:disabled {
   
   }
 
-/* HOME PAGE */
+/* Font */
+* {
+    font-family: 'IBM Plex Sans', cursive, sans-serif;
+    font-size: large;
+}
+
+/* Buttons */
+
+a.btn {
+    padding: 3px 5px;
+}
+
+button, input[type="submit"], a.btn {
+    margin: 0.5rem;
+    color: white;
+    background-color: #074EE8;
+    border-radius: 3px;
+    /* font-size: larger; */
+}
+
+input[type="submit"]:disabled {
+    background-color: rgba(239, 239, 239, 0.3);
+    color:rgba(16, 16, 16, 0.3);
+}
+
+/* Lists */
+
+ol li, ul li {
+    padding-inline-start: 1rem;
+}
+
+/* Hidden (usu. modals, forms) */
+.hidden {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility, opacity 0.5s;
+}
+
+
+/* /// Page Styles /// */
+/* Home Page */
 
 .home #main-content{
     display: flex;
@@ -160,13 +97,20 @@ input[type="submit"]:disabled {
     text-align: center;
 }
 
-/* WELCOME PAGE */
+/* Welcome Page */
 
 .instruction-img {
     width:100%;
 }
 
-/* PROJECT OPTIONS */
+/* Project Options Page */
 .project-form.existing-project .formfields {
     display: flex;
+}
+
+.project-actions {
+    margin: 1rem;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-evenly;
 }

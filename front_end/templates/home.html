@@ -1,18 +1,6 @@
-<!doctype html>
-<html>
-<head>
-  <link rel="stylesheet" href={{ url_for('static', filename='css/style.css') }}>
+{% extends 'base-nosidebar.html' %}
 
-  <title> Nanite: {{ pagetitle }} </title>
-
-  {% block head_content %}
-
-  {% endblock %}
-
-</head>
-
-<body class="{{pagetitle.lower().replace(' ', '-')}} ">
-  
+{% block content %} 
   <div id="main" class="main">   
 
     <div id="main-content" class="container">
@@ -22,8 +10,6 @@
       <div class="skip"><a href={{url_for('pg_options')}}>Skip to Projects</a></div>
     </div>
 
-  </div>
-
-</body>
-
-</html>
+  </div>  
+  
+{% endblock %} 

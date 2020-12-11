@@ -7,54 +7,32 @@ from flask        import request, redirect, url_for, make_response
 from math         import ceil
 from datetime     import datetime
 
-from wordcounter_funcs import wordmeta_set, wordcount, filepull, wordcount_update, wordmeta_delete
-from helper            import load_projects_options, get_projects, get_project, get_current_project_id, check_and_extract
+from wordcounter_funcs import wordmeta_set, wordcount, filepull, wordcount_update, project_delete, wordmeta_rename, wordmeta_pull
+from helper            import get_projects_list, get_projects_list, get_project, get_current_project_id, check_and_extract
 from front_end         import app
 
 #### CONTEXT PROCESSORS ####
 @app.context_processor
 def inject_projects():
-    return dict(menuprojects=enumerate(get_projects()))
+    return dict(menuprojects=enumerate(get_projects_list())) # list of projects for the menu
 
+#### ROUTES ####
 @app.route('/')
 def index():
-    return render_template('home.html', pagetitle='Charts')
-
-@app.route('/stats-single')
-def pg_single_stats():
-    # Get Current project
-    current_project_id = get_current_project_id() #returns a full string, or False
-
-    if current_project_id is False: # i.e. there is no current_project_id
-        current_project = {"name":"No Project: Create one now!","todaystargetwordcount":0}
-        wctoday = 0
-        wctoday_suggested_target = 0
-    else: # If there is a current_project_id
-        current_project_id = int(current_project_id)
-        current_project = get_project(current_project_id)
-
-        wctoday = 0 # TODO when it becomes possible to get meta: wordcount(filepull(current_project['filepath'], filetype='txt', isDirectory=False))
-        daysleft = datetime.strptime(str(current_project["targetenddate"]),'%y%m%d') - datetime.today()
-        daysleft = int(daysleft.days)
-        wordsleft = current_project["targetwordcount"] - wctoday
-        wctoday_suggested_target =  ceil(wordsleft / daysleft)
-
-    return render_template('stats-single.html', \
-        pagetitle=current_project["name"] + 'Stats', \
-        projectname=current_project["name"], \
-        WCtoday=wctoday, \
-        wctoday_target= current_project["todaystargetwordcount"], \
-        wctoday_suggested_target=wctoday_suggested_target, \
-        current_project_id = current_project_id)
+    return render_template('home.html', pagetitle='Home')
 
 @app.route('/options', methods=['GET','POST'])
 def pg_options():
     if request.method == 'GET':
-        projects = enumerate(get_projects()) # This is still needed, as context processor is 'used up' on menu
+        projects = enumerate(get_projects_list()) # This is still needed, as context processor is 'used up' on menu
         # NOTE: one of the below may be useful for the project end dates
         # datetime.strptime(project.targetenddate,'%y%m%d').strftime("%d-%b-%Y")
         # datetime.strptime(project.targetenddate,'%y%m%d').strftime("%d-%b-%Y")
-        return render_template('options.html', pagetitle='Project Options', projects=projects)
+
+        WCtoday = 0 # TODO: get today's word count and overall total for a project (get a list of these to iterate over in the template)
+        WCtotal = 0
+
+        return render_template('options.html', pagetitle='Project Options', projects=projects, WCtoday=WCtoday, WCtotal=WCtotal)
 
     elif request.method == 'POST': 
     # Add a new project
@@ -96,19 +74,21 @@ def pg_charts():
 
 @app.route('/project-options/<int:project_num>', methods=['POST'])
 def change_project_options(project_num): # for a single project
+    #NOTE: project_num is available for use here, if updating by project ID instead of name
+
     if request.method == 'POST':
-        
-        pr_id = check_and_extract('projectid', request.form)
-        wc_target_today = check_and_extract('wc_target_today', request.form)
+        # First off: Update the word count
         projectname = check_and_extract('name', request.form)
+        project = get_project(p_name = projectname) # search for project
+        dailywords= wordcount(filepull(project['filepath'], filetype='txt', isDirectory=False))
+        wordcount_update(projectname, dailywords)
+        
+        # Then, check if anything else needs changing (via the form submission)
+        pr_id = check_and_extract('projectid', request.form)
         filepath = check_and_extract('filepath', request.form)
         filetype = check_and_extract('filetype', request.form)
         targetwordcount = check_and_extract('targetwordcount', request.form)
         targetenddate = check_and_extract('targetenddate', request.form)
-
-        if wc_target_today is not None:
-            #Run function to update today's target only: (TODO: recheck this after fixing back end as it had error))
-            wordcount_update(projectname, wc_target_today)
         
         if (projectname is not None) and (filepath is not None): # AND the others?
             # SEND THESE TO BACK END
@@ -118,19 +98,56 @@ def change_project_options(project_num): # for a single project
 
         ## DEBUGGING ##
         print('Function run: change_project_options: change details for a single existing project\n')
-        print(f'Submitted Values: {wc_target_today} | {pr_id} | {projectname} | {filepath} | {filetype} | {targetwordcount} | {targetenddate}')
+        print(f'Submitted Values: {pr_id} | {projectname} | {filepath} | {filetype} | {targetwordcount} | {targetenddate}')
         ## ##
         return redirect(request.referrer)
 
 @app.route('/project-options/<int:project_num>/del', methods=['POST'])
 def delete_project_options(project_num): # Delete a single project 
-    projectname = check_and_extract('delproject_name', request.form)
-    wordmeta_delete(projectname)
+    projectname = check_and_extract('name', request.form)
+    project_delete(projectname)
 
     ## DEBUGGING ##
     print(f"Function run: delete_project_options: delete project: {str(project_num)} | {projectname}")
     ## ##
     return redirect(request.referrer)
+
+@app.route('/project-options/<int:project_num>/ren', methods=['POST'])
+def rename_project(project_num): # Rename a single project 
+    projectname = check_and_extract('name', request.form)
+    new_name = check_and_extract('newname', request.form)
+    wordmeta_rename(projectname, new_name)
+
+    ## DEBUGGING ##
+    print(f"Function run: rename_project: rename project: {str(projectname)} | {new_name}")
+    ## ##
+    return redirect(request.referrer)
+
+@app.route('/stats-single')
+def pg_single_stats():
+    # Get Current project
+    current_project_id = get_current_project_id() #returns a full string, or False
+    current_project = get_project(p_id = current_project_id) #if current_project_id is False, will return dummy text
+    
+    if current_project_id is False: # i.e. there is no current_project_id
+        wctoday = 0
+        wctoday_suggested_target = 0
+    else: # If there is a current_project_id
+        current_project_id = int(current_project_id)
+
+        wctoday = 0 # TODO when it becomes possible to get meta: wordcount(filepull(current_project['filepath'], filetype='txt', isDirectory=False))
+        daysleft = datetime.strptime(str(current_project["targetenddate"]),'%y%m%d') - datetime.today()
+        daysleft = int(daysleft.days)
+        wordsleft = current_project["targetwordcount"] - wctoday
+        wctoday_suggested_target =  ceil(wordsleft / daysleft)
+
+    return render_template('stats-single.html', \
+        pagetitle=current_project["name"] + ' Stats', \
+        projectname=current_project["name"], \
+        WCtoday=wctoday, \
+        wctoday_target= current_project["todaystargetwordcount"], \
+        wctoday_suggested_target=wctoday_suggested_target, \
+        current_project_id = current_project_id)
 
 #### Cookie for Current Project ####
 

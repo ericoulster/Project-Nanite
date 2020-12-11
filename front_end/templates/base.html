@@ -6,6 +6,7 @@
   <!-- <link rel="stylesheet" href="static/styles/cavepaint.css"> -->
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{url_for('static', filename='css/sanitize.css')}}">
   <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
 
   <title> Nanite: {{ pagetitle }} </title>
@@ -16,13 +17,12 @@
 
 </head>
 
-<body class="{{pagetitle.lower().replace(' ', '-')}} grid-container">
-    {% block sidebar %} 
+{% block body_open_sidebar %} 
 
-    {% endblock %}
+
+{% endblock %}
 
   <div id="main" class="main">
-    <h1>{{pagetitle}}</h1>
     
     {% block content %} 
 

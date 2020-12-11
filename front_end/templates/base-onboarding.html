@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
-{% block sidebar %} 
+{% block body_open_sidebar %}
+<body class="{{pagetitle.lower().replace(' ', '-')}} grid-container"></body> 
   <div id="nav" class="side">
       <nav>
           <ul class="navbar">

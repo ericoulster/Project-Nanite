@@ -106,6 +106,7 @@ def wordmeta_set(name, target, path, filetype, deadline):
 # Input is from front-end (takes name, returns wordcounts as a dict)
 
 def wordmeta_pull(name):
+    #TODO: change output dict to match those in sample_data.py (i.e. make sure values are all strings and ints, not more dicts, and - preferably - the keys match)
     df = pd.read_csv('wordcount_meta.csv', index_col='Project Name')
     
     if df.index.str.match('^' + str(name) +'$').any() == True:
@@ -121,7 +122,7 @@ def wordmeta_pull(name):
 # Input is project name and daily wordcount, writes an update to the wordcount file
 
 def wordcount_update(name, dailywords):
-    #TODO: this produces a csv file with date, overall target and actual wordcount, and wants to update the actual wordcount (dailywords -> actual word count). Actual word count is collected by the back end and only displayed in the front.
+    # NOTE: have used this function in connection with wordcount() to update wordount from /options page
     datestamp = date.today().strftime("%d/%m/%Y")
     
     if os.path.exists(str(name) + '_wordcount.csv') == False:

@@ -1,8 +1,10 @@
 # Dummy Projects for testing purposes
 
+# returned from wordmeta_pull {'Filetype': {'Alice in Project Land': 'txt'}, 'Latest Target': {'Alice in Project Land': 2000}, 'Project Path': {'Alice in Project Land': 'C:/Dummy/File/Path.txt'}, 'Deadline': {'Alice in Project Land': 210331}}
+
 def dummy_projects():
     dummy_project = {
-            "name": "Dummy Project Name",
+            "name": "Alice in Project Land",
             "filepath": "C:/Dummy/File/Path.txt",
             "filetype": 'txt',
             "targetwordcount": 20000,
