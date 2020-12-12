@@ -1,19 +1,10 @@
 {% extends 'base-app.html' %}
 
 {% block content %}
-
+<h1>{{pagetitle}}</h1>
 <div id="main-content" class="container">
     <div>Project Name: {{projectname}} </div>
+    <div>Today's Target Word Count is {{wctoday_target}}</div>
 <div>Today's Word Count: {{WCtoday}}</div>
-    <div>     
-      <form action="/project-options/{{current_project_id}}" method="POST">
-      <fieldset> 
-        <!-- <input type="text" name="projectid" value="{{idx}}" class="formfield" hidden required><br/> -->
-        <input type="text" name="name" value="{{ projectname }}" class="formfield" required hidden>
-        <label>Today's Target Word Count is {{wctoday_target}}. Set a new target? </label><input type="text" name="wc_target_today" value="{{wctoday_suggested_target}}"><br/>
-        <input type="submit" value="Set Target">
-      </fieldset> 
-    </form> 
-  </div>
 </div>
 {% endblock %}

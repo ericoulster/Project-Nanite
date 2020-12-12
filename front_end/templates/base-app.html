@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
-{% block sidebar %} 
+{% block body_open_sidebar %} 
+<body class="{{pagetitle.lower().replace(' ', '-')}} grid-container"></body>
   <div id="nav" class="side">
       <nav>
           <ul class="navbar">
@@ -11,7 +12,7 @@
                 <a class="nav-link" href="/options">Projects</a>
                 <ul>
                   {% for idx, project in menuprojects %}
-                  <li class="nav-item nav-sub-item"><a class="nav-link" href="/">{{project['name']}}</a></li>
+                  <li class="nav-item nav-sub-item"><a class="nav-link" href="#">{{project['name']}}</a></li>
                   {% endfor %}
                 </ul>
               </li>
