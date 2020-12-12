@@ -4,7 +4,8 @@ import string
 import re
 import fileinput
 import csv
-from datetime import date
+from datetime import date, datetime
+from math import ceil
 
 import numpy as np
 import pandas as pd
@@ -175,3 +176,18 @@ def project_delete(name):
     else:
         pass
         
+        
+def daily_words_calculate(word_goal, goal_start_date, goal_finish_date):
+    # We currently assume you are starting at zero words, or are factoring your already existant words into your decision.
+    # This assumption may be worth revisiting later
+    days_left = abs((datetime.strptime(goal_finish_date,"%d/%m/%Y") - datetime.strptime(goal_start_date,"%d/%m/%Y")).days)
+    daily_target = ceil(word_goal/days_left)
+    return daily_target
+
+
+def word_goal_calculate(daily_target, goal_start_date, goal_finish_date):
+    # We currently assume you are starting at zero words, or are factoring your already existant words into your decision.
+    # This assumption may be worth revisiting later
+    days_left = abs((datetime.strptime(goal_finish_date,"%d/%m/%Y") - datetime.strptime(goal_start_date,"%d/%m/%Y")).days)
+    word_goal = daily_target*days_left
+    return word_goal
