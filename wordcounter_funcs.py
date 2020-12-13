@@ -78,29 +78,29 @@ def filepull(project_path, filetype='txt', isDirectory=False):
 
 # Input is from front-end (name, target, path, filetype, and now deadline
 
-def wordmeta_set(name, target, path, filetype, deadline, goal):
+def wordmeta_set(name, target, path, filetype, start_date, deadline, goal):
     
     df = pd.read_csv('wordcount_meta.csv', index_col='Project Name')
     # Consolidate these options later on.
     
     if df.empty is True:
         new_row = pd.DataFrame.from_records({
-            'Project Name':name, 'Daily Target':target, 'Project Path':path, 'Filetype':filetype, 'Deadline':deadline, 'Wordcount Goal':goal
-        }, index=[0]).set_index('Project Name')
+            'Project Name':name, 'Daily Target':target, 'Project Path':path, 'Filetype':filetype, 'Start Date':start_date, 'Deadline':deadline,
+        'Wordcount Goal':goal}, index=[0]).set_index('Project Name')
         df = df.append(new_row)
         df.to_csv('wordcount_meta.csv', index=True)
     
     elif df.index.str.match('^' + str(name) +'$').any() == True:
         new_row = pd.DataFrame.from_records({
-            'Project Name':name, 'Daily Target':target, 'Project Path':path, 'Filetype':filetype, 'Deadline':deadline, 'Wordcount Goal':goal
-        }, index=[0]).set_index('Project Name')
+            'Project Name':name, 'Daily Target':target, 'Project Path':path, 'Start Date':start_date, 'Filetype':filetype, 'Deadline':deadline,
+         'Wordcount Goal':goal}, index=[0]).set_index('Project Name')
         df.update(new_row)
         df.to_csv('wordcount_meta.csv', index=True)
         
     else:
         new_row = pd.DataFrame.from_records({
-            'Project Name':name, 'Daily Target':target, 'Project Path':path, 'Filetype':filetype, 'Deadline':deadline, 'Wordcount Goal':goal
-        }, index=[0]).set_index('Project Name')
+            'Project Name':name, 'Daily Target':target, 'Project Path':path, 'Start Date':start_date, 'Filetype':filetype, 'Deadline':deadline,
+         'Wordcount Goal':goal}, index=[0]).set_index('Project Name')
         df = df.append(new_row)
         df.to_csv('wordcount_meta.csv', index=True)
 
