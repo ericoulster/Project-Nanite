@@ -229,3 +229,13 @@ def write_most_on(name):
     df_g['Day of week'] = pd.to_datetime(df_g['Date']).dt.day_name()
     df_g = df_g.groupby('Day of week')['Session Wordcount'].mean().sort_values(ascending=False)
     return list(df_g.head(1).to_dict().keys())
+
+# Displays sidepane info easily
+def get_sidepane_info(name):
+    words = wordcount_pull(name)[-1]['Total Wordcount']
+    streak = wordstreak(name)
+    day = write_most_on(name)
+    info = {
+        'words written':words, "day longest streak":streak, "You write most on":str(day)[2:-2]
+    }
+    return info
