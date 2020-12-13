@@ -107,12 +107,11 @@ def wordmeta_set(name, target, path, filetype, deadline, goal):
 # Input is from front-end (takes name, returns wordcounts as a dict)
 
 def wordmeta_pull(name):
-    #TODO: change output dict to match those in sample_data.py (i.e. make sure values are all strings and ints, not more dicts, and - preferably - the keys match)
     df = pd.read_csv('wordcount_meta.csv', index_col='Project Name')
     
     if df.index.str.match('^' + str(name) +'$').any() == True:
         val_row = df[df.index == str(name)]
-        return val_row.to_dict()
+        return val_row.to_dict(orient='records')
         
     else:
         #needed: error handling
@@ -191,5 +190,15 @@ def word_goal_calculate(daily_target, goal_start_date, goal_finish_date):
     days_left = abs((datetime.strptime(goal_finish_date,"%d/%m/%Y") - datetime.strptime(goal_start_date,"%d/%m/%Y")).days)
     word_goal = daily_target*days_left
     return word_goal
+
+# returns data for the wordcount table
+def wordcount_pull(name):
+    
+    if os.path.exists(str(name) + '_wordcount.csv') == False:
+        return print("no wordcount record")
+    else:
+        df = pd.read_csv(str(name) + '_wordcount.csv')
+        return df.to_dict(orient='records')
+
 
 
