@@ -221,4 +221,11 @@ def wordstreak(name):
                 return(x)
                 break
     
-
+def write_most_on(name):
+    # This is currently an average - but which metric to use introduces bias, worth discussing.
+    df = pd.read_csv(str(name) + '_wordcount.csv')
+    df['Date'] = pd.to_datetime(df['Date'], format='%d/%m/%Y - %X').dt.date
+    df_g = df.groupby(['Date']).agg({'Session Wordcount':'sum', 'Daily Target':'last'}).reset_index()
+    df_g['Day of week'] = pd.to_datetime(df_g['Date']).dt.day_name()
+    df_g = df_g.groupby('Day of week')['Session Wordcount'].mean().sort_values(ascending=False)
+    return list(df_g.head(1).to_dict().keys())
