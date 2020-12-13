@@ -122,31 +122,31 @@ def wordmeta_pull(name):
 
 # Input is project name and daily wordcount, writes an update to the wordcount file
 
-def wordcount_update(name, dailywords):
-    # NOTE: have used this function in connection with wordcount() to update wordount from /options page
-    datestamp = date.today().strftime("%d/%m/%Y")
+def wordcount_update(name, wordcount):
+    #This produces a csv file with date, overall target and actual wordcount, and wants to update the actual wordcount (dailywords -> actual word count). Actual word count is collected by the back end and only displayed in the front.
+    timestamp = datetime.now().strftime("%d/%m/%Y - %X")
     
     if os.path.exists(str(name) + '_wordcount.csv') == False:
-        colnames = [str('Date'), str('Wordcount'), str('Target')]
+        colnames = [str('Date'), str('Total Wordcount'), str('Session Wordcount'), str('Daily Target') ]
         with open(str(name) + '_wordcount.csv', 'w', encoding='cp1252') as file:
             filewriter = csv.writer(file)
             filewriter.writerow(colnames)
+            filewriter.close()
     else:
         pass
+    # Used to grab regularly occuring daily target
     meta_df = pd.read_csv('wordcount_meta.csv', index_col='Project Name')    
     
-    df = pd.read_csv(str(name) + '_wordcount.csv', index_col='Date')
-    new_row = pd.DataFrame.from_records(
-        {
-            'Date': datestamp, 'Wordcount':dailywords, 'Target':meta_df.loc[name]['Latest Target']
-        }, index=[0]).set_index('Date')
+    df = pd.read_csv(str(name) + '_wordcount.csv')
     
-    if (df.index[-1] == date.today().strftime("%d/%m/%Y")) is True: 
-        # TODO: This throws an error when empty AND is failing to overwrite an existing row
-        df.update(new_row)
-    else:      
-        df = df.combine_first(new_row)
-    df.to_csv(str(name) + '_wordcount.csv', index=True)
+    # session wordcount is this session subtracted by last session 
+    if df.empty is True:
+        session_wordcount = wordcount
+    else:
+        session_wordcount = wordcount - df.iloc[-1]['Total Wordcount']
+    
+    df = df.append({'Date': timestamp, 'Total Wordcount':wordcount, 'Session Wordcount': session_wordcount, 'Daily Target':meta_df.loc[name]['Daily Target']}, ignore_index=True)
+    df.to_csv(str(name) + '_wordcount.csv', index=False)
 
 # Input is the old name (from system) and new name (input field). Changes name in back-end.
 
@@ -191,3 +191,5 @@ def word_goal_calculate(daily_target, goal_start_date, goal_finish_date):
     days_left = abs((datetime.strptime(goal_finish_date,"%d/%m/%Y") - datetime.strptime(goal_start_date,"%d/%m/%Y")).days)
     word_goal = daily_target*days_left
     return word_goal
+
+
