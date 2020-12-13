@@ -200,5 +200,25 @@ def wordcount_pull(name):
         df = pd.read_csv(str(name) + '_wordcount.csv')
         return df.to_dict(orient='records')
 
+# takes project name, returns number of days wordstreak
+def wordstreak(name):
+    df = pd.read_csv(str(name) + '_wordcount.csv')
+    
+    if df.empty is True:
+        return 0
+    else:
+        df['Date'] = pd.to_datetime(df['Date'], format='%d/%m/%Y - %X').dt.date
 
+        # Max daily target, sum of Session Wordcount
+        df_g = df.groupby(['Date']).agg({'Session Wordcount':'sum', 'Daily Target':'last'})
+        # sort by df_g asc
+        df_g = df_g.sort_values(ascending=False, by='Date')
+        x = 0
+        for i in range(len(df_g)):
+            if df_g['Session Wordcount'][i] >= df_g['Daily Target'][i]:
+                x += 1
+            else:
+                return(x)
+                break
+    
 
