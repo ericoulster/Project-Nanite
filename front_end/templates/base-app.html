@@ -2,25 +2,37 @@
 
 {% block body_open_sidebar %} 
 <body class="{{pagetitle.lower().replace(' ', '-')}} grid-container"></body>
-  <div id="nav" class="side">
+  <div id="left-sidebar" class="leftside sidebar">
+    <div id="left-sidebar-content" class="content">
+      <div class="logo">Nanite</div>
+      <div id="sidebar-insights" class="insights">
+        <p>Hi, {{username}}!</p>
+        <h2>Insights</h2>
+        <ul id="insights-list" class="insights-list">
+          <li class="insights-item"><span class="metric">{{overall_total_words_written}}</span> words written</li>
+          <li class="insights-item"><span class="metric">{{streak_length}}</span> day longest streak</li>
+          <li class="insights-item">You write most on <span class="metric">{{weekday_most_writing}}</span></li>
+        </ul>
+      </div>
       <nav>
-          <ul class="navbar">
+        <ul class="navbar">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a> 
+          </li>
             <li class="nav-item">
-              <a class="nav-link" href="/">Home</a> 
+              <a class="nav-link" href="/options">Projects</a>
+              <ul>
+                {% for idx, project in menuprojects %}
+                <li class="nav-item nav-sub-item"><a class="nav-link" href="#">{{project['name']}}</a></li>
+                {% endfor %}
+              </ul>
             </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/options">Projects</a>
-                <ul>
-                  {% for idx, project in menuprojects %}
-                  <li class="nav-item nav-sub-item"><a class="nav-link" href="#">{{project['name']}}</a></li>
-                  {% endfor %}
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Info</a> 
-              </li>
-          </ul>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Info</a> 
+            </li>
+        </ul>
       </nav>
     </div>
+  </div>
 {% endblock %}
   

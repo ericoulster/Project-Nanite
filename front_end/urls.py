@@ -13,8 +13,15 @@ from front_end         import app
 
 #### CONTEXT PROCESSORS ####
 @app.context_processor
-def inject_projects():
-    return dict(menuprojects=enumerate(get_projects_list())) # list of projects for the menu
+def inject_menu_info():
+    username = request.cookies.get('currentuser')
+    if username is None:
+        username = 'Writer'
+    return dict(menuprojects=enumerate(get_projects_list()) \
+        , username = username \
+            , overall_total_words_written = 0 \
+                , streak_length = 0 \
+                    , weekday_most_writing = "---") #TODO get this information for the menu
 
 #### ROUTES ####
 @app.route('/')
@@ -158,5 +165,15 @@ def current_project_cookie():
     # resp = make_response(render_template('home.html'))
     resp = make_response(redirect(request.referrer))
     resp.set_cookie('currentproject', current_project_id)
+
+    return resp
+
+@app.route('/current-user', methods = ['POST'])
+def current_user_cookie():
+    current_username = request.form['username']
+
+    # resp = make_response(render_template('home.html'))
+    resp = make_response(redirect(request.referrer))
+    resp.set_cookie('currentuser', current_username)
 
     return resp
