@@ -7,8 +7,9 @@ def dummy_projects():
             "name": "Alice in Project Land",
             "filepath": "C:/Dummy/File/Path.txt",
             "filetype": 'txt',
-            "targetwordcount": 20000,
+            "wordcountgoal": 20000,
             "todaystargetwordcount": 1000,
+            "targetstartdate": 201210, #10 Dec 2020
             "targetenddate": 210331 #31st March 2021 
         }
 
@@ -16,8 +17,9 @@ def dummy_projects():
             "name": "Writing for Dummies",
             "filepath": "C:/Dummy/File/Path2.txt",
             "filetype": 'txt',
-            "targetwordcount": 50000,
+            "wordcountgoal": 50000,
             "todaystargetwordcount": 1000,
+            "targetstartdate": 201208, #08 Dec 2020
             "targetenddate": 210721 #21st Jul 2021 
         }
 

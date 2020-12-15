@@ -13,7 +13,7 @@
           <fieldset> 
               <legend>Setup</legend>
                 <input type="text" name="projectid" value="{{idx}}" class="formfield" hidden required disabled>
-                <label>Project Name: </label><input type="text" name="name" value="{{ project.name }}" class="formfield" required disabled><br/>
+                <input type="text" name="name" value="{{ project.name }}" class="formfield" hidden required disabled>
                 <label>File/folder Path:</label><input type="text" name="filepath" value="{{ project.filepath }}" class="formfield" required disabled><br/>
                 <label>Files of type:</label>
                   <select name="filetype" selected="{{ project.filetype }}" class="formfield" required disabled>
@@ -24,7 +24,7 @@
           </fieldset>
           <fieldset> 
             <legend>Goals</legend>
-                <label>Word Count Goal:</label><input type="text" name="targetwordcount" value="{{ project.targetwordcount }}" class="formfield" required disabled> words
+                <label>Word Count Goal:</label><input type="text" name="wordcountgoal" value="{{ project.wordcountgoal }}" class="formfield" required disabled> words
                 <div class="regularity selection" style="display:inline-block;">
                   <input type="radio" id="daily" name="wordcountreg-{{idx}}" value="daily" class="formfield" disabled>
                   <label for="daily">Daily</label>
@@ -32,6 +32,7 @@
                   <label for="total">Total</label>
                 </div>
                 <br/>
+                <label>Goal Start Date:</label><input type="text" name="targetstartdate" value="{{ project.targetenddate }}" required disabled><br/>
                 <label>Goal End Date:</label><input type="text" name="targetenddate" value="{{ project.targetenddate }}" class="formfield" required disabled><br/>
             </fieldset>
         </div>
@@ -45,11 +46,11 @@
         </form>
       </div>
       <div id="project-actions-{{idx}}" class="project-actions project-actions-{{idx}}">
-        <form action = "/current-project" method = "POST">
+        <form class="debug" action = "/current-project" method = "POST">
             <input type="hidden" name="currentproject" value="{{idx}}">
             <input type="submit" value="Select Current Project">
         </form>
-          <button onclick="alert(document.cookie);">Cookie Alert</button>
+          <button class="debug" onclick="alert(document.cookie);">Cookie Alert</button>
           <button onclick="m = document.querySelectorAll('.modal'); m.forEach(function(x){x.classList.toggle('hidden')})">Rename Project</button>
           <button onclick="pr = document.querySelectorAll('div#project-{{idx}} > form#project-{{idx}}-form .formfield'); pr.forEach(function(x){x.toggleAttribute('disabled')})">Edit Project</button>
         <form action = "/project-options/{{idx}}/del" method = "POST">
@@ -77,7 +78,7 @@
               <option value="rtf">rtf</option>
               <option value="docx">docx</option>
             </select><br/>
-            <label>What's your writing goal?</label><input type="text" name="targetwordcount" required> words            
+            <label>What's your writing goal?</label><input type="text" name="wordcountgoal" required> words            
             <input type="radio" id="daily" name="wordcountreg-new" value="daily" checked>
             <label for="daily">Daily</label>
             <input type="radio" id="total" name="wordcountreg-new" value="total">

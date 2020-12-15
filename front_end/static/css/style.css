@@ -1,4 +1,11 @@
 /* ///////////////////////////////// */
+/* /// Debug Classes /// */
+
+.debug {
+    display: none;
+}
+
+/* ///////////////////////////////// */
 /* /// Sitewide Styles /// */
 /* Layout: Grid */
 .grid-container {
@@ -12,7 +19,7 @@
       ". . . .";
   }
   .leftside { grid-area: leftside; background-color: #cccccc; }
-  .main { grid-area: main; }
+  .main { grid-area: main; padding-left: 1rem; padding-right: 1rem;}
   
   @media all and (-ms-high-contrast:none) {
   
@@ -42,7 +49,7 @@
 /* Sidebar */
 
 .sidebar .content {
-    width: 7rem;
+    width: 10rem;
     margin: auto;
 } 
 
@@ -59,6 +66,12 @@
     padding: 1em 0px;
 }
 
+.sidebar .logo a {
+    font-weight: bold;
+    color: black;
+    text-decoration: none;
+}
+
 .sidebar .navbar li.nav-item {
     padding-inline-start: 0.5rem;
 } 
@@ -68,14 +81,18 @@
     padding: 0;
 }
 
-.sidebar ul .insights-item {
+.sidebar .insights-list .insights-item {
     padding-inline-start: 0rem;
+}
+
+.sidebar .insights-list .insights-item .metric {
+    font-weight: bold;
 }
 
 /* Font */
 * {
     font-family: 'IBM Plex Sans', cursive, sans-serif;
-    font-size: large;
+    /* font-size: large; */
 }
 
 /* Buttons */
@@ -105,9 +122,10 @@ ol li, ul li {
 
 /* Hidden (usu. modals, forms) */
 .hidden {
+    height: 0px;
     visibility: hidden;
     opacity: 0;
-    transition: visibility, opacity 0.5s;
+    transition: visibility, opacity, height 0.5s;
 }
 
 

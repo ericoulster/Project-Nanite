@@ -48,25 +48,25 @@ def pg_options():
         projectname = request.form['name']
         filepath = request.form['filepath']
         filetype = request.form['filetype']
-        targetwordcount = request.form['targetwordcount']
+        dailytarget = 0 #TODO: get this
+        targetstartdate = request.form['targetstartdate']
         targetenddate = request.form['targetenddate']
+        wordcountgoal = request.form['wordcountgoal']
 
         # SEND THESE TO BACK END
         # wordmeta_set(pr_id, projectname, targetwordcount, filepath, filetype, targetenddate)
-        wordmeta_set(projectname, targetwordcount, filepath, filetype, targetenddate)
+        wordmeta_set(projectname, dailytarget, filepath, filetype, targetstartdate, targetenddate, wordcountgoal)
 
         ## DEBUGGING ##
         # print(f"Function run: new_project: add a project. \n Submitted values: {pr_id} | {projectname} | {filepath} | {targetwordcount} | {targetenddate}")
-        print(f"Function run: new_project: add a project. \n Submitted values: {projectname} | {filepath} | {targetwordcount} | {targetenddate}")
+        print(f"Function run: new_project: add a project. \n Submitted values: {projectname} | {filepath} | {wordcountgoal} | {targetenddate}")
         ## ##
         return redirect(url_for('pg_options'))
 
-@app.route('/welcome', methods=['GET','POST'])
+@app.route('/welcome', methods=['GET'])
 def pg_welcome():
     if request.method == 'GET':
         return render_template('welcome.html', pagetitle='Welcome')
-    if request.method == 'POST': # TODO: Collect and store username
-        return redirect(url_for('pg_options'))
 
 @app.route('/stats')
 def pg_stats():
@@ -94,18 +94,20 @@ def change_project_options(project_num): # for a single project
         pr_id = check_and_extract('projectid', request.form)
         filepath = check_and_extract('filepath', request.form)
         filetype = check_and_extract('filetype', request.form)
-        targetwordcount = check_and_extract('targetwordcount', request.form)
+        dailytarget = 0 #TODO: get or calc this
+        targetstartdate = request.form['targetstartdate']
         targetenddate = check_and_extract('targetenddate', request.form)
+        wordcountgoal = check_and_extract('wordcountgoal', request.form)
         
         if (projectname is not None) and (filepath is not None): # AND the others?
             # SEND THESE TO BACK END
             # TODO: this function currently just adds a new row, rather than updating the existing one
             # wordmeta_set(pr_id, projectname, targetwordcount, filepath, filetype, targetenddate)
-            wordmeta_set(projectname, targetwordcount, filepath, filetype, targetenddate)
+            wordmeta_set(projectname, dailytarget, filepath, filetype, targetstartdate, targetenddate, wordcountgoal)
 
         ## DEBUGGING ##
         print('Function run: change_project_options: change details for a single existing project\n')
-        print(f'Submitted Values: {pr_id} | {projectname} | {filepath} | {filetype} | {targetwordcount} | {targetenddate}')
+        print(f'Submitted Values: {pr_id} | {projectname} | {filepath} | {filetype} | {wordcountgoal} | {targetenddate}')
         ## ##
         return redirect(request.referrer)
 
@@ -145,14 +147,14 @@ def pg_single_stats():
         wctoday = 0 # TODO when it becomes possible to get meta: wordcount(filepull(current_project['filepath'], filetype='txt', isDirectory=False))
         daysleft = datetime.strptime(str(current_project["targetenddate"]),'%y%m%d') - datetime.today()
         daysleft = int(daysleft.days)
-        wordsleft = current_project["targetwordcount"] - wctoday
+        wordsleft = current_project["wordcountgoal"] - wctoday
         wctoday_suggested_target =  ceil(wordsleft / daysleft)
 
     return render_template('stats-single.html', \
         pagetitle=current_project["name"] + ' Stats', \
         projectname=current_project["name"], \
         WCtoday=wctoday, \
-        wctoday_target= current_project["todaystargetwordcount"], \
+        wctoday_target= current_project["dailytarget"], \
         wctoday_suggested_target=wctoday_suggested_target, \
         current_project_id = current_project_id)
 
@@ -173,7 +175,7 @@ def current_user_cookie():
     current_username = request.form['username']
 
     # resp = make_response(render_template('home.html'))
-    resp = make_response(redirect(request.referrer))
+    resp = make_response(redirect(url_for('pg_options')))
     resp.set_cookie('currentuser', current_username)
 
     return resp
