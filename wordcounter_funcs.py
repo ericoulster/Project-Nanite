@@ -156,12 +156,11 @@ def wordmeta_pull_all():
     return df.to_dict(orient='index')
 
 def wordmeta_pull(name):
-    # TODO: error: this doesn't return the project name. Can the index (project name) be included as another value in the dict? The output is currently the following: [{'Daily Target': 0, 'Project Path': 'C:/FilePath/B2F.txt', 'Filetype': 'txt', 'Start Date': 201215, 'Deadline': 210323, 'Wordcount Goal': 12000}]
     df = pd.read_csv('wordcount_meta.csv', index_col='Project Name')
     
     if df.index.str.match('^' + str(name) +'$').any() == True:
         val_row = df[df.index == str(name)]
-        return val_row.to_dict(orient='records')
+        return val_row.reset_index().to_dict(orient='records')
         
     else:
         #needed: error handling
