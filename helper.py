@@ -4,7 +4,7 @@
 
 from flask             import request
 
-from wordcounter_funcs import wordmeta_pull
+from wordcounter_funcs import wordmeta_pull, wordmeta_pull_all
 from sample_data       import dummy_projects
 
 def get_current_project_id():
@@ -17,6 +17,7 @@ def get_current_project_id():
 
 
 def get_projects_dict(): # for all projects
+    # TODO: defunct function??
     # Function [[receives JSON from API OR receives variables??]] and outputs as a dict
     
     #### IF USING JSON
@@ -36,10 +37,29 @@ def get_projects_dict(): # for all projects
     return projects
 
 def get_projects_list():
-   projects = get_projects_dict()
-   projects = projects.values()
+    # Return list of projects using wordmeta_pull_all() (each project in the output list is a dict)
 
-   return list(projects) # return an iterable list of projects (and their options)
+    ## Defunct? ##
+    #projects = get_projects_dict()
+    #projects = projects.values()
+    ## ##
+
+    wmpull = wordmeta_pull_all()
+    projects = []
+
+    for proj in wmpull.items():
+        project  = { 
+                    "name": proj[0],
+                    "filepath": proj[1]['Project Path'],
+                    "filetype": proj[1]['Filetype'],
+                    "wordcountgoal": proj[1]['Wordcount Goal'],
+                    "todaystargetwordcount": proj[1]['Daily Target'],
+                    "targetstartdate": proj[1]['Start Date'],
+                    "targetenddate": proj[1]['Deadline']
+                    }
+        projects.append(project)
+        
+    return projects # return an iterable list of projects (and their options)
 
 def get_project(**kwargs):
     #Takes in either p_id (project id) or p_name (project name)

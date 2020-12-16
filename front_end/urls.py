@@ -7,7 +7,7 @@ from flask        import request, redirect, url_for, make_response
 from math         import ceil
 from datetime     import datetime
 
-from wordcounter_funcs import wordmeta_set, wordcount, filepull, wordcount_update, project_delete, wordmeta_rename, wordmeta_pull
+from wordcounter_funcs import wordmeta_set, wordcount, filepull, wordcount_update, project_delete, wordmeta_rename, wordmeta_pull, wordmeta_pull_all, daily_words_calculate, word_goal_calculate
 from helper            import get_projects_list, get_projects_list, get_project, get_current_project_id, check_and_extract
 from front_end         import app
 
@@ -24,12 +24,18 @@ def inject_menu_info():
                     , weekday_most_writing = "---") #TODO get this information for the menu
 
 #### ROUTES ####
+@app.route('/test')
+def test():
+    # a = wordmeta_pull('Back 2 DF')[0]
+    print(wordmeta_pull_all())
+    return " "
+
 @app.route('/')
 def index():
     return render_template('home.html', pagetitle='Home')
 
-@app.route('/options', methods=['GET','POST'])
-def pg_options():
+@app.route('/projects', methods=['GET','POST'])
+def pg_projects():
     if request.method == 'GET':
         projects = enumerate(get_projects_list()) # This is still needed, as context processor is 'used up' on menu
         # NOTE: one of the below may be useful for the project end dates
@@ -39,7 +45,7 @@ def pg_options():
         WCtoday = 0 # TODO: get today's word count and overall total for a project (get a list of these to iterate over in the template)
         WCtotal = 0
 
-        return render_template('options.html', pagetitle='Project Options', projects=projects, WCtoday=WCtoday, WCtotal=WCtotal)
+        return render_template('projects.html', pagetitle='Projects', projects=projects, WCtoday=WCtoday, WCtotal=WCtotal)
 
     elif request.method == 'POST': 
     # Add a new project
@@ -48,10 +54,18 @@ def pg_options():
         projectname = request.form['name']
         filepath = request.form['filepath']
         filetype = request.form['filetype']
-        dailytarget = 0 #TODO: get this
         targetstartdate = request.form['targetstartdate']
         targetenddate = request.form['targetenddate']
-        wordcountgoal = request.form['wordcountgoal']
+        wordcountreg = request.form['wordcountreg']
+
+        if wordcountreg == 'daily': 
+            dailytarget = request.form['wordcountgoal']
+            wordcountgoal = word_goal_calculate(dailytarget, targetstartdate, targetenddate)
+        elif wordcountreg == 'total':
+            wordcountgoal = request.form['wordcountgoal']
+            dailytarget = daily_words_calculate(wordcountgoal, targetstartdate, targetenddate)
+        else:
+            pass # ERROR #TODO handle this
 
         # SEND THESE TO BACK END
         # wordmeta_set(pr_id, projectname, targetwordcount, filepath, filetype, targetenddate)
@@ -59,9 +73,9 @@ def pg_options():
 
         ## DEBUGGING ##
         # print(f"Function run: new_project: add a project. \n Submitted values: {pr_id} | {projectname} | {filepath} | {targetwordcount} | {targetenddate}")
-        print(f"Function run: new_project: add a project. \n Submitted values: {projectname} | {filepath} | {wordcountgoal} | {targetenddate}")
+        print(f"Function run: new_project: add a project. \n Submitted values: {projectname} | {filepath} | {wordcountgoal} | {targetenddate} | {wordcountreg}")
         ## ##
-        return redirect(url_for('pg_options'))
+        return redirect(url_for('pg_projects'))
 
 @app.route('/welcome', methods=['GET'])
 def pg_welcome():
@@ -95,7 +109,7 @@ def change_project_options(project_num): # for a single project
         filepath = check_and_extract('filepath', request.form)
         filetype = check_and_extract('filetype', request.form)
         dailytarget = 0 #TODO: get or calc this
-        targetstartdate = request.form['targetstartdate']
+        targetstartdate = check_and_extract('targetstartdate', request.form)
         targetenddate = check_and_extract('targetenddate', request.form)
         wordcountgoal = check_and_extract('wordcountgoal', request.form)
         
@@ -175,7 +189,7 @@ def current_user_cookie():
     current_username = request.form['username']
 
     # resp = make_response(render_template('home.html'))
-    resp = make_response(redirect(url_for('pg_options')))
+    resp = make_response(redirect(url_for('pg_projects')))
     resp.set_cookie('currentuser', current_username)
 
     return resp

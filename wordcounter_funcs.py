@@ -79,6 +79,7 @@ def filepull(project_path, filetype='txt', isDirectory=False):
 # Input is from front-end (name, target, path, filetype, and now deadline
 
 def wordmeta_set(name, target, path, filetype, start_date, deadline, goal):
+    # TODO: error: if wordcount_meta.csv doesn't exist it doesn't create it
     
     df = pd.read_csv('wordcount_meta.csv', index_col='Project Name')
     # Consolidate these options later on.
@@ -106,7 +107,13 @@ def wordmeta_set(name, target, path, filetype, start_date, deadline, goal):
 
 # Input is from front-end (takes name, returns wordcounts as a dict)
 
+def wordmeta_pull_all():
+    # BP NOTE: added this function 
+    df = pd.read_csv('wordcount_meta.csv', index_col='Project Name')
+    return df.to_dict(orient='index')
+
 def wordmeta_pull(name):
+    # TODO: error: this doesn't return the project name. Can the index (project name) be included as another value in the dict? The output is currently the following: [{'Daily Target': 0, 'Project Path': 'C:/FilePath/B2F.txt', 'Filetype': 'txt', 'Start Date': 201215, 'Deadline': 210323, 'Wordcount Goal': 12000}]
     df = pd.read_csv('wordcount_meta.csv', index_col='Project Name')
     
     if df.index.str.match('^' + str(name) +'$').any() == True:
@@ -179,16 +186,18 @@ def project_delete(name):
 def daily_words_calculate(word_goal, goal_start_date, goal_finish_date):
     # We currently assume you are starting at zero words, or are factoring your already existant words into your decision.
     # This assumption may be worth revisiting later
-    days_left = abs((datetime.strptime(goal_finish_date,"%d/%m/%Y") - datetime.strptime(goal_start_date,"%d/%m/%Y")).days)
-    daily_target = ceil(word_goal/days_left)
+    #NOTE: changed incoming date format #days_left = abs((datetime.strptime(goal_finish_date,"%d/%m/%Y") - datetime.strptime(goal_start_date,"%d/%m/%Y")).days)
+    days_left = abs((datetime.strptime(goal_finish_date,"%Y-%m-%d") - datetime.strptime(goal_start_date,"%Y-%m-%d")).days)
+    daily_target = ceil(int(word_goal)/days_left)
     return daily_target
 
 
 def word_goal_calculate(daily_target, goal_start_date, goal_finish_date):
     # We currently assume you are starting at zero words, or are factoring your already existant words into your decision.
     # This assumption may be worth revisiting later
-    days_left = abs((datetime.strptime(goal_finish_date,"%d/%m/%Y") - datetime.strptime(goal_start_date,"%d/%m/%Y")).days)
-    word_goal = daily_target*days_left
+    #NOTE: changed incoming date format #days_left = abs((datetime.strptime(goal_finish_date,"%d/%m/%Y") - datetime.strptime(goal_start_date,"%d/%m/%Y")).days)
+    days_left = abs((datetime.strptime(goal_finish_date,"%Y-%m-%d") - datetime.strptime(goal_start_date,"%Y-%m-%d")).days)
+    word_goal = int(daily_target)*days_left
     return word_goal
 
 # returns data for the wordcount table

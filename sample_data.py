@@ -1,6 +1,8 @@
 # Dummy Projects for testing purposes
 
 # returned from wordmeta_pull {'Filetype': {'Alice in Project Land': 'txt'}, 'Latest Target': {'Alice in Project Land': 2000}, 'Project Path': {'Alice in Project Land': 'C:/Dummy/File/Path.txt'}, 'Deadline': {'Alice in Project Land': 210331}}
+# returned from wordmeta_pull [{'Daily Target': 0, 'Project Path': 'C:/Dummy/FilePath/dummyProjects/B2F.txt', 'Filetype': 'txt', 'Start Date': 201215, 'Deadline': 210323, 'Wordcount Goal': 12000}]
+# returned from wordmeta_pull_all {'Back 2 DF': {'Daily Target': 0, 'Project Path': 'C:/Dummy/FilePath/dummyProjects/B2F.txt', 'Filetype': 'txt', 'Start Date': 201215, 'Deadline': 210323, 'Wordcount Goal': 12000}, 'Bacon': {'Daily Target': 0, 'Project Path': 'C:/Dummy/FilePath/dummyProjects/bacon.txt', 'Filetype': 'txt', 'Start Date': 201215, 'Deadline': 210321, 'Wordcount Goal': 784512}}
 
 def dummy_projects():
     dummy_project = {
