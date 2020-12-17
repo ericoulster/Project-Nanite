@@ -79,31 +79,74 @@ def filepull(project_path, filetype='txt', isDirectory=False):
 # Input is from front-end (name, target, path, filetype, and now deadline
 
 def wordmeta_set(name, target, path, filetype, start_date, deadline, goal):
-    # TODO: error: if wordcount_meta.csv doesn't exist it doesn't create it
     
-    df = pd.read_csv('wordcount_meta.csv', index_col='Project Name')
+    # creates wordcount meta if none exists.
+    if os.path.exists('wordcount_meta.csv') == False:
+        
+        try:
+            colnames = [str('Project Name'), 
+                        str('Daily Target'), 
+                        str('Project Path'), 
+                        str('Filetype'),
+                        str('Start Date'),
+                        str('Deadline'),
+                        str('Wordcount Goal')]
+            with open('wordcount_meta.csv', 'w', encoding='cp1252') as file:
+                    filewriter = csv.writer(file)
+                    filewriter.writerow(colnames)
+                    filewriter.close()
+        except:
+            print("error, wordcount_meta was not found, and nanite could not create it.")
+    else:
+        pass
+
+    
+    
+    # try to read wordcount meta csv
+    try:    
+        df = pd.read_csv('wordcount_meta.csv', index_col='Project Name')
+        
+    except:
+        print("error: nanite can't read records file")
     # Consolidate these options later on.
     
+    # Condition 1: if records are empty, insert the first record.
+    
     if df.empty is True:
-        new_row = pd.DataFrame.from_records({
-            'Project Name':name, 'Daily Target':target, 'Project Path':path, 'Filetype':filetype, 'Start Date':start_date, 'Deadline':deadline,
-        'Wordcount Goal':goal}, index=[0]).set_index('Project Name')
-        df = df.append(new_row)
-        df.to_csv('wordcount_meta.csv', index=True)
+        try:
+            new_row = pd.DataFrame.from_records({
+                'Project Name':name, 'Daily Target':target, 'Project Path':path, 'Filetype':filetype, 'Start Date':start_date, 'Deadline':deadline,
+            'Wordcount Goal':goal}, index=[0]).set_index('Project Name')
+            df = df.append(new_row)
+            df.to_csv('wordcount_meta.csv', index=True)
+        except:
+            print("error, nanite cannot insert row of data into empty record-list.")
+    
+    
+    # Condition 2: If the record exists, update it.
     
     elif df.index.str.match('^' + str(name) +'$').any() == True:
-        new_row = pd.DataFrame.from_records({
-            'Project Name':name, 'Daily Target':target, 'Project Path':path, 'Start Date':start_date, 'Filetype':filetype, 'Deadline':deadline,
-         'Wordcount Goal':goal}, index=[0]).set_index('Project Name')
-        df.update(new_row)
-        df.to_csv('wordcount_meta.csv', index=True)
-        
+        try:
+            new_row = pd.DataFrame.from_records({
+                'Project Name':name, 'Daily Target':target, 'Project Path':path, 'Start Date':start_date, 'Filetype':filetype, 'Deadline':deadline,
+             'Wordcount Goal':goal}, index=[0]).set_index('Project Name')
+            df.update(new_row)
+            df.to_csv('wordcount_meta.csv', index=True)
+        except:
+            print("error, nanite can't read row of data in records")
+    
+    # Condition 3: If no record exists, but other records exist, insert the record.
+    
     else:
-        new_row = pd.DataFrame.from_records({
-            'Project Name':name, 'Daily Target':target, 'Project Path':path, 'Start Date':start_date, 'Filetype':filetype, 'Deadline':deadline,
-         'Wordcount Goal':goal}, index=[0]).set_index('Project Name')
-        df = df.append(new_row)
-        df.to_csv('wordcount_meta.csv', index=True)
+        try:
+            new_row = pd.DataFrame.from_records({
+                'Project Name':name, 'Daily Target':target, 'Project Path':path, 'Start Date':start_date, 'Filetype':filetype, 'Deadline':deadline,
+             'Wordcount Goal':goal}, index=[0]).set_index('Project Name')
+            df = df.append(new_row)
+            df.to_csv('wordcount_meta.csv', index=True)
+        except:
+            print("error: nanite can't read data in records")
+
 
 # Input is from front-end (takes name, returns wordcounts as a dict)
 
@@ -113,12 +156,11 @@ def wordmeta_pull_all():
     return df.to_dict(orient='index')
 
 def wordmeta_pull(name):
-    # TODO: error: this doesn't return the project name. Can the index (project name) be included as another value in the dict? The output is currently the following: [{'Daily Target': 0, 'Project Path': 'C:/FilePath/B2F.txt', 'Filetype': 'txt', 'Start Date': 201215, 'Deadline': 210323, 'Wordcount Goal': 12000}]
     df = pd.read_csv('wordcount_meta.csv', index_col='Project Name')
     
     if df.index.str.match('^' + str(name) +'$').any() == True:
         val_row = df[df.index == str(name)]
-        return val_row.to_dict(orient='records')
+        return val_row.reset_index().to_dict(orient='records')
         
     else:
         #needed: error handling
