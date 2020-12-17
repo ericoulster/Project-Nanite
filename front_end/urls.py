@@ -49,12 +49,12 @@ def pg_projects():
         WCprojtotal = [] #0
 
         # TODO: test this script below
-        # for project in projectslist:
-        #     wc = wordcount(filepull(project['filepath'], project['filetype'], isDirectory=False)) #  #TODO pick up directory (or not) from project
-        #     wc_pull = wordcount_pull(project['name'])
-        #     wclastsession = wc_pull[-1]['Session Wordcount'] #TODO THIS IS THE WORDCOUNT FROM THE LAST SESSION, SHOULD BE TODAY?
-        #     WCtoday.append(wclastsession)
-        #     WCprojtotal.append(wc)
+        for project in projectslist:
+            wc = wordcount(filepull(project['filepath'], project['filetype'], isDirectory=False)) #  #TODO pick up directory (or not) from project
+            wc_pull = wordcount_pull(project['name'])
+            wclastsession = wc_pull[-1]['Session Wordcount'] #TODO THIS IS THE WORDCOUNT FROM THE LAST SESSION, SHOULD BE TODAY?
+            WCtoday.append(wclastsession)
+            WCprojtotal.append(wc)
 
         return render_template('projects.html', pagetitle='Projects', projects=projects, WCtoday=WCtoday, WCtotal=WCprojtotal)
 
@@ -80,7 +80,11 @@ def pg_projects():
 
         # SEND THESE TO BACK END
         # wordmeta_set(pr_id, projectname, targetwordcount, filepath, filetype, targetenddate)
+        wc = wordcount(filepull(filepath, filetype, isDirectory=False))
+        #TODO: 1. Check if there is a file first?  2. pick up directory (or not) from project
+        
         wordmeta_set(projectname, dailytarget, filepath, filetype, targetstartdate, targetenddate, wordcountgoal)
+        wordcount_update(name = projectname, wordcount = wc)
 
         ## DEBUGGING ##
         # print(f"Function run: new_project: add a project. \n Submitted values: {pr_id} | {projectname} | {filepath} | {targetwordcount} | {targetenddate}")
@@ -119,11 +123,19 @@ def change_project_options(project_num): # for a single project
         pr_id = check_and_extract('projectid', request.form)
         filepath = check_and_extract('filepath', request.form)
         filetype = check_and_extract('filetype', request.form)
-        dailytarget = 0 #TODO: get or calc this
         targetstartdate = check_and_extract('targetstartdate', request.form)
         targetenddate = check_and_extract('targetenddate', request.form)
-        wordcountgoal = check_and_extract('wordcountgoal', request.form)
-        
+        wordcountreg = check_and_extract('wordcountreg', request.form)
+
+        if wordcountreg == 'daily': 
+            dailytarget = request.form['wordcountgoal']
+            wordcountgoal = word_goal_calculate(dailytarget, targetstartdate, targetenddate)
+        elif wordcountreg == 'total':
+            wordcountgoal = request.form['wordcountgoal']
+            dailytarget = daily_words_calculate(wordcountgoal, targetstartdate, targetenddate)
+        else:
+            pass # ERROR #TODO handle this
+
         if (projectname is not None) and (filepath is not None): # AND the others?
             # SEND THESE TO BACK END
             # TODO: this function currently just adds a new row, rather than updating the existing one
@@ -132,7 +144,7 @@ def change_project_options(project_num): # for a single project
 
         ## DEBUGGING ##
         print('Function run: change_project_options: change details for a single existing project\n')
-        print(f'Submitted Values: {pr_id} | {projectname} | {filepath} | {filetype} | {wordcountgoal} | {targetenddate}')
+        print(f'Submitted Values: {pr_id} | {projectname} | {filepath} | {filetype} | {wordcountgoal} | {wordcountreg} | {targetenddate}')
         ## ##
         return redirect(request.referrer)
 

@@ -7,7 +7,9 @@
     {% for idx, project in projects %}
     <div id="project-{{idx}}">
       <h2>{{ project.name }}</h2>
-      <p>Today you've written {{WCtoday}} / {{project.todaystargetwordcount}} words, which brings you to {{WCtotal}} / {{project.wordcountgoal}} words towards this project overall. </p>
+      <p>Today you've written {{WCtoday[idx]}} / {{project.todaystargetwordcount}} words, which brings you to {{WCtotal[idx]}} / {{project.wordcountgoal}} words towards this project overall. </p>
+      <label for="project-progress">Project progress:</label>
+      <progress id="project-progress" value="{{WCtotal[idx]}}" max="{{project.wordcountgoal}}"> {{WCtotal[idx] / project.wordcountgoal}} </progress>
       <form id="project-{{idx}}-form" action="/project-options/{{idx}}" method="POST" class="project-form existing-project">
         <div class="formfields">
           <fieldset> 
@@ -26,13 +28,13 @@
             <legend>Goals</legend>
                 <label>Word Count Goal:</label><input type="text" name="wordcountgoal" value="{{ project.wordcountgoal }}" class="formfield" required disabled> words
                 <div class="regularity selection" style="display:inline-block;">
-                  <input type="radio" id="daily-{{idx}}" name="wordcountreg" value="daily" class="formfield" disabled>
+                  <input type="radio" id="daily-{{idx}}" name="wordcountreg" value="daily" class="formfield" required disabled>
                   <label for="daily">Daily</label>
-                  <input type="radio" id="total-{{idx}}" name="wordcountreg" value="total" class="formfield" disabled>
+                  <input type="radio" id="total-{{idx}}" name="wordcountreg" value="total" class="formfield" required checked disabled>
                   <label for="total">Total</label>
                 </div>
                 <br/>
-                <label>Start Date:</label><input type="date" name="targetstartdate" value="{{ project.targetstartdate }}" required disabled><br/>
+                <label>Start Date:</label><input type="date" name="targetstartdate" value="{{ project.targetstartdate }}" class="formfield" required disabled><br/>
                 <label>Goal End Date:</label><input type="date" name="targetenddate" value="{{ project.targetenddate }}" class="formfield" required disabled><br/>
             </fieldset>
         </div>
@@ -79,9 +81,9 @@
               <option value="docx">docx</option>
             </select><br/>
             <label>What's your writing goal?</label><input type="text" name="wordcountgoal" required> words            
-            <input type="radio" id="daily-new" name="wordcountreg" value="daily" checked>
+            <input type="radio" id="daily-new" name="wordcountreg" value="daily" required checked>
             <label for="daily">Daily</label>
-            <input type="radio" id="total-new" name="wordcountreg" value="total">
+            <input type="radio" id="total-new" name="wordcountreg" value="total" required>
             <label for="total">Total</label><br/><br/>
             <label>Start Date:</label><input type="date" name="targetstartdate" required><br/>
             <label>Goal End Date:</label><input type="date" name="targetenddate" required><br/>
