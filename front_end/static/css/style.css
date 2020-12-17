@@ -72,6 +72,11 @@
     text-decoration: none;
 }
 
+.sidebar .username {
+    color: black;
+    text-decoration: none;
+}
+
 .sidebar .navbar li.nav-item {
     padding-inline-start: 0.5rem;
 } 

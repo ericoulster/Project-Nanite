@@ -7,7 +7,7 @@ from flask        import request, redirect, url_for, make_response
 from math         import ceil
 from datetime     import datetime
 
-from wordcounter_funcs import wordmeta_set, wordcount, filepull, wordcount_update, project_delete, wordmeta_rename, wordmeta_pull, wordmeta_pull_all, daily_words_calculate, word_goal_calculate
+from wordcounter_funcs import wordmeta_set, wordcount, filepull, wordcount_update, project_delete, wordmeta_rename, wordmeta_pull, wordmeta_pull_all, daily_words_calculate, word_goal_calculate, wordcount_pull
 from helper            import get_projects_list, get_projects_list, get_project, get_current_project_id, check_and_extract
 from front_end         import app
 
@@ -15,7 +15,7 @@ from front_end         import app
 @app.context_processor
 def inject_menu_info():
     username = request.cookies.get('currentuser')
-    if username is None:
+    if (username is None) or (username == ''):
         username = 'Writer'
     return dict(menuprojects=enumerate(get_projects_list()) \
         , username = username \
@@ -26,8 +26,10 @@ def inject_menu_info():
 #### ROUTES ####
 @app.route('/test')
 def test():
-    # a = wordmeta_pull('Back 2 DF')[0]
-    print(wordmeta_pull_all())
+    #a = wordmeta_pull('Bacon')
+    #a = wordcount_pull('Back 2 DF')
+    #print(a)
+    #print(wordmeta_pull_all())
     return " "
 
 @app.route('/')
@@ -37,7 +39,8 @@ def index():
 @app.route('/projects', methods=['GET','POST'])
 def pg_projects():
     if request.method == 'GET':
-        projects = enumerate(get_projects_list()) # This is still needed, as context processor is 'used up' on menu
+        projectslist = get_projects_list() # This is still needed, as context processor is 'used up' on menu
+        projects = enumerate(get_projects_list())
         # NOTE: one of the below may be useful for the project end dates
         # datetime.strptime(project.targetenddate,'%y%m%d').strftime("%d-%b-%Y")
         # datetime.strptime(project.targetenddate,'%y%m%d').strftime("%d-%b-%Y")
@@ -45,11 +48,13 @@ def pg_projects():
         WCtoday = [] #0 # TODO: get today's word count and overall total for a project (get a list of these to iterate over in the template)
         WCprojtotal = [] #0
 
-        # TODO: finish this script below
-        # for project in projects:
-        #     wc = wordcount(filepull(project['filepath'], filetype='txt', isDirectory=False)) #  #TODO pick up filetype and directory from project
-        #     WCtoday.append()
-        #     WCprojtotal.append()
+        # TODO: test this script below
+        # for project in projectslist:
+        #     wc = wordcount(filepull(project['filepath'], project['filetype'], isDirectory=False)) #  #TODO pick up directory (or not) from project
+        #     wc_pull = wordcount_pull(project['name'])
+        #     wclastsession = wc_pull[-1]['Session Wordcount'] #TODO THIS IS THE WORDCOUNT FROM THE LAST SESSION, SHOULD BE TODAY?
+        #     WCtoday.append(wclastsession)
+        #     WCprojtotal.append(wc)
 
         return render_template('projects.html', pagetitle='Projects', projects=projects, WCtoday=WCtoday, WCtotal=WCprojtotal)
 

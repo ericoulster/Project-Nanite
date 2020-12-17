@@ -179,7 +179,7 @@ def wordcount_update(name, wordcount):
         with open(str(name) + '_wordcount.csv', 'w', encoding='cp1252') as file:
             filewriter = csv.writer(file)
             filewriter.writerow(colnames)
-            filewriter.close()
+            file.close() #NOTE: BP: corrected AttributeError: '_csv.writer' object has no attribute 'close' by calling close on the file
     else:
         pass
     # Used to grab regularly occuring daily target
