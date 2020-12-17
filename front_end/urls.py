@@ -42,10 +42,16 @@ def pg_projects():
         # datetime.strptime(project.targetenddate,'%y%m%d').strftime("%d-%b-%Y")
         # datetime.strptime(project.targetenddate,'%y%m%d').strftime("%d-%b-%Y")
 
-        WCtoday = 0 # TODO: get today's word count and overall total for a project (get a list of these to iterate over in the template)
-        WCtotal = 0
+        WCtoday = [] #0 # TODO: get today's word count and overall total for a project (get a list of these to iterate over in the template)
+        WCprojtotal = [] #0
 
-        return render_template('projects.html', pagetitle='Projects', projects=projects, WCtoday=WCtoday, WCtotal=WCtotal)
+        # TODO: finish this script below
+        # for project in projects:
+        #     wc = wordcount(filepull(project['filepath'], filetype='txt', isDirectory=False)) #  #TODO pick up filetype and directory from project
+        #     WCtoday.append()
+        #     WCprojtotal.append()
+
+        return render_template('projects.html', pagetitle='Projects', projects=projects, WCtoday=WCtoday, WCtotal=WCprojtotal)
 
     elif request.method == 'POST': 
     # Add a new project
@@ -101,7 +107,7 @@ def change_project_options(project_num): # for a single project
         # First off: Update the word count
         projectname = check_and_extract('name', request.form)
         project = get_project(p_name = projectname) # search for project
-        dailywords= wordcount(filepull(project['filepath'], filetype='txt', isDirectory=False))
+        dailywords= wordcount(filepull(project['filepath'], filetype='txt', isDirectory=False)) #TODO pick up filetype and directory from project
         wordcount_update(projectname, dailywords)
         
         # Then, check if anything else needs changing (via the form submission)
