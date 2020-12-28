@@ -7,7 +7,7 @@ from flask        import request, redirect, url_for, make_response
 from math         import ceil
 from datetime     import datetime
 
-from wordcounter_funcs import wordmeta_set, wordcount, filepull, wordcount_update, project_delete, wordmeta_rename, wordmeta_pull, wordmeta_pull_all, daily_words_calculate, word_goal_calculate, wordcount_pull
+from wordcounter_funcs import wordmeta_set, wordcount, filepull, wordcount_update, project_delete, wordmeta_rename, wordmeta_pull, wordmeta_pull_all, daily_words_calculate, word_goal_calculate, wordcount_pull, get_sidepane_info
 from helper            import get_projects_list, get_projects_list, get_project, get_current_project_id, check_and_extract
 from front_end         import app
 
@@ -15,13 +15,22 @@ from front_end         import app
 @app.context_processor
 def inject_menu_info():
     username = request.cookies.get('currentuser')
+    p_id = get_current_project_id()
+    current_project_name = get_project(p_id = p_id)["name"]
+
+    if p_id == False:
+        info = {'words written':0, "day longest streak":0, "You write most on":'---'}
+    else:
+        info = get_sidepane_info(current_project_name)
+
     if (username is None) or (username == ''):
         username = 'Writer'
     return dict(menuprojects=enumerate(get_projects_list()) \
-        , username = username \
-            , overall_total_words_written = 0 \
-                , streak_length = 0 \
-                    , weekday_most_writing = "---") #TODO get this information for the menu
+        , projectname = current_project_name \
+            , username = username \
+                , overall_total_words_written = info['words written'] \
+                    , streak_length = info['day longest streak'] \
+                        , weekday_most_writing = info['You write most on']) #TODO get this information across projects?
 
 #### ROUTES ####
 @app.route('/test')
@@ -52,9 +61,14 @@ def pg_projects():
         for project in projectslist:
             wc = wordcount(filepull(project['filepath'], project['filetype'], isDirectory=False)) #  #TODO pick up directory (or not) from project
             wc_pull = wordcount_pull(project['name'])
-            wclastsession = wc_pull[-1]['Session Wordcount'] #TODO THIS IS THE WORDCOUNT FROM THE LAST SESSION, SHOULD BE TODAY?
-            WCtoday.append(wclastsession)
             WCprojtotal.append(wc)
+
+            try:
+                wclastsession = wc_pull[-1]['Session Wordcount'] #TODO THIS IS THE WORDCOUNT FROM THE LAST SESSION, SHOULD BE TODAY?
+            except:
+                wclastsession = 0
+            
+            WCtoday.append(wclastsession)
 
         return render_template('projects.html', pagetitle='Projects', projects=projects, WCtoday=WCtoday, WCtotal=WCprojtotal)
 
@@ -97,6 +111,11 @@ def pg_welcome():
     if request.method == 'GET':
         return render_template('welcome.html', pagetitle='Welcome')
 
+@app.route('/how-nanite-works', methods=['GET'])
+def pg_instructions():
+    if request.method == 'GET':
+        return render_template('how-nanite-works.html', pagetitle='How Nanite Works')
+
 @app.route('/stats')
 def pg_stats():
     return render_template('stats.html', pagetitle='Stats')
@@ -111,6 +130,13 @@ def pg_charts():
 @app.route('/project-options/<int:project_num>', methods=['POST'])
 def change_project_options(project_num): # for a single project
     #NOTE: project_num is available for use here, if updating by project ID instead of name
+    projectname = None
+    dailytarget = None
+    filepath = None
+    filetype = None
+    targetstartdate = None
+    targetenddate = None
+    wordcountgoal = None
 
     if request.method == 'POST':
         # First off: Update the word count
@@ -136,7 +162,7 @@ def change_project_options(project_num): # for a single project
         else:
             pass # ERROR #TODO handle this
 
-        if (projectname is not None) and (filepath is not None): # AND the others?
+        if all(v is not None for v in [projectname, dailytarget, filepath, filetype, targetstartdate, targetenddate, wordcountgoal]):
             # SEND THESE TO BACK END
             # TODO: this function currently just adds a new row, rather than updating the existing one
             # wordmeta_set(pr_id, projectname, targetwordcount, filepath, filetype, targetenddate)
@@ -144,7 +170,7 @@ def change_project_options(project_num): # for a single project
 
         ## DEBUGGING ##
         print('Function run: change_project_options: change details for a single existing project\n')
-        print(f'Submitted Values: {pr_id} | {projectname} | {filepath} | {filetype} | {wordcountgoal} | {wordcountreg} | {targetenddate}')
+        # print(f'Submitted Values: {pr_id} | {projectname} | {filepath} | {filetype} | {wordcountgoal} | {wordcountreg} | {targetenddate}')
         ## ##
         return redirect(request.referrer)
 

@@ -4,8 +4,10 @@
   <div id="main" class="main">   
 
     <div id="main-content" class="container">
-      <div class="nanite-welcome-image"></div>
-      <div class="nanite-welcome-text"><h1>Nanite</h1><p>Increase your writing productivity in a fun and engaging way.</p></div>
+      <div class="nanite-welcome-image">
+        <img src="{{url_for('static', filename='imgs/innovation_.svg')}}"/>
+      </div>
+      <div class="nanite-welcome-text"><h1>Nanite</h1><p class="font-med">Increase your writing productivity in a fun and engaging way.</p></div>
       <div class="nanite-start-button"><a role="button" class="btn" href={{url_for('pg_welcome')}}>Let's Get Started</a></div>
       <div class="skip"><a href={{url_for('pg_projects')}}>Skip to Projects</a></div>
     </div>

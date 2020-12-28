@@ -94,7 +94,7 @@ def filepull(project_path, filetype='txt', isDirectory=False):
             except:
                 print("error, docx files didn't read correctly")
         else:
-            print("error: filepull only accepts 'txt', 'rtf', & 'docx' filetypes)
+            print("error: filepull only accepts 'txt', 'rtf', & 'docx' filetypes")
 # Input is from front-end (name, target, path, filetype, and now deadline
 
 def wordmeta_set(name, target, path, filetype, start_date, deadline, goal):
@@ -317,7 +317,7 @@ def write_most_on(name):
 # Displays sidepane info easily
 def get_sidepane_info(name):
     #TODO: this gets info for one project, but (I understood that) the sidebar is meant to sum/average across projects
-    words = wordcount_pull(name)[-1]['Total Wordcount']
+    words = wordcount_pull(name)[-1]['Total Wordcount'] #TODO: this throws an error:  'NoneType' object is not subscriptable
     streak = wordstreak(name)
     day = write_most_on(name)
     info = {

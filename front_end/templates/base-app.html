@@ -9,6 +9,7 @@
         <p>Hi, <a id="username" class="username" href="/welcome">{{username}}</a>!</p>
         <h2>Insights</h2>
         <ul id="insights-list" class="insights-list">
+          <li class="insights-item">Current Project: <span class="metric">{{projectname}}</span></li>
           <li class="insights-item"><span class="metric">{{overall_total_words_written}}</span> words written</li>
           <li class="insights-item"><span class="metric">{{streak_length}}</span> day longest streak</li>
           <li class="insights-item">You write most on <span class="metric">{{weekday_most_writing}}</span></li>
@@ -28,7 +29,7 @@
               </ul>
             </li>
             <li class="nav-item">
-              {% include 'info-sidebar.html' %}
+              {% include 'sidebar-info-list.html' %}
             </li>
         </ul>
       </nav>

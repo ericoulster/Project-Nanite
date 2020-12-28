@@ -1,0 +1,10 @@
+{% extends 'base-onboarding.html' %}
+
+{% block content %}
+<h1>{{pagetitle}}</h1>
+<div id="main-content" class="container">
+    <div class="instruction-img" >     
+    <img src="{{url_for('static', filename='imgs/instruction_img.png')}}"/>
+  </div>
+</div>
+{% endblock %}

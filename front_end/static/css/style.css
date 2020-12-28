@@ -100,6 +100,18 @@
     /* font-size: large; */
 }
 
+.font-large {
+    font-size: 18px;
+}
+
+.font-med {
+    font-size: 16px;
+}
+
+.font-small {
+    font-size: 12px;
+}
+
 /* Buttons */
 
 a.btn {
@@ -144,9 +156,16 @@ ol li, ul li {
 }
 
 .home .nanite-welcome-image {
-    width: 300px;
+    margin-top: 10vh;
+}
+
+.home .nanite-welcome-image img {
+    width: 400px;
     height: 300px;
-    background: #cccccc;
+}
+
+.home .nanite-welcome-text {
+    width: 21rem;
 }
 
 .home div h1, .home div p {
@@ -155,7 +174,33 @@ ol li, ul li {
 
 /* Welcome Page */
 
-.instruction-img {
+.welcome-form {
+    display: flex;
+    justify-content: space-around;
+}
+
+.welcome-form form legend {
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.welcome-form form fieldset {
+    border: none;
+}
+
+.welcome-form form fieldset input {
+    display: block;
+}
+
+.welcome-form form input[type="submit"] {
+    margin-left: 0;
+}
+
+/* .welcome-form form input[name="username"] + input[type="submit"] {
+
+} */
+
+.instruction-img img {
     width:100%;
 }
 
