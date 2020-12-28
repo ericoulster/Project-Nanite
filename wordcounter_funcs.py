@@ -29,53 +29,72 @@ def wordcount(content):
 def filepull(project_path, filetype='txt', isDirectory=False):
     
     if isDirectory is False:
+        
         if filetype == 'txt':
-            filepath = os.path.join(project_path)
-            with open(filepath, "r", encoding='utf8') as file:
-                return file.read()
+            try:
+                filepath = os.path.join(project_path)
+                with open(filepath, "r", encoding='utf8') as file:
+                    return file.read()
+            except:
+                print("txt file failed to be read")
             
         elif filetype == 'rtf':
-            filepath = os.path.join(project_path)
-            with open(filepath, "r", encoding='utf8') as file:
-                rtf_file = file.read()
-                clean_file = rtf_to_text(rtf_file)
-                return clean_file
-                
-        elif filetype == 'docx':
-            filepath = os.path.join(project_path)
-            file = docx2txt.process(filepath)
-            return file
-
-        else:
-            print("error: filepull only accepts 'txt', 'rtf', & 'docx' as args")
-        
-    if isDirectory is True:
-        if filetype == 'txt':
-            file_list = []
-            for filepath in glob.glob(os.path.join(project_path, '*.' + str(filetype))):
-                with open(filepath, "r", encoding='utf8') as file:
-                    read_in = file.read()
-                    file_list.append(read_in)
-            merged_files = (" ").join(file_list)
-            return merged_files
-        
-        elif filetype == 'rtf':
-            file_list = []
-            for filepath in glob.glob(os.path.join(project_path, '*.' + str(filetype))):
+            try:
+                filepath = os.path.join(project_path)
                 with open(filepath, "r", encoding='utf8') as file:
                     rtf_file = file.read()
                     clean_file = rtf_to_text(rtf_file)
-                    file_list.append(clean_file)
-            merged_files = (" ").join(file_list)
-            return merged_files    
+                    return clean_file
+            except:
+                print("rtf file failed to be read")
+                
+        elif filetype == 'docx':
+            try:
+                filepath = os.path.join(project_path)
+                file = docx2txt.process(filepath)
+                return file
+            except:
+                print("docx file failed to be read")
+        else:
+            print("error: filepull only accepts 'txt', 'rtf', & 'docx' filetypes")
+        
+    if isDirectory is True:
+        if filetype == 'txt':
+            try:
+                file_list = []
+                for filepath in glob.glob(os.path.join(project_path, '*.' + str(filetype))):
+                    with open(filepath, "r", encoding='utf8') as file:
+                        read_in = file.read()
+                        file_list.append(read_in)
+                merged_files = (" ").join(file_list)
+                return merged_files
+            except:
+                print("error, txt files didn't read correctly")
+        
+        elif filetype == 'rtf':
+            try:
+                file_list = []
+                for filepath in glob.glob(os.path.join(project_path, '*.' + str(filetype))):
+                    with open(filepath, "r", encoding='utf8') as file:
+                        rtf_file = file.read()
+                        clean_file = rtf_to_text(rtf_file)
+                        file_list.append(clean_file)
+                merged_files = (" ").join(file_list)
+                return merged_files
+            except:
+                print("error, rtf files didn't read correctly")
         
         elif filetype == 'docx':
-            file_list = []
-            for filepath in glob.glob(os.path.join(project_path, '*.' + str(filetype))):
-                file_list = docx2txt.process(filepath)
-            merged_files = (" ").join(file_list)
-            return file_list
-
+            try:
+                file_list = []
+                for filepath in glob.glob(os.path.join(project_path, '*.' + str(filetype))):
+                    file_list = docx2txt.process(filepath)
+                merged_files = (" ").join(file_list)
+                return file_list
+            except:
+                print("error, docx files didn't read correctly")
+        else:
+            print("error: filepull only accepts 'txt', 'rtf', & 'docx' filetypes)
 # Input is from front-end (name, target, path, filetype, and now deadline
 
 def wordmeta_set(name, target, path, filetype, start_date, deadline, goal):
@@ -171,58 +190,67 @@ def wordmeta_pull(name):
 # Input is project name and daily wordcount, writes an update to the wordcount file
 
 def wordcount_update(name, wordcount):
-    #This produces a csv file with date, overall target and actual wordcount, and wants to update the actual wordcount (dailywords -> actual word count). Actual word count is collected by the back end and only displayed in the front.
-    timestamp = datetime.now().strftime("%d/%m/%Y - %X")
-    
-    if os.path.exists(str(name) + '_wordcount.csv') == False:
-        colnames = [str('Date'), str('Total Wordcount'), str('Session Wordcount'), str('Daily Target') ]
-        with open(str(name) + '_wordcount.csv', 'w', encoding='cp1252') as file:
-            filewriter = csv.writer(file)
-            filewriter.writerow(colnames)
-            file.close() #NOTE: BP: corrected AttributeError: '_csv.writer' object has no attribute 'close' by calling close on the file
-    else:
-        pass
-    # Used to grab regularly occuring daily target
-    meta_df = pd.read_csv('wordcount_meta.csv', index_col='Project Name')    
-    
-    df = pd.read_csv(str(name) + '_wordcount.csv')
-    
-    # session wordcount is this session subtracted by last session 
-    if df.empty is True:
-        session_wordcount = wordcount
-    else:
-        session_wordcount = wordcount - df.iloc[-1]['Total Wordcount']
-    
-    df = df.append({'Date': timestamp, 'Total Wordcount':wordcount, 'Session Wordcount': session_wordcount, 'Daily Target':meta_df.loc[name]['Daily Target']}, ignore_index=True)
-    df.to_csv(str(name) + '_wordcount.csv', index=False)
+    try:
+        #This produces a csv file with date, overall target and actual wordcount, and wants to update the actual wordcount (dailywords -> actual word count). Actual word count is collected by the back end and only displayed in the front.
+        timestamp = datetime.now().strftime("%d/%m/%Y - %X")
+        
+        if os.path.exists(str(name) + '_wordcount.csv') == False:
+            colnames = [str('Date'), str('Total Wordcount'), str('Session Wordcount'), str('Daily Target') ]
+            with open(str(name) + '_wordcount.csv', 'w', encoding='cp1252') as file:
+                filewriter = csv.writer(file)
+                filewriter.writerow(colnames)
+                filewriter.close()
+        else:
+            pass
+        # Used to grab regularly occuring daily target
+        meta_df = pd.read_csv('wordcount_meta.csv', index_col='Project Name')    
+        
+        df = pd.read_csv(str(name) + '_wordcount.csv')
+        
+        # session wordcount is this session subtracted by last session 
+        if df.empty is True:
+            session_wordcount = wordcount
+        else:
+            session_wordcount = wordcount - df.iloc[-1]['Total Wordcount']
+        
+        df = df.append({'Date': timestamp, 'Total Wordcount':wordcount, 'Session Wordcount': session_wordcount, 'Daily Target':meta_df.loc[name]['Daily Target']}, ignore_index=True)
+        df.to_csv(str(name) + '_wordcount.csv', index=False)
+    except:
+        print("wordcount failed to update")
 
 # Input is the old name (from system) and new name (input field). Changes name in back-end.
 
 def wordmeta_rename(name, new_name):
-    df = pd.read_csv('wordcount_meta.csv')
-    if df.empty is True:
-        pass
-    
-    elif df['Project Name'].str.match('^' + str(name) +'$').any() == True:
-        df['Project Name'] = np.where(df[['Project Name']] == str(name), str(new_name), df[['Project Name']])
-        df.to_csv('wordcount_meta.csv', index=False)
+    try:
+        df = pd.read_csv('wordcount_meta.csv')
+        if df.empty is True:
+            pass
         
-    else:
-        pass
+        elif df['Project Name'].str.match('^' + str(name) +'$').any() == True:
+            df['Project Name'] = np.where(df[['Project Name']] == str(name), str(new_name), df[['Project Name']])
+            df.to_csv('wordcount_meta.csv', index=False)
+            
+        else:
+            pass
+    except:
+        print("project failed to be renamed")
 
 # takes in name of project, deletes it.
 
 def project_delete(name):
-    df = pd.read_csv('wordcount_meta.csv', index_col='Project Name')
-    if df.empty is True:
-        pass
-    
-    elif df.index.str.match('^' + str(name) +'$').any() == True:
-        df = df.drop(labels=str(name), axis=0)
-        df.to_csv('wordcount_meta.csv', index=True)
-        os.remove(str(name) + '_wordcount.csv')
-    else:
-        pass
+    try:
+        df = pd.read_csv('wordcount_meta.csv', index_col='Project Name')
+        if df.empty is True:
+            pass
+        
+        elif df.index.str.match('^' + str(name) +'$').any() == True:
+            df = df.drop(labels=str(name), axis=0)
+            df.to_csv('wordcount_meta.csv', index=True)
+            os.remove(str(name) + '_wordcount.csv')
+        else:
+            pass
+    except:
+        print("project failed to delete")
         
         
 def daily_words_calculate(word_goal, goal_start_date, goal_finish_date):
@@ -253,24 +281,29 @@ def wordcount_pull(name):
 
 # takes project name, returns number of days wordstreak
 def wordstreak(name):
-    df = pd.read_csv(str(name) + '_wordcount.csv')
-    
-    if df.empty is True:
-        return 0
-    else:
-        df['Date'] = pd.to_datetime(df['Date'], format='%d/%m/%Y - %X').dt.date
+    try:
+        df = pd.read_csv(str(name) + '_wordcount.csv')
+        
+        if df.empty is True:
+            return 0
+        else:
+            df['Date'] = pd.to_datetime(df['Date'], format='%d/%m/%Y - %X').dt.date
 
-        # Max daily target, sum of Session Wordcount
-        df_g = df.groupby(['Date']).agg({'Session Wordcount':'sum', 'Daily Target':'last'})
-        # sort by df_g asc
-        df_g = df_g.sort_values(ascending=False, by='Date')
-        x = 0
-        for i in range(len(df_g)):
-            if df_g['Session Wordcount'][i] >= df_g['Daily Target'][i]:
-                x += 1
-            else:
-                return(x)
-                break
+            # Max daily target, sum of Session Wordcount
+            df_g = df.groupby(['Date']).agg({'Session Wordcount':'sum', 'Daily Target':'last'})
+            # sort by df_g asc
+            df_g = df_g.sort_values(ascending=False, by='Date')
+            x = 0
+            for i in range(len(df_g)):
+                if df_g['Session Wordcount'][i] >= df_g['Daily Target'][i]:
+                    x += 1
+                else:
+                    return(x)
+                    break
+    except:
+        print("wordstreak failed to be calculated")
+
+
     
 def write_most_on(name):
     # This is currently an average - but which metric to use introduces bias, worth discussing.
