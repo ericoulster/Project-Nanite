@@ -283,6 +283,7 @@ def write_most_on(name):
 
 # Displays sidepane info easily
 def get_sidepane_info(name):
+    #TODO: this gets info for one project, but (I understood that) the sidebar is meant to sum/average across projects
     words = wordcount_pull(name)[-1]['Total Wordcount']
     streak = wordstreak(name)
     day = write_most_on(name)
