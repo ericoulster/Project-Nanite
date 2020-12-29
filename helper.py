@@ -72,7 +72,11 @@ def get_project(**kwargs):
         else: # If there is a current_project_id
             p_id = int(p_id)
             projects = get_projects_list()
-            return projects[p_id] # returns a single project and its options
+            try:    
+                project = projects[p_id] # returns a single project and its options
+                return project
+            except:
+                return project_notfound
     elif 'p_name' in kwargs:
         # TODO: add finding project by name
         p_name = kwargs['p_name']

@@ -204,7 +204,44 @@ ol li, ul li {
     width:100%;
 }
 
-/* Project Options Page */
+/* Projects Page */
+
+.projects .greeting {
+    margin: 0.5rem 0px;
+}
+
+.projects .greeting p.username-greet {
+    font-weight: bold;
+}
+
+.projects .greeting p {
+    margin: 0.1rem;
+}
+
+.projects #main-content {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+}
+
+.projects #main-content > * {
+    min-width: 20rem;
+}
+
+
+.projects .project-form.new-project input[type="text"], .projects .project-form.new-project input[type="date"] {
+    display: block;
+}
+
+.projects .project-form.new-project fieldset {
+    border: none;
+    padding-left: 0;
+}
+
+.projects .project-form.new-project fieldset .writing-goal {
+    display: flex;
+}
+
 .project-form.existing-project .formfields {
     display: flex;
 }

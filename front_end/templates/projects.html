@@ -3,6 +3,11 @@
 {% block content %}
 <h1>{{pagetitle}}</h1>
 <div id="main-content" class="container">
+  {% if not hasprojects %}
+  <div class="greeting"><p class="username-greet">Hi, {{username}}!</p>
+    <p>Let's create your first project!</p>
+  </div>
+  {% endif %}
     <div id="projectslist" class="projectslist">
     {% for idx, project in projects %}
     <div id="project-{{idx}}">
@@ -71,22 +76,25 @@
   <div id="new-project">
     <form class="project-form new-project" action="/projects" method="post">
       <fieldset> 
-          <legend>Add a new project here:</legend>
-            <label>What's the name of your project?</label><input type="text" name="name" required><br/>
-            <label>File/folder Path:</label><input type="text" name="filepath" required><br/>
+          <legend class="hidden">Add a new project here:</legend>
+            <label>What's the name of your project?</label><input type="text" name="name" required>
+            <label>File/folder Path:</label><input type="text" name="filepath" required>
             <label>Files of type:</label>
             <select name="filetype" required>
               <option value="txt">txt</option>
               <option value="rtf">rtf</option>
               <option value="docx">docx</option>
             </select><br/>
-            <label>What's your writing goal?</label><input type="text" name="wordcountgoal" required> words            
-            <input type="radio" id="daily-new" name="wordcountreg" value="daily" required checked>
-            <label for="daily">Daily</label>
-            <input type="radio" id="total-new" name="wordcountreg" value="total" required>
-            <label for="total">Total</label><br/><br/>
-            <label>Start Date:</label><input type="date" name="targetstartdate" required><br/>
-            <label>Goal End Date:</label><input type="date" name="targetenddate" required><br/>
+            <label>What's your writing goal?</label>
+            <div class="writing-goal">
+              <input type="text" name="wordcountgoal" required> words            
+              <input type="radio" id="daily-new" name="wordcountreg" value="daily" required checked>
+              <label for="daily">Daily</label>
+              <input type="radio" id="total-new" name="wordcountreg" value="total" required>
+              <label for="total">Total</label>
+            </div>
+            <label>Start Date:</label><input type="date" name="targetstartdate" required>
+            <label>Goal End Date:</label><input type="date" name="targetenddate" required>
             <input type="submit" value="Add New Project">
       </fieldset> 
     </form>

@@ -21,7 +21,10 @@ def inject_menu_info():
     if p_id == False:
         info = {'words written':0, "day longest streak":0, "You write most on":'---'}
     else:
-        info = get_sidepane_info(current_project_name)
+        try: #TODO: fix this! had to do this to make the app usable when get_sidepane_info returns the indexing error
+            info = get_sidepane_info(current_project_name)
+        except:
+            info = {'words written':0, "day longest streak":0, "You write most on":'---'}
 
     if (username is None) or (username == ''):
         username = 'Writer'
@@ -50,6 +53,9 @@ def pg_projects():
     if request.method == 'GET':
         projectslist = get_projects_list() # This is still needed, as context processor is 'used up' on menu
         projects = enumerate(get_projects_list())
+        
+        hasprojects = True if projectslist else False # check if this has projects and pass on
+        
         # NOTE: one of the below may be useful for the project end dates
         # datetime.strptime(project.targetenddate,'%y%m%d').strftime("%d-%b-%Y")
         # datetime.strptime(project.targetenddate,'%y%m%d').strftime("%d-%b-%Y")
@@ -70,7 +76,7 @@ def pg_projects():
             
             WCtoday.append(wclastsession)
 
-        return render_template('projects.html', pagetitle='Projects', projects=projects, WCtoday=WCtoday, WCtotal=WCprojtotal)
+        return render_template('projects.html', pagetitle='Projects', hasprojects=hasprojects, projects=projects, WCtoday=WCtoday, WCtotal=WCprojtotal)
 
     elif request.method == 'POST': 
     # Add a new project
