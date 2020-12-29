@@ -17,6 +17,26 @@ r = re.compile(r'\w+')
 
 punctuation_strip = str.maketrans('', '', string.punctuation)
 
+# creates wordcount meta if none exists
+def wordcount_meta_check_create():
+    if os.path.exists('wordcount_meta.csv') == False:
+        
+        try:
+            colnames = [str('Project Name'), 
+                        str('Daily Target'), 
+                        str('Project Path'), 
+                        str('Filetype'),
+                        str('Start Date'),
+                        str('Deadline'),
+                        str('Wordcount Goal')]
+            with open('wordcount_meta.csv', 'w', encoding='cp1252') as file:
+                    filewriter = csv.writer(file)
+                    filewriter.writerow(colnames)
+                    filewriter.close()
+        except:
+            print("error, wordcount_meta was not found, and nanite could not create it.")
+    else:
+        pass
 
 # input is words, returns a wordcount
 def wordcount(content):
@@ -100,26 +120,7 @@ def filepull(project_path, filetype='txt', isDirectory=False):
 def wordmeta_set(name, target, path, filetype, start_date, deadline, goal):
     
     # creates wordcount meta if none exists.
-    if os.path.exists('wordcount_meta.csv') == False:
-        
-        try:
-            colnames = [str('Project Name'), 
-                        str('Daily Target'), 
-                        str('Project Path'), 
-                        str('Filetype'),
-                        str('Start Date'),
-                        str('Deadline'),
-                        str('Wordcount Goal')]
-            with open('wordcount_meta.csv', 'w', encoding='cp1252') as file:
-                    filewriter = csv.writer(file)
-                    filewriter.writerow(colnames)
-                    filewriter.close()
-        except:
-            print("error, wordcount_meta was not found, and nanite could not create it.")
-    else:
-        pass
-
-    
+    wordcount_meta_check_create()
     
     # try to read wordcount meta csv
     try:    
@@ -171,10 +172,18 @@ def wordmeta_set(name, target, path, filetype, start_date, deadline, goal):
 
 def wordmeta_pull_all():
     # BP NOTE: added this function 
+
+    # creates wordcount meta if none exists.
+    wordcount_meta_check_create()
+
     df = pd.read_csv('wordcount_meta.csv', index_col='Project Name')
     return df.to_dict(orient='index')
 
 def wordmeta_pull(name):
+
+    # creates wordcount meta if none exists.
+    wordcount_meta_check_create()
+
     df = pd.read_csv('wordcount_meta.csv', index_col='Project Name')
     
     if df.index.str.match('^' + str(name) +'$').any() == True:
