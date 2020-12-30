@@ -206,6 +206,23 @@ ol li, ul li {
 
 /* Projects Page */
 
+.projects #main-content {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+}
+
+.projects #main-content > * {
+    width: 30rem;
+}
+
+.projects #main-content button.new-project {
+    width: fit-content;
+    background-color: #ffffff;
+    color: #074EE8;
+    border: 3px solid #074EE8;
+}
+
 .projects .greeting {
     margin: 0.5rem 0px;
 }
@@ -215,35 +232,71 @@ ol li, ul li {
 }
 
 .projects .greeting p {
-    margin: 0.1rem;
+    margin: 0.5rem 0px;
 }
-
-.projects #main-content {
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: center;
-}
-
-.projects #main-content > * {
-    min-width: 20rem;
-}
-
 
 .projects .project-form.new-project input[type="text"], .projects .project-form.new-project input[type="date"] {
     display: block;
+    margin-right: 1rem;
 }
 
 .projects .project-form.new-project fieldset {
     border: none;
     padding-left: 0;
+    display: flex;
+    flex-flow: column;
+}
+
+.projects .project-form.new-project fieldset input, .projects .project-form.new-project fieldset select {
+    max-width: 80%;
+}
+
+.projects .project-form.new-project fieldset input[type="text"] {
+    border-color: #aaaaaa;
+    border-radius: 5px;
+}
+
+.projects .project-form.new-project fieldset > label {
+    line-height: 2rem;
 }
 
 .projects .project-form.new-project fieldset .writing-goal {
     display: flex;
 }
 
+.projects .project-form.new-project fieldset .writing-goal .radio-buttons {
+    margin: 0px 1rem;
+}
+
+.projects .project-form.new-project fieldset .writing-goal .radio-buttons input[type="radio"] {
+    display: none;
+}
+
+.projects .project-form.new-project fieldset .writing-goal .radio-buttons label {
+    cursor: pointer;
+    color: #074EE8;
+    display: inline-block;
+    width: 4rem;
+    border: solid 2px #074EE8;
+    text-align: center;
+}
+
+.projects .project-form.new-project fieldset .writing-goal .radio-buttons input[type="radio"]:checked + label {
+    color: #ffffff;
+    background: #074EE8;
+}
+
+.projects .project-form.new-project input[type="submit"] {
+    width: fit-content;
+    margin-left: 0rem;
+}
+
 .project-form.existing-project .formfields {
     display: flex;
+}
+
+.projects .projectslist progress {
+    width: 100%;
 }
 
 .project-actions {

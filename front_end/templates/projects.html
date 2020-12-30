@@ -7,13 +7,44 @@
   <div class="greeting"><p class="username-greet">Hi, {{username}}!</p>
     <p>Let's create your first project!</p>
   </div>
+  {% else %}
+  <button class="new-project" onclick="np = document.querySelector('#new-project').classList.toggle('hidden');">+ New Project</button>
   {% endif %}
+  <div id="new-project" {% if not hasprojects %} class="" {% else %} class="hidden" {% endif %}>
+    <form class="project-form new-project" action="/projects" method="post">
+      <fieldset> 
+          <legend class="hidden">Add a new project here:</legend>
+            <label>What's the name of your project?</label><input type="text" name="name" required>
+            <label>File/folder Path:</label><input type="text" name="filepath" required>
+            <label>Files of type:</label>
+            <select name="filetype" required>
+              <option value="txt">txt</option>
+              <option value="rtf">rtf</option>
+              <option value="docx">docx</option>
+            </select>
+            <label>What's your writing goal?</label>
+            <div class="writing-goal">
+              <input type="text" name="wordcountgoal" required> words            
+              <div class="radio-buttons">
+                <input type="radio" id="daily-new" name="wordcountreg" value="daily" required checked>
+                <label for="daily-new">Daily</label>
+                <input type="radio" id="total-new" name="wordcountreg" value="total" required>
+                <label for="total-new">Total</label>
+              </div>
+            </div>
+            <label>Start Date:</label><input type="date" name="targetstartdate" required>
+            <label>Goal End Date:</label><input type="date" name="targetenddate" required>
+            <input type="submit" value="Add New Project">
+      </fieldset> 
+    </form>
+  </div>
+
     <div id="projectslist" class="projectslist">
     {% for idx, project in projects %}
     <div id="project-{{idx}}">
       <h2>{{ project.name }}</h2>
       <p>Today you've written {{WCtoday[idx]}} / {{project.todaystargetwordcount}} words, which brings you to {{WCtotal[idx]}} / {{project.wordcountgoal}} words towards this project overall. </p>
-      <label for="project-progress">Project progress:</label>
+      <label for="project-progress">Writing Goal: {{project.wordcountgoal}} Total Words</label>
       <progress id="project-progress" value="{{WCtotal[idx]}}" max="{{project.wordcountgoal}}"> {{WCtotal[idx] / project.wordcountgoal}} </progress>
       <form id="project-{{idx}}-form" action="/project-options/{{idx}}" method="POST" class="project-form existing-project">
         <div class="formfields">
@@ -34,9 +65,9 @@
                 <label>Word Count Goal:</label><input type="text" name="wordcountgoal" value="{{ project.wordcountgoal }}" class="formfield" required disabled> words
                 <div class="regularity selection" style="display:inline-block;">
                   <input type="radio" id="daily-{{idx}}" name="wordcountreg" value="daily" class="formfield" required disabled>
-                  <label for="daily">Daily</label>
+                  <label for="daily-{{idx}}">Daily</label>
                   <input type="radio" id="total-{{idx}}" name="wordcountreg" value="total" class="formfield" required checked disabled>
-                  <label for="total">Total</label>
+                  <label for="total-{{idx}}">Total</label>
                 </div>
                 <br/>
                 <label>Start Date:</label><input type="date" name="targetstartdate" value="{{ project.targetstartdate }}" class="formfield" required disabled><br/>
@@ -72,32 +103,5 @@
     </div>
   {% endfor %}
   </div>
-
-  <div id="new-project">
-    <form class="project-form new-project" action="/projects" method="post">
-      <fieldset> 
-          <legend class="hidden">Add a new project here:</legend>
-            <label>What's the name of your project?</label><input type="text" name="name" required>
-            <label>File/folder Path:</label><input type="text" name="filepath" required>
-            <label>Files of type:</label>
-            <select name="filetype" required>
-              <option value="txt">txt</option>
-              <option value="rtf">rtf</option>
-              <option value="docx">docx</option>
-            </select><br/>
-            <label>What's your writing goal?</label>
-            <div class="writing-goal">
-              <input type="text" name="wordcountgoal" required> words            
-              <input type="radio" id="daily-new" name="wordcountreg" value="daily" required checked>
-              <label for="daily">Daily</label>
-              <input type="radio" id="total-new" name="wordcountreg" value="total" required>
-              <label for="total">Total</label>
-            </div>
-            <label>Start Date:</label><input type="date" name="targetstartdate" required>
-            <label>Goal End Date:</label><input type="date" name="targetenddate" required>
-            <input type="submit" value="Add New Project">
-      </fieldset> 
-    </form>
-  </div>  
 </div>
 {% endblock %}
