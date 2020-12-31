@@ -97,7 +97,7 @@
           </form>
             <button class="debug" onclick="alert(document.cookie);">Cookie Alert</button>
             <button onclick="m = document.querySelector('.modal-{{idx}}'); m.classList.toggle('hidden');">Rename Project</button>
-            <button onclick="pr = document.querySelectorAll('div#project-{{idx}} > form#project-{{idx}}-form .formfield'); pr.forEach(function(x){x.toggleAttribute('disabled');}); document.querySelector('#project-{{idx}}-form > input[type=\'submit\']').classList.toggle('hidden');">Edit Project</button>
+            <button onclick="pr = document.querySelectorAll('div#project-{{idx}} form#project-{{idx}}-form .formfield'); pr.forEach(function(x){x.toggleAttribute('disabled');}); document.querySelector('#project-{{idx}}-form > input[type=\'submit\']').classList.toggle('hidden');">Edit Project</button>
           <form action = "/project-options/{{idx}}/del" method = "POST">
               <input type="text" name="name" value="{{ project.name }}" class="formfield" required hidden>
               <input type="submit" value="Delete Project">
