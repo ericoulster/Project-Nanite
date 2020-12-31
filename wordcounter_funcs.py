@@ -337,3 +337,11 @@ def get_sidepane_info(name):
         'words written':words, "day longest streak":streak, "You write most on":str(day)[2:-2]
     }
     return info
+
+def get_file_path_gui(isDirectory=False):
+    if isDirectory=True:
+        path = easygui.fileopenbox()
+        return path
+    else:
+        path = easygui.diropenbox()
+        return path
