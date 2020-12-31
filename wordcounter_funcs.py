@@ -241,6 +241,7 @@ def wordmeta_rename(name, new_name):
             
         else:
             pass
+        os.rename(str(name) + '_wordcount.csv',str(new_name) + '_wordcount.csv')
     except:
         print("project failed to be renamed")
 

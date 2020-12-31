@@ -200,20 +200,45 @@ ol li, ul li {
 
 } */
 
+
+/* How Nanite Works Page */
+
+
 .instruction-img img {
     width:100%;
+}
+
+.how-nanite-works p.headline {
+    font-weight: bold;
+}
+
+.how-nanite-works .panels {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.how-nanite-works .panels .panel {
+    flex-basis: 170px;
+    flex-grow: 1;
+}
+
+.how-nanite-works .panels .panel p {
+    margin: 0;
+    text-align: center;
+    font-size: small;
 }
 
 /* Projects Page */
 
 .projects #main-content {
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: center;
+    /* display: flex; */
+    /* flex-flow: column nowrap; */
+    /* align-items: center; */
 }
 
 .projects #main-content > * {
-    width: 30rem;
+    /* width: 30rem; */
 }
 
 .projects #main-content button.new-project {
@@ -233,6 +258,11 @@ ol li, ul li {
 
 .projects .greeting p {
     margin: 0.5rem 0px;
+}
+
+.projects .new-project-form-container {
+    width: 30rem;
+    margin: 0 auto;
 }
 
 .projects .project-form.new-project input[type="text"], .projects .project-form.new-project input[type="date"] {

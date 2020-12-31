@@ -10,7 +10,7 @@
   {% else %}
   <button class="new-project" onclick="np = document.querySelector('#new-project').classList.toggle('hidden');">+ New Project</button>
   {% endif %}
-  <div id="new-project" {% if not hasprojects %} class="" {% else %} class="hidden" {% endif %}>
+  <div id="new-project" class="new-project-form-container {% if hasprojects %}hidden{% endif %}">
     <form class="project-form new-project" action="/projects" method="post">
       <fieldset> 
           <legend class="hidden">Add a new project here:</legend>

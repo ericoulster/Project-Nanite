@@ -2,7 +2,9 @@
 
 {% block body_open_sidebar %}
 <body class="{{pagetitle.lower().replace(' ', '-')}} grid-container"></body> 
-  <div id="nav" class="leftside sidebar">
+<div id="left-sidebar" class="leftside sidebar">
+  <div id="left-sidebar-content" class="content">
+    <div class="logo"><a href="/">Nanite</a></div>
       <nav>
           <ul class="navbar">
             <li class="nav-item">
@@ -14,5 +16,6 @@
           </ul>
       </nav>
     </div>
+  </div>
 {% endblock %}
   
