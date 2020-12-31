@@ -145,6 +145,26 @@ ol li, ul li {
     transition: visibility, opacity, height 0.5s;
 }
 
+/* Flexbox Panels */
+.panels {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.panels .panel {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    flex-basis: 170px;
+    flex-grow: 1;
+}
+
+.panels .panel p {
+    margin: 0;
+    text-align: center;
+    font-size: small;
+}
 
 /* /// Page Styles /// */
 /* Home Page */
@@ -325,8 +345,22 @@ ol li, ul li {
     display: flex;
 }
 
+.projects .projectslist .projects-item + .projects-item {
+    margin-top: 1rem;
+}
+
+
 .projects .projectslist progress {
     width: 100%;
+}
+
+.projects .project-summary {
+    border: 3px solid #cccccc;
+}
+
+
+.projects .project-summary h2 {
+    text-align: center;
 }
 
 .project-actions {
