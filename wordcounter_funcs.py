@@ -47,6 +47,9 @@ def wordcount(content):
 
 # input is project's path, the filetype, and whether it is one file or multiple
 def filepull(project_path, filetype='txt', isDirectory=False):
+    # assigning to a raw string
+    project_path = r'{}'.format(project_path)
+
     
     if isDirectory is False:
         
