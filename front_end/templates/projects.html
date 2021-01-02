@@ -7,38 +7,42 @@
   <div class="greeting"><p class="username-greet">Hi, {{username}}!</p>
     <p>Let's create your first project!</p>
   </div>
-  {% else %}
-  <button class="new-project" onclick="np = document.querySelector('#new-project').classList.toggle('hidden');">+ New Project</button>
   {% endif %}
-  <div id="new-project" class="new-project-form-container {% if hasprojects %}hidden{% endif %}">
-    <form class="project-form new-project" action="/projects" method="post">
-      <fieldset> 
-          <legend class="hidden">Add a new project here:</legend>
-            <label>What's the name of your project?</label><input type="text" name="name" required>
-            <label>File/folder Path: <span style="font-size: smaller;">Use '/' not '\'</span></label><input type="text" name="filepath" placeholder="C:/filepath/Filename.txt" required>
-            <label>Files of type:</label>
-            <select name="filetype" required>
-              <option value="txt">txt</option>
-              <option value="rtf">rtf</option>
-              <option value="docx">docx</option>
-            </select>
-            <label>What's your writing goal?</label>
-            <div class="writing-goal">
-              <input type="text" name="wordcountgoal" required> words            
-              <div class="radio-buttons">
-                <input type="radio" id="daily-new" name="wordcountreg" value="daily" required checked>
-                <label for="daily-new">Daily</label>
-                <input type="radio" id="total-new" name="wordcountreg" value="total" required>
-                <label for="total-new">Total</label>
+  {% with %}
+    {% set modal_header_text = 'New Project' %}
+    {% set modal_trigger_text = '+ New Project' %}
+    {% set modal_trigger_classes = 'new-project' %}
+    {% set close_button_text = 'Cancel' %}
+    {% set modal_contents_html = '<div id="new-project" class="new-project-form-container {% if hasprojects %}hidden{% endif %}">
+      <form class="project-form new-project" action="/projects" method="post">
+        <fieldset> 
+            <legend class="hidden">Add a new project here:</legend>
+              <label>What\'s the name of your project?</label><input type="text" name="name" required>
+              <label>File/folder Path: <span style="font-size: smaller;">Use / not \</span></label><input type="text" name="filepath" placeholder="C:/filepath/Filename.txt" required>
+              <label>Files of type:</label>
+              <select name="filetype" required>
+                <option value="txt">txt</option>
+                <option value="rtf">rtf</option>
+                <option value="docx">docx</option>
+              </select>
+              <label>What\'s your writing goal?</label>
+              <div class="writing-goal">
+                <input type="text" name="wordcountgoal" required> words            
+                <div class="radio-buttons">
+                  <input type="radio" id="daily-new" name="wordcountreg" value="daily" required checked>
+                  <label for="daily-new">Daily</label>
+                  <input type="radio" id="total-new" name="wordcountreg" value="total" required>
+                  <label for="total-new">Total</label>
+                </div>
               </div>
-            </div>
-            <label>Start Date:</label><input type="date" name="targetstartdate" required>
-            <label>Goal End Date:</label><input type="date" name="targetenddate" required>
-            <input type="submit" value="Add New Project">
-      </fieldset> 
-    </form>
-  </div>
-
+              <label>Start Date:</label><input type="date" name="targetstartdate" required>
+              <label>Goal End Date:</label><input type="date" name="targetenddate" required>
+              <input type="submit" value="Add New Project">
+        </fieldset> 
+      </form>
+    </div>'|safe %}
+    {% include 'modal.html' %}
+  {% endwith %}
     <div id="projectslist" class="projectslist">
     {% for idx, project in projects %}
     <div id="project-{{idx}}" class="projects-item">

@@ -318,6 +318,27 @@ def wordstreak(name):
         print("wordstreak failed to be calculated")
 
 
+# takes project name, returns number of words written on the last day
+def wordcount_last_day(name):
+    #TODO: review this function
+    try:
+        df = pd.read_csv(str(name) + '_wordcount.csv')
+        
+        if df.empty is True:
+            return 0
+        else:
+            df['Date'] = pd.to_datetime(df['Date'], format='%d/%m/%Y - %X').dt.date
+
+            # Max daily target, sum of Session Wordcount
+            df_g = df.groupby(['Date']).agg({'Session Wordcount':'sum', 'Daily Target':'last'})
+            # sort by df_g asc
+            df_g = df_g.sort_values(ascending=True, by='Date')
+            # return last
+            return df_g['Session Wordcount'][-1]
+    except:
+        print("wordcount failed to be calculated")
+        return 0
+
     
 def write_most_on(name):
     # This is currently an average - but which metric to use introduces bias, worth discussing.

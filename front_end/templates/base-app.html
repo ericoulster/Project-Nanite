@@ -24,7 +24,7 @@
               <a class="nav-link" href="/projects">Projects</a>
               <ul id="projects-list-sidebar">
                 {% for idx, project in menuprojects %}
-                <li class="nav-item nav-sub-item"><a class="nav-link" href="#">{{project['name']}}</a></li>
+                <li class="nav-item nav-sub-item"><a class="nav-link" href="/projects/{{idx}}">{{project['name']}}</a></li>
                 {% endfor %}
               </ul>
             </li>

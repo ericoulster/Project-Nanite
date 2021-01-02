@@ -3,11 +3,11 @@
 ####################################### 
 
 from flask        import render_template
-from flask        import request, redirect, url_for, make_response
+from flask        import request, redirect, url_for, make_response, Markup
 from math         import ceil
 from datetime     import datetime
 
-from wordcounter_funcs import wordmeta_set, wordcount, filepull, wordcount_update, project_delete, wordmeta_rename, wordmeta_pull, wordmeta_pull_all, daily_words_calculate, word_goal_calculate, wordcount_pull, get_sidepane_info, get_file_path_gui
+from wordcounter_funcs import wordmeta_set, wordcount, filepull, wordcount_update, project_delete, wordmeta_rename, wordmeta_pull, wordmeta_pull_all, daily_words_calculate, word_goal_calculate, wordcount_pull, get_sidepane_info, wordstreak, wordcount_last_day
 from helper            import get_projects_list, get_projects_list, get_project, get_current_project_id, check_and_extract
 from front_end         import app
 
@@ -52,7 +52,7 @@ def test():
     # os.system('test.py') # Doesn't work
     # exec(open("./test.py").read()) # Doesn't work
 
-    return render_template('modaltest.html', pagetitle='Test')
+    return render_template('modaltest.html', pagetitle='Test' )
     #return ""
 
 @app.route('/')
@@ -140,16 +140,27 @@ def pg_instructions():
     if request.method == 'GET':
         return render_template('how-nanite-works.html', pagetitle='How Nanite Works')
 
-@app.route('/stats')
-def pg_stats():
-    return render_template('stats.html', pagetitle='Stats')
+@app.route('/projects/<int:project_num>', methods=['GET'])
+def pg_stats(project_num):
+    if request.method == 'GET':
+        project = get_project(p_id=project_num)
+        streak = wordstreak(project['name'])
+        lastwc = wordcount_last_day(project['name'])
+        try:
+            isDirectory = not project['filepath'].split(".")[-1]==project['filetype'] #TODO: refine? This is detecting if this is a directory (or a file) by comparing the end of the file path to the filetype
+            wc = wordcount(filepull(project['filepath'], project['filetype'], isDirectory)) #  #TODO pick up directory (or not) from project
+        except:
+            wc = 0
+            pass # TODO error handle this
+        print(project)
+        return render_template('stats.html', pagetitle='Stats', project = project, WCtotal = wc, streak = streak, lastWordCount = lastwc)
 
 @app.route('/charts')
 def pg_charts():
     return render_template('charts.html', pagetitle='Charts')
 
 
-#### CHANGES TO INDIVIDUAL PROJECTS ####
+#### CHANGES AND DETAILS OF INDIVIDUAL PROJECTS ####
 
 @app.route('/project-options/<int:project_num>', methods=['POST'])
 def change_project_options(project_num): # for a single project
@@ -224,7 +235,7 @@ def rename_project(project_num): # Rename a single project
     ## ##
     return redirect(request.referrer)
 
-@app.route('/stats-single')
+@app.route('/stats-single', methods=['GET'])
 def pg_single_stats():
     # Get Current project
     current_project_id = get_current_project_id() #returns a full string, or False

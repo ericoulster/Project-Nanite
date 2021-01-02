@@ -9,14 +9,13 @@
 /* /// Sitewide Styles /// */
 /* Layout: Grid */
 .grid-container {
+    height: 100vh;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
     gap: 0px 0px;
     grid-template-areas:
-      "leftside main main main"
-      ". . . ."
-      ". . . .";
+      "leftside main main main";
   }
   .leftside { grid-area: leftside; background-color: #cccccc; }
   .main { grid-area: main; padding-left: 1rem; padding-right: 1rem;}
@@ -26,7 +25,7 @@
   .grid-container {
     display: -ms-grid;
     -ms-grid-columns: 1fr 1fr 1fr 1fr;
-    -ms-grid-rows: 1fr 1fr 1fr;
+    -ms-grid-rows: 1fr;
     gap: 0px 0px;
   }
   
@@ -171,7 +170,7 @@ ol li, ul li {
 \**************************/
 
 .modal {
-    font-family: -apple-system,BlinkMacSystemFont,avenir next,avenir,helvetica neue,helvetica,ubuntu,roboto,noto,segoe ui,arial,sans-serif;
+    /* font-family: -apple-system,BlinkMacSystemFont,avenir next,avenir,helvetica neue,helvetica,ubuntu,roboto,noto,segoe ui,arial,sans-serif; */
   }
   
   .modal__overlay {
@@ -188,7 +187,7 @@ ol li, ul li {
   
   .modal__container {
     background-color: #fff;
-    padding: 30px;
+    padding: 15px;
     max-width: 500px;
     max-height: 100vh;
     border-radius: 4px;
@@ -208,7 +207,8 @@ ol li, ul li {
     font-weight: 600;
     font-size: 1.25rem;
     line-height: 1.25;
-    color: #00449e;
+    text-align: center;
+    color: #000000;
     box-sizing: border-box;
   }
   
@@ -217,7 +217,10 @@ ol li, ul li {
     border: 0;
   }
   
-  .modal__header .modal__close:before { content: "\2715"; }
+  .modal__header .modal__close:before { 
+      content: "\2715"; 
+      color: black;
+    }
   
   .modal__content {
     margin-top: 2rem;
@@ -260,7 +263,7 @@ ol li, ul li {
   }
   
   .modal__btn-primary {
-    background-color: #00449e;
+    background-color: #074EE8;
     color: #fff;
   }
   
