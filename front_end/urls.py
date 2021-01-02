@@ -115,7 +115,7 @@ def pg_projects():
 
         # SEND THESE TO BACK END
         # wordmeta_set(pr_id, projectname, targetwordcount, filepath, filetype, targetenddate)
-        isDirectory = not project['filepath'][-3:]==project['filetype'] #TODO: refine? This is detecting if this is a directory (or a file) by comparing the end of the file path to the filetype
+        isDirectory = not filepath[-3:]==filetype #TODO: refine? This is detecting if this is a directory (or a file) by comparing the end of the file path to the filetype
         wc = wordcount(filepull(filepath, filetype, isDirectory))
         #TODO: 1. Check if there is a file first?  2. pick up directory (or not) from project
         
