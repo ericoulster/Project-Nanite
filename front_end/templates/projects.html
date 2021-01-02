@@ -61,7 +61,8 @@
                 <input type="text" name="name" value="{{ project.name }}" class="formfield" hidden required disabled>
                 <label>File/folder Path:</label><input type="text" name="filepath" value="{{ project.filepath }}" class="formfield" required disabled><br/>
                 <label>Files of type:</label>
-                  <select name="filetype" selected="{{ project.filetype }}" class="formfield" required disabled>
+                  <select name="filetype" class="formfield" required disabled>
+                    <option value="" selected hidden>{{ project.filetype }}</option>
                     <option value="txt">txt</option>
                     <option value="rtf">rtf</option>
                     <option value="docx">docx</option>

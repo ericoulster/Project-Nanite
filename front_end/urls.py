@@ -7,9 +7,12 @@ from flask        import request, redirect, url_for, make_response
 from math         import ceil
 from datetime     import datetime
 
-from wordcounter_funcs import wordmeta_set, wordcount, filepull, wordcount_update, project_delete, wordmeta_rename, wordmeta_pull, wordmeta_pull_all, daily_words_calculate, word_goal_calculate, wordcount_pull, get_sidepane_info
+from wordcounter_funcs import wordmeta_set, wordcount, filepull, wordcount_update, project_delete, wordmeta_rename, wordmeta_pull, wordmeta_pull_all, daily_words_calculate, word_goal_calculate, wordcount_pull, get_sidepane_info, get_file_path_gui
 from helper            import get_projects_list, get_projects_list, get_project, get_current_project_id, check_and_extract
 from front_end         import app
+
+# from subprocess   import call
+# import os
 
 #### CONTEXT PROCESSORS ####
 @app.context_processor
@@ -42,7 +45,15 @@ def test():
     #a = wordcount_pull('Back 2 DF')
     #print(a)
     #print(wordmeta_pull_all())
-    return " "
+    # script = '<script>var xhttp = new XMLHttpRequest(); xhttp.open("GET", "/test.py", true); xhttp.send();</script>'
+    # path = get_file_path_gui() # Doesn't work
+    # print(path)
+    # call(['python', 'test.py']) # Doesn't work
+    # os.system('test.py') # Doesn't work
+    # exec(open("./test.py").read()) # Doesn't work
+
+    return render_template('modaltest.html', pagetitle='Test')
+    #return ""
 
 @app.route('/')
 def index():
@@ -65,7 +76,11 @@ def pg_projects():
 
         # TODO: test this script below
         for project in projectslist:
-            wc = wordcount(filepull(project['filepath'], project['filetype'], isDirectory=False)) #  #TODO pick up directory (or not) from project
+            try:    
+                isDirectory = not project['filepath'][-3:]==project['filetype'] #TODO: refine? This is detecting if this is a directory (or a file) by comparing the end of the file path to the filetype
+                wc = wordcount(filepull(project['filepath'], project['filetype'], isDirectory)) #  #TODO pick up directory (or not) from project
+            except:
+                pass # TODO error handle this
             wc_pull = wordcount_pull(project['name'])
             WCprojtotal.append(wc)
 
@@ -100,10 +115,11 @@ def pg_projects():
 
         # SEND THESE TO BACK END
         # wordmeta_set(pr_id, projectname, targetwordcount, filepath, filetype, targetenddate)
-        wc = wordcount(filepull(filepath, filetype, isDirectory=False))
+        isDirectory = not project['filepath'][-3:]==project['filetype'] #TODO: refine? This is detecting if this is a directory (or a file) by comparing the end of the file path to the filetype
+        wc = wordcount(filepull(filepath, filetype, isDirectory))
         #TODO: 1. Check if there is a file first?  2. pick up directory (or not) from project
         
-        wordmeta_set(projectname, dailytarget, filepath, filetype, targetstartdate, targetenddate, wordcountgoal)
+        wordmeta_set(projectname, dailytarget, filepath, filetype, targetstartdate, targetenddate, wordcountgoal)  
         wordcount_update(name = projectname, wordcount = wc)
 
         ## DEBUGGING ##
@@ -145,11 +161,15 @@ def change_project_options(project_num): # for a single project
     wordcountgoal = None
 
     if request.method == 'POST':
-        # First off: Update the word count
+        # First off: Try to update the word count
         projectname = check_and_extract('name', request.form)
         project = get_project(p_name = projectname) # search for project
-        dailywords= wordcount(filepull(project['filepath'], filetype='txt', isDirectory=False)) #TODO pick up filetype and directory from project
-        wordcount_update(projectname, dailywords)
+        isDirectory = not project['filepath'][-3:]==project['filetype'] #TODO: refine? This is detecting if this is a directory (or a file) by comparing the end of the file path to the filetype
+        try:
+            dailywords= wordcount(filepull(project['filepath'], project['filetype'], isDirectory)) 
+            wordcount_update(projectname, dailywords)
+        except:
+            pass # ERROR #TODO handle this
         
         # Then, check if anything else needs changing (via the form submission)
         pr_id = check_and_extract('projectid', request.form)

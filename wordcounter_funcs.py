@@ -4,6 +4,7 @@ import string
 import re
 import fileinput
 import csv
+import easygui
 from datetime import date, datetime
 from math import ceil
 
@@ -339,7 +340,7 @@ def get_sidepane_info(name):
     return info
 
 def get_file_path_gui(isDirectory=False):
-    if isDirectory=True:
+    if isDirectory == True:
         path = easygui.fileopenbox()
         return path
     else:
