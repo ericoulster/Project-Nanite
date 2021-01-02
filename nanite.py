@@ -8,4 +8,4 @@ PORT='5000'
 
 if __name__ == '__main__':
     # app.run(host=HOST, port=PORT,)
-    app.run(host=HOST, port=PORT, debug=True)
+    app.run(host=HOST, port=PORT, debug=False)
