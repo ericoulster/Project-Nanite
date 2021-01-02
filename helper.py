@@ -5,7 +5,6 @@
 from flask             import request
 
 from wordcounter_funcs import wordmeta_pull, wordmeta_pull_all
-from sample_data       import dummy_projects
 
 def get_current_project_id():
     currentproject = request.cookies.get('currentproject')
@@ -16,7 +15,7 @@ def get_current_project_id():
     return currentproject
 
 
-def get_projects_dict(): # for all projects
+#def get_projects_dict(): # for all projects
     # TODO: defunct function??
     # Function [[receives JSON from API OR receives variables??]] and outputs as a dict
     
@@ -27,14 +26,14 @@ def get_projects_dict(): # for all projects
 
     #### Reading from CSV using wordcounter_funcs below
 
-    projects = dummy_projects() # keeping the dummy for testing purposes
+    # projects = dummy_projects() # keeping the dummy for testing purposes
 
     # out = wordmeta_pull('Alice in Project Land')
     # print(out)
     # RETURNS: {'Filetype': {'Alice in Project Land': 'txt'}, 'Latest Target': {'Alice in Project Land': 2000}, 'Project Path': {'Alice in Project Land': 'C:/Dummy/File/Path.txt'}, 'Deadline': {'Alice in Project Land': 210331}}
     # TODO: ?????
 
-    return projects
+#    return projects
 
 def get_projects_list():
     # Return list of projects using wordmeta_pull_all() (each project in the output list is a dict)

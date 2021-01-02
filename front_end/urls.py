@@ -76,13 +76,14 @@ def pg_projects():
 
         # TODO: test this script below
         for project in projectslist:
-            try:    
-                isDirectory = not project['filepath'][-3:]==project['filetype'] #TODO: refine? This is detecting if this is a directory (or a file) by comparing the end of the file path to the filetype
+            try:
+                isDirectory = not project['filepath'].split(".")[-1]==project['filetype']    
+                # isDirectory = not project['filepath'][-3:]==project['filetype'] #TODO: refine? This is detecting if this is a directory (or a file) by comparing the end of the file path to the filetype
                 wc = wordcount(filepull(project['filepath'], project['filetype'], isDirectory)) #  #TODO pick up directory (or not) from project
+                wc_pull = wordcount_pull(project['name'])
+                WCprojtotal.append(wc)
             except:
                 pass # TODO error handle this
-            wc_pull = wordcount_pull(project['name'])
-            WCprojtotal.append(wc)
 
             try:
                 wclastsession = wc_pull[-1]['Session Wordcount'] #TODO THIS IS THE WORDCOUNT FROM THE LAST SESSION, SHOULD BE TODAY?
@@ -115,7 +116,8 @@ def pg_projects():
 
         # SEND THESE TO BACK END
         # wordmeta_set(pr_id, projectname, targetwordcount, filepath, filetype, targetenddate)
-        isDirectory = not filepath[-3:]==filetype #TODO: refine? This is detecting if this is a directory (or a file) by comparing the end of the file path to the filetype
+        isDirectory = not filepath.split(".")[-1]==filetype
+        # isDirectory = not filepath.split(".")[-1]==filetype #TODO: refine? This is detecting if this is a directory (or a file) by comparing the end of the file path to the filetype
         wc = wordcount(filepull(filepath, filetype, isDirectory))
         #TODO: 1. Check if there is a file first?  2. pick up directory (or not) from project
         
@@ -124,7 +126,7 @@ def pg_projects():
 
         ## DEBUGGING ##
         # print(f"Function run: new_project: add a project. \n Submitted values: {pr_id} | {projectname} | {filepath} | {targetwordcount} | {targetenddate}")
-        print(f"Function run: new_project: add a project. \n Submitted values: {projectname} | {filepath} | {wordcountgoal} | {targetenddate} | {wordcountreg}")
+        #print(f"Function run: new_project: add a project. \n Submitted values: {projectname} | {filepath} | {wordcountgoal} | {targetenddate} | {wordcountreg}")
         ## ##
         return redirect(url_for('pg_projects'))
 
@@ -164,7 +166,8 @@ def change_project_options(project_num): # for a single project
         # First off: Try to update the word count
         projectname = check_and_extract('name', request.form)
         project = get_project(p_name = projectname) # search for project
-        isDirectory = not project['filepath'][-3:]==project['filetype'] #TODO: refine? This is detecting if this is a directory (or a file) by comparing the end of the file path to the filetype
+        isDirectory = not project['filepath'].split(".")[-1]==project['filetype']
+        # isDirectory = not project['filepath'][-3:]==project['filetype'] #TODO: refine? This is detecting if this is a directory (or a file) by comparing the end of the file path to the filetype
         try:
             dailywords= wordcount(filepull(project['filepath'], project['filetype'], isDirectory)) 
             wordcount_update(projectname, dailywords)
