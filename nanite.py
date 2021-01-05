@@ -1,9 +1,5 @@
-# -*- coding: utf-8 -*-
-# Start Flask with default web server
- 
 #from front_end import app
 from front_end import ui
-
 
 HOST='127.0.0.1'
 PORT='5000'

@@ -1,7 +1,3 @@
-#######################################
-################# URLs ################
-####################################### 
-
 from flask        import render_template
 from flask        import request, redirect, url_for, make_response, Markup
 from math         import ceil
@@ -10,9 +6,6 @@ from datetime     import datetime
 from wordcounter_funcs import wordmeta_set, wordcount, filepull, wordcount_update, project_delete, wordmeta_rename, wordmeta_pull, wordmeta_pull_all, daily_words_calculate, word_goal_calculate, wordcount_pull, get_sidepane_info, wordstreak, wordcount_last_day
 from helper            import get_projects_list, get_projects_list, get_project, get_current_project_id, check_and_extract
 from front_end         import app
-
-# from subprocess   import call
-# import os
 
 #### CONTEXT PROCESSORS ####
 @app.context_processor
@@ -39,20 +32,10 @@ def inject_menu_info():
                         , weekday_most_writing = info['You write most on']) #TODO get this information across projects?
 
 #### ROUTES ####
-@app.route('/test')
-def test():
-    #a = wordmeta_pull('Bacon')
-    #a = wordcount_pull('Back 2 DF')
-    #print(a)
-    #print(wordmeta_pull_all())
-    # script = '<script>var xhttp = new XMLHttpRequest(); xhttp.open("GET", "/test.py", true); xhttp.send();</script>'
-    # path = get_file_path_gui() # Doesn't work
-    # print(path)
-    # call(['python', 'test.py']) # Doesn't work
-    # os.system('test.py') # Doesn't work
-    # exec(open("./test.py").read()) # Doesn't work
 
-    return render_template('modaltest.html', pagetitle='Test' )
+#@app.route('/test')
+#def test():
+    #return render_template('modaltest.html', pagetitle='Test' )
     #return ""
 
 @app.route('/')
@@ -71,8 +54,8 @@ def pg_projects():
         # datetime.strptime(project.targetenddate,'%y%m%d').strftime("%d-%b-%Y")
         # datetime.strptime(project.targetenddate,'%y%m%d').strftime("%d-%b-%Y")
 
-        WCtoday = [] #0 # TODO: get today's word count and overall total for a project (get a list of these to iterate over in the template)
-        WCprojtotal = [] #0
+        WCtoday = []
+        WCprojtotal = []
 
         # TODO: test this script below
         for project in projectslist:
@@ -86,7 +69,7 @@ def pg_projects():
                 pass # TODO error handle this
 
             try:
-                wclastsession = wc_pull[-1]['Session Wordcount'] #TODO THIS IS THE WORDCOUNT FROM THE LAST SESSION, SHOULD BE TODAY?
+                wclastsession = wc_pull[-1]['Session Wordcount'] #TODO: This is the wordcount from last session. Should be today?
             except:
                 wclastsession = 0
             
@@ -96,7 +79,6 @@ def pg_projects():
 
     elif request.method == 'POST': 
     # Add a new project
-    # NOTE: if using DB, use the Project class defined in api.__init__.py
         #pr_id = datetime.now().strftime("%y%m%d%H%M%S%f")
         projectname = request.form['name']
         filepath = request.form['filepath']
@@ -115,19 +97,12 @@ def pg_projects():
             pass # ERROR #TODO handle this
 
         # SEND THESE TO BACK END
-        # wordmeta_set(pr_id, projectname, targetwordcount, filepath, filetype, targetenddate)
-        isDirectory = not filepath.split(".")[-1]==filetype
-        # isDirectory = not filepath.split(".")[-1]==filetype #TODO: refine? This is detecting if this is a directory (or a file) by comparing the end of the file path to the filetype
+        isDirectory = not filepath.split(".")[-1]==filetype #TODO: refine? This is detecting if this is a directory (or a file) by comparing the end of the file path to the filetype
         wc = wordcount(filepull(filepath, filetype, isDirectory))
-        #TODO: 1. Check if there is a file first?  2. pick up directory (or not) from project
+        #TODO: 1. Check if there is a file first?  2. pick up if directory (or not) from project filepath directly
         
         wordmeta_set(projectname, dailytarget, filepath, filetype, targetstartdate, targetenddate, wordcountgoal)  
         wordcount_update(name = projectname, wordcount = wc)
-
-        ## DEBUGGING ##
-        # print(f"Function run: new_project: add a project. \n Submitted values: {pr_id} | {projectname} | {filepath} | {targetwordcount} | {targetenddate}")
-        #print(f"Function run: new_project: add a project. \n Submitted values: {projectname} | {filepath} | {wordcountgoal} | {targetenddate} | {wordcountreg}")
-        ## ##
         return redirect(url_for('pg_projects'))
 
 @app.route('/welcome', methods=['GET'])
@@ -148,7 +123,7 @@ def pg_stats(project_num):
         lastwc = wordcount_last_day(project['name'])
         try:
             isDirectory = not project['filepath'].split(".")[-1]==project['filetype'] #TODO: refine? This is detecting if this is a directory (or a file) by comparing the end of the file path to the filetype
-            wc = wordcount(filepull(project['filepath'], project['filetype'], isDirectory)) #  #TODO pick up directory (or not) from project
+            wc = wordcount(filepull(project['filepath'], project['filetype'], isDirectory)) #  #TODO pick up directory (or not) from project filepath
         except:
             wc = 0
             pass # TODO error handle this
@@ -160,25 +135,19 @@ def pg_charts():
     return render_template('charts.html', pagetitle='Charts')
 
 
-#### CHANGES AND DETAILS OF INDIVIDUAL PROJECTS ####
+## INDIVIDUAL PROJECTS: get details/make changes ##
 
 @app.route('/project-options/<int:project_num>', methods=['POST'])
 def change_project_options(project_num): # for a single project
     #NOTE: project_num is available for use here, if updating by project ID instead of name
-    projectname = None
-    dailytarget = None
-    filepath = None
-    filetype = None
-    targetstartdate = None
-    targetenddate = None
-    wordcountgoal = None
+    projectname = dailytarget = filepath = filetype = targetstartdate = targetenddate = wordcountgoal = None
 
     if request.method == 'POST':
+
         # First off: Try to update the word count
         projectname = check_and_extract('name', request.form)
         project = get_project(p_name = projectname) # search for project
-        isDirectory = not project['filepath'].split(".")[-1]==project['filetype']
-        # isDirectory = not project['filepath'][-3:]==project['filetype'] #TODO: refine? This is detecting if this is a directory (or a file) by comparing the end of the file path to the filetype
+        isDirectory = not project['filepath'].split(".")[-1]==project['filetype'] #TODO: refine? This is detecting if this is a directory (or a file) by comparing the end of the file path to the filetype
         try:
             dailywords= wordcount(filepull(project['filepath'], project['filetype'], isDirectory)) 
             wordcount_update(projectname, dailywords)
@@ -203,25 +172,15 @@ def change_project_options(project_num): # for a single project
             pass # ERROR #TODO handle this
 
         if all(v is not None for v in [projectname, dailytarget, filepath, filetype, targetstartdate, targetenddate, wordcountgoal]):
-            # SEND THESE TO BACK END
-            # TODO: this function currently just adds a new row, rather than updating the existing one
-            # wordmeta_set(pr_id, projectname, targetwordcount, filepath, filetype, targetenddate)
+            # Send to back end
             wordmeta_set(projectname, dailytarget, filepath, filetype, targetstartdate, targetenddate, wordcountgoal)
 
-        ## DEBUGGING ##
-        print('Function run: change_project_options: change details for a single existing project\n')
-        # print(f'Submitted Values: {pr_id} | {projectname} | {filepath} | {filetype} | {wordcountgoal} | {wordcountreg} | {targetenddate}')
-        ## ##
         return redirect(request.referrer)
 
 @app.route('/project-options/<int:project_num>/del', methods=['POST'])
 def delete_project_options(project_num): # Delete a single project 
     projectname = check_and_extract('name', request.form)
     project_delete(projectname)
-
-    ## DEBUGGING ##
-    print(f"Function run: delete_project_options: delete project: {str(project_num)} | {projectname}")
-    ## ##
     return redirect(request.referrer)
 
 @app.route('/project-options/<int:project_num>/ren', methods=['POST'])
@@ -229,16 +188,12 @@ def rename_project(project_num): # Rename a single project
     projectname = check_and_extract('name', request.form)
     new_name = check_and_extract('newname', request.form)
     wordmeta_rename(projectname, new_name)
-
-    ## DEBUGGING ##
-    print(f"Function run: rename_project: rename project: {str(projectname)} | {new_name}")
-    ## ##
     return redirect(request.referrer)
 
 @app.route('/stats-single', methods=['GET'])
 def pg_single_stats():
     # Get Current project
-    current_project_id = get_current_project_id() #returns a full string, or False
+    current_project_id = get_current_project_id() #returns a full string, or False 
     current_project = get_project(p_id = current_project_id) #if current_project_id is False, will return dummy text
     
     if current_project_id is False: # i.e. there is no current_project_id
@@ -261,7 +216,7 @@ def pg_single_stats():
         wctoday_suggested_target=wctoday_suggested_target, \
         current_project_id = current_project_id)
 
-#### Cookie for Current Project ####
+#### Cookies for Current User and Current Project ####
 
 @app.route('/current-project', methods = ['POST'])
 def current_project_cookie():
@@ -277,7 +232,6 @@ def current_project_cookie():
 def current_user_cookie():
     current_username = request.form['username']
 
-    # resp = make_response(render_template('home.html'))
     resp = make_response(redirect(url_for('pg_projects')))
     resp.set_cookie('currentuser', current_username)
 
