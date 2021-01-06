@@ -1,17 +1,17 @@
-{% extends 'base.html' %}
+{% extends 'base-nosidebar.html' %}
 
-{% block content %}
+{% block content %} 
+  <div id="main" class="main">   
 
-<div id="main-content" class="container">
-    <div>Project Name: {{projectname}} </div>
-<div>Today's Word Count: {{WCtoday}}</div>
-    <div>     
-      <form action="/project-options/{{current_project_id}}" method="put">
-      <fieldset> 
-            <label>Today's Target Word Count is {{wctoday_target}}. Set a new target? </label><input type="text" name="wctoday_target_new" value="{{wctoday_suggested_target}}"><br/>
-            <input type="submit" value="SetTarget">
-      </fieldset> 
-    </form> </div>
+    <div id="main-content" class="container">
+      <div class="nanite-welcome-image">
+        <img src="{{url_for('static', filename='imgs/innovation_.svg')}}"/>
+      </div>
+      <div class="nanite-welcome-text"><h1>Nanite</h1><p class="font-med">Increase your writing productivity in a fun and engaging way.</p></div>
+      <div class="nanite-start-button"><a role="button" class="btn" href={{url_for('pg_welcome')}}>Let's Get Started</a></div>
+      <div class="skip"><a href={{url_for('pg_projects')}}>Skip to Projects</a></div>
+    </div>
 
-</div>
-{% endblock %}
+  </div>  
+  
+{% endblock %} 
