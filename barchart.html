@@ -87,11 +87,32 @@ var maxY = d3.max(data, (wordplot) => {
 svg.append("path")
       .datum(data)
       .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width", 1.5)
+      .attr("stroke", "black")
+      .attr("stroke-width", 0.5)
       .attr("d", d3.line()
         .x(function(d) { return x(d.Wdate) })
         .y(function(d) { return y(d.Wtarget) })
         )
+
+// X Axis Label
+
+
+ svg.append("text")             
+      .attr("transform",
+            "translate(" + (width/2) + " ," + 
+                           (height + margin.top + 35) + ")")
+      .style("text-anchor", "middle")
+      .text("Date");
+
+
+// Y Axis Label
+
+svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Words Written");      
 
   </script>
