@@ -27,7 +27,7 @@
 
 
 
-  // Parse the Data
+  // The data (which will be separated into another file later on)
 
   
   var data = [
@@ -55,15 +55,15 @@
 
 
 
-
-var maxY = d3.max(data, (wordplot) => {
-    if (wordplot.Wcount > wordplot.Wtarget) {
-        return wordplot.Wcount
-    }
-    else {
-        return wordplot.Wtarget
-    }
-  });
+  // max of Y axis
+  var maxY = d3.max(data, (wordplot) => {
+      if (wordplot.Wcount > wordplot.Wtarget) {
+          return wordplot.Wcount
+      }
+      else {
+          return wordplot.Wtarget
+      }
+    });
 
   // Y axis
   var y = d3.scaleLinear()
@@ -90,7 +90,7 @@ svg.append("path")
       .attr("stroke", "black")
       .attr("stroke-width", 0.5)
       .attr("d", d3.line()
-        .x(function(d) { return x(d.Wdate)+18 })
+        .x(function(d) { return x(d.Wdate)+18 }) //18 worked on my resolution, but it may not work for resizing.
         .y(function(d) { return y(d.Wtarget) })
         )
 
@@ -127,4 +127,6 @@ svg.append("text")
       .style("text-anchor", "middle")
       .text("Words Written");      
 
+
+      //to add: weekly & monthly granularity, & locally grabbed d3 file (currently grabbed from online)
   </script>
