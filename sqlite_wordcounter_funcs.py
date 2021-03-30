@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS words (
 
 
 
-sqlite3_path = 'nanite_storage.sqlite3'
+sqlite3_path = './Project-Nanite/database/nanite_storage.sqlite3'
 # SQLite just needs to connect to create db
 def db_init():
     """creates database if they don't exist"""
