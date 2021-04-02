@@ -69,4 +69,4 @@ def db_init():
         conn.execute(create_words_sql)
         conn.close()
     else:
-        pass
+        print("task failed")
