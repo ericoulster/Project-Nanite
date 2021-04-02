@@ -45,6 +45,12 @@ def wordcount(content):
     wordcount = list(filter(r.match, filetoken))
     return len(wordcount)
 
+# in progress - use this inside filepull
+def single_filepull():
+    pass
+
+def multi_filepull():
+    pass
 
 # input is project's path, the filetype, and whether it is one file or multiple
 def filepull(project_path, filetype='txt', isDirectory=False):

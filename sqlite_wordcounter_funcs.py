@@ -70,4 +70,3 @@ def db_init():
         conn.close()
     else:
         pass
-db_init()
