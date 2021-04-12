@@ -2,6 +2,7 @@ import string
 from datetime import date, datetime
 from math import ceil
 import re
+from pathlib import Path
 
 from striprtf.striprtf import rtf_to_text
 import docx2txt
@@ -55,3 +56,81 @@ def word_goal_calculate(daily_target, goal_start_date, goal_finish_date):
     word_goal = int(daily_target)*days_left
     return word_goal
 
+
+
+
+### TO EDIT ###:
+# Switch to using Pathlib instead of os.path (will also replace glob functions)
+def filepull(project_path: str, filetype='txt': str, is_folder=False: bool) -> str:
+    # assigning to a raw string
+    project_path = r'{}'.format(project_path)
+
+    
+    if is_folder is False:
+        
+        if filetype == '.txt':
+            try:
+                filepath = Path(project_path)
+                with open(filepath, "r", encoding='utf8') as file:
+                    return file.read()
+            except:
+                print("txt file failed to be read")
+            
+        elif filetype == '.rtf':
+            try:
+                filepath = Path(project_path)
+                with open(filepath, "r", encoding='utf8') as file:
+                    rtf_file = file.read()
+                    clean_file = rtf_to_text(rtf_file)
+                    return clean_file
+            except:
+                print("rtf file failed to be read")
+                
+        elif filetype == '.docx':
+            try:
+                filepath = Path(project_path)
+                file = docx2txt.process(filepath)
+                return file
+            except:
+                print("docx file failed to be read")
+        else:
+            print("error: filepull only accepts 'txt', 'rtf', & 'docx' filetypes")
+        
+    if is_folder is True:
+        if filetype == 'txt':
+            try:
+                file_list = []
+                for filepath in glob.glob(os.path.join(project_path, '*.' + str(filetype))):
+                    with open(filepath, "r", encoding='utf8') as file:
+                        read_in = file.read()
+                        file_list.append(read_in)
+                merged_files = (" ").join(file_list)
+                return merged_files
+            except:
+                print("error, txt files didn't read correctly")
+        
+        elif filetype == 'rtf':
+            try:
+                file_list = []
+                for filepath in glob.glob(os.path.join(project_path, '*.' + str(filetype))):
+                    with open(filepath, "r", encoding='utf8') as file:
+                        rtf_file = file.read()
+                        clean_file = rtf_to_text(rtf_file)
+                        file_list.append(clean_file)
+                merged_files = (" ").join(file_list)
+                return merged_files
+            except:
+                print("error, rtf files didn't read correctly")
+        
+        elif filetype == 'docx':
+            try:
+                file_list = []
+                for filepath in glob.glob(os.path.join(project_path, '*.' + str(filetype))):
+                    file_list = docx2txt.process(filepath)
+                merged_files = (" ").join(file_list)
+                return file_list
+            except:
+                print("error, docx files didn't read correctly")
+        else:
+            print("error: filepull only accepts 'txt', 'rtf', & 'docx' filetypes")
+# Input is from front-end (name, target, path, filetype, and now deadline
