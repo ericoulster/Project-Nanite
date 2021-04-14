@@ -61,6 +61,7 @@ def word_goal_calculate(daily_target, goal_start_date, goal_finish_date):
 
 ### TO EDIT ###:
 # Switch to using Pathlib instead of os.path (will also replace glob functions)
+# You may not need 'is_file' and 'is_directory' anymore if you use pathlib intelligently (it has funcs built in).
 def filepull(project_path: str, filetype='txt': str, is_folder=False: bool) -> str:
     # assigning to a raw string
     project_path = r'{}'.format(project_path)
