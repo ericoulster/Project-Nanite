@@ -9,6 +9,8 @@ import docx2txt
 
 r = re.compile(r'\w+')
 
+# Note for etl: .stat().st_mtime in pathlib gives the time of last modification of a file
+
 punctuation_strip = str.maketrans('', '', string.punctuation)
 
 # input is words, returns a wordcount
@@ -62,7 +64,7 @@ def word_goal_calculate(daily_target, goal_start_date, goal_finish_date):
 ### TO EDIT ###:
 # Switch to using Pathlib instead of os.path (will also replace glob functions)
 # You may not need 'is_file' and 'is_directory' anymore if you use pathlib intelligently (it has funcs built in).
-def filepull(project_path: str, filetype='txt': str, is_folder=False: bool) -> str:
+def filepull(project_path: str, filetype='.txt': str, is_folder=False: bool):
     # assigning to a raw string
     project_path = r'{}'.format(project_path)
 
