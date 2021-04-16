@@ -115,7 +115,7 @@ def filepull(project_path: str, filetype='.txt': str, is_folder=False: bool):
         elif filetype == 'rtf':
             try:
                 file_list = []
-                for filepath in glob.glob(os.path.join(project_path, '*.' + str(filetype))):
+                for filepath in pathr.glob(os.path.join(project_path, '*.' + str(filetype))):
                     with open(filepath, "r", encoding='utf8') as file:
                         rtf_file = file.read()
                         clean_file = rtf_to_text(rtf_file)
