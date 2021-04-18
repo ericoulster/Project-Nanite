@@ -2,26 +2,43 @@ import string
 from datetime import date, datetime
 from math import ceil
 import re
+import shutil
 from pathlib import Path
 
 from striprtf.striprtf import rtf_to_text
 import docx2txt
 
-r = re.compile(r'\w+')
+
 
 # Note for etl: .stat().st_mtime in pathlib gives the time of last modification of a file
 
+
+
+### Funcs ###
+
+
+## Wordcount Funcs ##
+
+r = re.compile(r'\w+')
+
 punctuation_strip = str.maketrans('', '', string.punctuation)
+
 
 # input is words, returns a wordcount
 def wordcount(content: str) -> int:
+    """
+    The mechanism to count words.
+    A component of file_pipe
+    """
     filetoken = content.translate(punctuation_strip).split(' ')
     wordcount = list(filter(r.match, filetoken))
     return len(wordcount)
 
+
 def path_parser(path: str) -> str:
     """
-    Takes in path, returns filetype
+    Takes in path, returns filetype.
+    A component of file_pipe
     """
     path_raw = r"{}".format(path)
     txt = '.txt'
@@ -40,6 +57,87 @@ def path_parser(path: str) -> str:
         return None
 
 
+
+def filepull(path: Path()) -> str:  
+    """
+    Takes in directory, returns all words from it.
+    A component of file_pipe
+    """
+    ftype = path_parser(path)
+
+    if ftype == '.txt':
+        try:
+            with open(path, "r", encoding='utf8') as txtfile:
+                words = txtfile.read()
+                txtfile.close()
+                return words
+        except:
+            raise Exception("Error with reading .txt file")
+
+    elif ftype == '.rtf':
+        try:
+            with open(path, "r", encoding='utf8') as rtffile:
+                rtf_file = rtffile.read()
+                clean_file = rtf_to_text(rtf_file)
+                words = clean_file     
+                rtffile.close()
+                return words         
+        except:
+            raise Exception("Error with reading .rtf file")
+
+    elif ftype == '.docx':
+        try:
+            docxfile = docx2txt.process(path)
+            words = docxfile
+            return words
+        except:
+            raise Exception("Error reading .docx file")
+
+    else:
+        print(f'{path} is an unrecognized filetype')
+
+
+def file_pipe(path: str) -> str:
+    """
+    The function called to take a filepath, and return wordcounts.
+    For use in sqlite_funcs.
+    """
+    orig = Path(f'{path}'.format(r''))
+    local = r"./temp_filestore/"
+    Path(local).mkdir(exist_ok=True)
+    copy = Path(local)
+    
+    ## File Move ##
+    
+    if orig.is_dir() is True:
+        try:
+            shutil.copytree(orig, copy)
+        except:
+            raise Exception("Error: shutil copy failed")
+    else:
+        try:
+            shutil.copy2(orig, copy)
+        except:
+            raise Exception("Error: shutil copy failed")
+    
+    ## Filepull ##
+
+    # Single File #
+    if orig.is_dir() is False:
+        words = filepull(copy.joinpath(orig.name))
+    ## Multi-file ##
+    else:
+        list_words = [filepull(i) for i in copy.iterdir()]
+        words = (" ").join(list_words)
+    wc = wordcount(words)
+    shutil.rmtree(copy)
+    return wc
+
+
+
+
+
+## Time Intelligence Funcs ##
 
 def daily_words_calculate(word_goal, goal_start_date, goal_finish_date):
     # We currently assume you are starting at zero words, or are factoring your already existant words into your decision.
@@ -61,79 +159,3 @@ def word_goal_calculate(daily_target, goal_start_date, goal_finish_date):
 
 
 
-### TO EDIT ###:
-# Switch to using Pathlib instead of os.path (will also replace glob functions)
-# You may not need 'is_file' and 'is_directory' anymore if you use pathlib intelligently (it has funcs built in).
-def filepull(project_path: str, filetype='.txt': str, is_folder=False: bool):
-    # assigning to a raw string
-    project_path = r'{}'.format(project_path)
-
-    
-    if is_folder is False:
-        
-        if filetype == '.txt':
-            try:
-                filepath = Path(project_path)
-                with open(filepath, "r", encoding='utf8') as file:
-                    return file.read()
-            except:
-                print("txt file failed to be read")
-            
-        elif filetype == '.rtf':
-            try:
-                filepath = Path(project_path)
-                with open(filepath, "r", encoding='utf8') as file:
-                    rtf_file = file.read()
-                    clean_file = rtf_to_text(rtf_file)
-                    return clean_file
-            except:
-                print("rtf file failed to be read")
-                
-        elif filetype == '.docx':
-            try:
-                filepath = Path(project_path)
-                file = docx2txt.process(filepath)
-                return file
-            except:
-                print("docx file failed to be read")
-        else:
-            print("error: filepull only accepts 'txt', 'rtf', & 'docx' filetypes")
-        
-    if is_folder is True:
-        if filetype == 'txt':
-            try:
-                file_list = []
-                for filepath in glob.glob(os.path.join(project_path, '*.' + str(filetype))):
-                    with open(filepath, "r", encoding='utf8') as file:
-                        read_in = file.read()
-                        file_list.append(read_in)
-                merged_files = (" ").join(file_list)
-                return merged_files
-            except:
-                print("error, txt files didn't read correctly")
-        
-        elif filetype == 'rtf':
-            try:
-                file_list = []
-                for filepath in pathr.glob(os.path.join(project_path, '*.' + str(filetype))):
-                    with open(filepath, "r", encoding='utf8') as file:
-                        rtf_file = file.read()
-                        clean_file = rtf_to_text(rtf_file)
-                        file_list.append(clean_file)
-                merged_files = (" ").join(file_list)
-                return merged_files
-            except:
-                print("error, rtf files didn't read correctly")
-        
-        elif filetype == 'docx':
-            try:
-                file_list = []
-                for filepath in glob.glob(os.path.join(project_path, '*.' + str(filetype))):
-                    file_list = docx2txt.process(filepath)
-                merged_files = (" ").join(file_list)
-                return file_list
-            except:
-                print("error, docx files didn't read correctly")
-        else:
-            print("error: filepull only accepts 'txt', 'rtf', & 'docx' filetypes")
-# Input is from front-end (name, target, path, filetype, and now deadline
