@@ -157,5 +157,16 @@ def word_goal_calculate(daily_target, goal_start_date, goal_finish_date):
     return word_goal
 
 
-
+def change_goal(goal_start_date, goal_end_date, word_goal=None, daily_target=None):
+    """
+    Takes daily_words_calculate and word_goal_calculate and combines them as one function
+    """
+    if (word_goal is not None) and (daily_target is None):
+        goal = daily_words_calculate(word_goal, goal_start_date, goal_end_date)
+        return goal
+    elif (daily_target is not None) and (word_goal is None):
+        goal = word_goal_calculate(daily_target, goal_start_date, goal_end_date)
+        return goal
+    else:
+        raise Exception("Error: provide word_goal or daily_target, but not both.")
 

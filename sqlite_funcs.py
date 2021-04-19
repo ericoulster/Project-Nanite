@@ -166,8 +166,7 @@ class AuthorActions:
         deadline=None,
         wordcount_goal=None, 
         current_daily_target=None,
-        filetype=None,
-        is_folder=True,
+        wp_page=None,
         project_path=None):
         """
         Takes in a project info, then creates a new project for a given author.
@@ -184,9 +183,9 @@ class AuthorActions:
             conn = sqlite3.connect(sqlite3_path)
             cur = conn.cursor()
             query = '''INSERT INTO projects values (
-                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) '''
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) '''
             params = [None, self.author_id, project_name, now, project_start_date, deadline, 
-            wordcount_goal, current_daily_target, filetype, is_folder, project_path]
+            wordcount_goal, current_daily_target, wp_page, project_path]
             try:
                 cur.execute(query, params)
                 conn.commit()
@@ -225,7 +224,7 @@ class AuthorActions:
         conn.close()
 
     def return_all_wordcounts(self):
-        """Returns all wordcount records from all projects."""
+        """Returns all wordcount records from all projects for a given author."""
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
         cur.execute("SELECT * FROM words where author_id=?", self.author_id)
@@ -234,6 +233,34 @@ class AuthorActions:
         conn.close()
         return data
 
+    def return_freq_wordcounts(freq=None) -> dict:
+        """
+        Return frequency of wordcounts for a given project
+        freq maps to the granularity of the data, in line with pandas granularity values.
+        """
+        freq = freq
+        conn = sqlite3.connect(sqlite3_path)
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM words where author_id=?", self.author_id)
+        row = cur.fetchall()
+        data = [dict(WordVals(*row[i])._asdict()) for i in range(len(row))]
+        conn.close()
+        df = pd.DataFrame(data)
+        df.index = pd.DatetimeIndex(df['Wdate'])
+
+        earliest = df.index[0]
+        latest = df.index[-1]
+
+        new_index = pd.date_range(earliest, latest, freq='D')
+
+        df = df.groupby(pd.Grouper(freq='D')).last()
+        df = df.reindex(new_index, method='ffill')
+        df = df.fillna(method='ffill')
+        df['Wtarget_sum'] = df['Wtarget'].cumsum()
+        df['Wdate'] = df['Wdate'].apply(lambda x: x[:10])
+        df = df.groupby(pd.Grouper(freq=freq)).last()
+        records = df.to_dict(orient='records')
+        return records
 
 ## Project-level Class ##
 
@@ -251,13 +278,11 @@ class ProjectActions:
         self.deadline = None
         self.wordcount_goal = None
         self.current_daily_target = None
-        self.filetype = None
-        self.is_folder = None
+        self.wp_page = None
         self.project_path = None
 
         self.author_set = False
         self.daily_target_set = False
-        self.project_path = False
 
     def set_project(self, project_id=None):
         """
@@ -284,9 +309,8 @@ class ProjectActions:
         self.deadline = data[5]
         self.wordcount_goal = data[6]
         self.current_daily_target = data[7]
-        self.filetype = data[8]
-        self.is_folder = data[9]
-        self.project_path = data[10]
+        self.wp_page = data[8]
+        self.project_path = data[9]
         self.author_set = True
         self.daily_target_set = True
         conn.close()
@@ -328,11 +352,14 @@ class ProjectActions:
             conn.close()
             author_set = True
         else:
-            print("No name combination found.")
+            raise Exception("No name combination found.")
             conn.close()
         
 
-    def get_wordcounts(self):
+    def return_wordcounts(self):
+        """
+        return all wordcounts for a given project
+        """
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
         cur.execute("SELECT * FROM words where project_id=?", self.project_id)
@@ -341,26 +368,57 @@ class ProjectActions:
         conn.close()
         return data
 
-    def set_wordcounts(self):
-        """Input Daily Wordcounts (some functions not finished)"""
+
+    def return_freq_wordcounts(freq=None) -> dict:
+        """
+        Return frequency of wordcounts for a given project
+        freq maps to the granularity of the data, in line with pandas granularity values.
+        """
+        freq = freq
+        conn = sqlite3.connect(sqlite3_path)
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM words where project_id=?", self.project_id)
+        row = cur.fetchall()
+        data = [dict(WordVals(*row[i])._asdict()) for i in range(len(row))]
+        conn.close()
+        df = pd.DataFrame(data)
+        df.index = pd.DatetimeIndex(df['Wdate'])
+
+        earliest = df.index[0]
+        latest = df.index[-1]
+
+        new_index = pd.date_range(earliest, latest, freq='D')
+
+        df = df.groupby(pd.Grouper(freq='D')).last()
+        df = df.reindex(new_index, method='ffill')
+        df = df.fillna(method='ffill')
+        df['Wtarget_sum'] = df['Wtarget'].cumsum()
+        df['Wdate'] = df['Wdate'].apply(lambda x: x[:10])
+        df = df.groupby(pd.Grouper(freq=freq)).last()
+        records = df.to_dict(orient='records')
+        return records
+
+
+    def enter_wordcount(self):
+        """
+        Input Daily Wordcounts (needs critical overhaul)
+        """
         if (self.current_daily_target == False):
             print("Wcount not pushed, Wordcount Target not set!")
         elif self.project_path is None:
             print("Project Path not set- Data cannot be pulled!")
         else:
-            try:
-                words = filepull(self.project_path, self.is_folder, self.filetype)
-            except:
-                print("filepull failed.")
-            try:
-                wc = wordcount(words)
-            except:
-                print("words cannot be counted")
-                now = timestamp()
-            query = '''INSERT INTO projects values (
-                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) '''
+            #try:
+            wc = file_pipe(self.project_path)
+            #except:
+                #raise Exception("Error: wordcount pipeline (file_pipe) failed.")
+            now = timestamp()
+            query = '''INSERT INTO words values (
+                ?, ?, ?, ?, ?, ?) '''
             params = [None, self.project_id, self.author_id, now, wc, self.current_daily_target]
             try:
+                conn = sqlite3.connect(sqlite3_path)
+                cur = conn.cursor()
                 cur.execute(query, params)
                 conn.commit()
             except:
@@ -369,7 +427,9 @@ class ProjectActions:
                 conn.close()
 
     def change_target(self):
-        """Still needs doing"""
+        """
+        Still needs doing
+        """
         pass
 
     def rename_project(self, new_name):
