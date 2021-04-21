@@ -233,7 +233,7 @@ class AuthorActions:
         conn.close()
         return data
 
-    def return_freq_wordcounts(freq=None) -> dict:
+    def return_freq_wordcounts(self, freq='D') -> dict:
         """
         Return frequency of wordcounts for a given project
         freq maps to the granularity of the data, in line with pandas granularity values.
@@ -362,14 +362,14 @@ class ProjectActions:
         """
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM words where project_id=?", self.project_id)
+        cur.execute("SELECT * FROM words where project_id=?", (self.project_id,))
         row = cur.fetchall()
-        data = [dict(WordVals(*row[i])._asdict()) for i in range(len(rows))]
+        data = [dict(WordVals(*row[i])._asdict()) for i in range(len(row))]
         conn.close()
         return data
 
 
-    def return_freq_wordcounts(freq=None) -> dict:
+    def return_freq_wordcounts(self, freq='D') -> dict:
         """
         Return frequency of wordcounts for a given project
         freq maps to the granularity of the data, in line with pandas granularity values.
@@ -377,7 +377,7 @@ class ProjectActions:
         freq = freq
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM words where project_id=?", self.project_id)
+        cur.execute("SELECT * FROM words where project_id=?", (self.project_id,))
         row = cur.fetchall()
         data = [dict(WordVals(*row[i])._asdict()) for i in range(len(row))]
         conn.close()
@@ -394,6 +394,10 @@ class ProjectActions:
         df = df.fillna(method='ffill')
         df['Wtarget_sum'] = df['Wtarget'].cumsum()
         df['Wdate'] = df['Wdate'].apply(lambda x: x[:10])
+        df['streak'] = [is_streak(i, df['Wcount'], df['Wtarget']) for i in range(len(df))]
+        d_list = streak_length(df['streak'])
+        df['streak'] = pd.Series(d_list, index=new_index)
+        
         df = df.groupby(pd.Grouper(freq=freq)).last()
         records = df.to_dict(orient='records')
         return records
@@ -401,7 +405,7 @@ class ProjectActions:
 
     def enter_wordcount(self):
         """
-        Input Daily Wordcounts (needs critical overhaul)
+        Input Daily Wordcounts
         """
         if (self.current_daily_target == False):
             print("Wcount not pushed, Wordcount Target not set!")

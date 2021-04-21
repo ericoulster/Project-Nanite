@@ -170,3 +170,28 @@ def change_goal(goal_start_date, goal_end_date, word_goal=None, daily_target=Non
     else:
         raise Exception("Error: provide word_goal or daily_target, but not both.")
 
+
+## Time Func ##
+
+def streak_length(df_col):
+    d_list = []
+    for i in df_col:
+            if i == 0:
+                d = 0
+            else:
+                d += 1
+            d_list.append(d)
+    return d_list
+
+def is_streak(i, count_col, target_col):
+    
+    if i == 0:
+        return 0
+    else: 
+        pass
+    if i == 0:
+        pass
+    elif (count_col.iloc[i] - count_col.iloc[i-1]) >= (target_col.iloc[i]): 
+        return 1
+    else:
+        return 0
