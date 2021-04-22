@@ -167,7 +167,9 @@ def change_goal(goal_start_date, goal_end_date, word_goal=None, daily_target=Non
     elif (daily_target is not None) and (word_goal is None):
         goal = word_goal_calculate(daily_target, goal_start_date, goal_end_date)
         return goal
-    else:
+    elif (word_goal is not None) and (daily_target is not None):
+        pass
+    else:   
         raise Exception("Error: provide word_goal or daily_target, but not both.")
 
 

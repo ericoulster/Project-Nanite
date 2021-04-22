@@ -1,13 +1,14 @@
 ### Dependendies ###
 from datetime import datetime
 from collections import namedtuple
+import time
 
 import numpy as np
 import pandas as pd
 
 import sqlite3
 
-
+from file_funcs import file_pipe, is_streak, streak_length, change_goal
 ### Variables ###
 
 sqlite3_path = './database/nanite_storage.sqlite3'
@@ -258,6 +259,10 @@ class AuthorActions:
         df = df.fillna(method='ffill')
         df['Wtarget_sum'] = df['Wtarget'].cumsum()
         df['Wdate'] = df['Wdate'].apply(lambda x: x[:10])
+        df['streak'] = [is_streak(i, df['Wcount'], df['Wtarget']) for i in range(len(df))]
+        d_list = streak_length(df['streak'])
+        df['streak'] = pd.Series(d_list, index=new_index)
+
         df = df.groupby(pd.Grouper(freq=freq)).last()
         records = df.to_dict(orient='records')
         return records
@@ -434,7 +439,12 @@ class ProjectActions:
         """
         Still needs doing
         """
-        pass
+
+        conn = sqlite3.connect(sqlite3_path)
+        cur = conn.cursor()
+        cur.execute("UPDATE projects SET project_name=? WHERE project_id=?", (new_name, self.project_id))
+        conn.commit()
+        conn.close()
 
     def rename_project(self, new_name):
         """Renames a project based on new_name"""
