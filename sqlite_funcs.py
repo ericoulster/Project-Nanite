@@ -377,7 +377,7 @@ class ProjectActions:
     def return_freq_wordcounts(self, freq='D') -> dict:
         """
         Return frequency of wordcounts for a given project
-        freq maps to the granularity of the data, in line with pandas granularity values.
+        freq maps to the granularity of the data, in line with pandas timeseries granularity values.
         """
         freq = freq
         conn = sqlite3.connect(sqlite3_path)
@@ -413,14 +413,14 @@ class ProjectActions:
         Input Daily Wordcounts
         """
         if (self.current_daily_target == False):
-            print("Wcount not pushed, Wordcount Target not set!")
+            raise Exception("Wcount not pushed, Wordcount Target not set!")
         elif self.project_path is None:
-            print("Project Path not set- Data cannot be pulled!")
+            raise Exception("Project Path not set- Data cannot be pulled!")
         else:
-            #try:
-            wc = file_pipe(self.project_path)
-            #except:
-                #raise Exception("Error: wordcount pipeline (file_pipe) failed.")
+            try:
+                wc = file_pipe(self.project_path)
+            except:
+                raise Exception("Error: wordcount pipeline (file_pipe) failed.")
             now = timestamp()
             query = '''INSERT INTO words values (
                 ?, ?, ?, ?, ?, ?) '''
@@ -435,16 +435,71 @@ class ProjectActions:
             finally:
                 conn.close()
 
-    def change_target(self):
-        """
-        Still needs doing
-        """
 
+    def change_daily_words(self, daily_words):
+        """
+        changes daily_words value.
+        Re-calibrates word goal accordingly (based on deadline)
+        Requires project_start_date, deadline, and project_id to work
+        """
+        if (self.project_start_date is not None) & (self.deadline is not None):
+            word_goal = word_goal_calculate(daily_words, self.project_start_date, self.deadline)
+            conn = sqlite3.connect(sqlite3_path)
+            cur = conn.cursor()
+            cur.execute("UPDATE projects SET wordcount_goal=?, current_daily_target=? WHERE project_id=?", (word_goal, daily_words, self.project_id))
+            conn.commit()
+            conn.close()
+            self.current_daily_target = daily_words
+            self.wordcount_goal = word_goal
+        else:
+            raise Exception("Error: Submission requires project_start_date & deadline")
+
+    def change_word_goal(self, word_goal):
+        """
+        changes daily_words value.
+        Also changes daily words to re-calibrate.
+        Requires project_start_date, deadline, and project_id to work
+        """
+        if (self.project_start_date is not None) & (self.deadline is not None):
+            daily_words = daily_words_calculate(word_goal, self.project_start_date, self.deadline)
+            conn = sqlite3.connect(sqlite3_path)
+            cur = conn.cursor()
+            cur.execute("UPDATE projects SET wordcount_goal=?, current_daily_target=? WHERE project_id=?", (word_goal, daily_words, self.project_id))
+            conn.commit()
+            conn.close()
+            self.current_daily_target = daily_words
+            self.wordcount_goal = word_goal
+        else:
+            raise Exception("Error: Submission requires project_start_date & deadline")
+
+
+    def change_deadline(self, new_deadline):
+        """
+        Changes deadline value.
+        Re-calibrates daily_words accordingly
+        Requires project_start_date, word_goal, and project_id to work
+        """
+        if (self.project_start_date is not None) & (self.wordcount_goal is not None)
+            daily_words = daily_words_calculate(self.wordcount_goal, self.project_start_date, new_deadline)
+            conn = sqlite3.connect(sqlite3_path)
+            cur = conn.cursor()
+            cur.execute("UPDATE projects SET current_daily_target=?, deadline=? WHERE project_id=?", (daily_words, new_deadline, self.project_id))
+            conn.commit()
+            conn.close()
+            self.deadline = new_deadline
+            self.current_daily_target = daily_words        
+        else:
+            raise Exception("Error: Submission requires project_start_date & wordcount_goal")
+
+    def change_words_per_page(self, new_wp_page):
+        "Changes wp_page value"
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("UPDATE projects SET project_name=? WHERE project_id=?", (new_name, self.project_id))
+        cur.execute("UPDATE projects SET wp_page WHERE project_id=?", (new_wp_page, self.project_id))
         conn.commit()
-        conn.close()
+        conn.close()       
+        self.wp_page = new_wp_page
+
 
     def rename_project(self, new_name):
         """Renames a project based on new_name"""
@@ -453,3 +508,4 @@ class ProjectActions:
         cur.execute("UPDATE projects SET project_name=? WHERE project_id=?", (new_name, self.project_id))
         conn.commit()
         conn.close()
+        self.project_name = new_name

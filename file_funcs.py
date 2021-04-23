@@ -134,7 +134,12 @@ def file_pipe(path: str) -> str:
     return wc
 
 
-
+def wp_page_convert(words, wp_page):
+    """
+    Simple conversion from words to pages
+    """
+    pages = floor(words/wp_page)
+    return pages
 
 
 ## Time Intelligence Funcs ##
