@@ -82,6 +82,29 @@ def db_init():
     else:
         print("db already exists")
 
+
+
+def return_project_screen(author_id:int) -> list(dict()):
+    """
+    Returns all the values needed for the Projects page, each 'div' as an individual dict.
+    Needs to be tested on entries without a table.
+    """
+    a = AuthorActions(author_id)
+    projects = a.return_projects()
+    project_ids = [i[0] for i in projects]
+    projects_list = []
+    for i in project_ids:
+        p = ProjectActions(i)
+        p.set_project()
+        row = p.return_wordcounts()[-1]
+        p_dict = {
+            'project_name': p.project_name, 'project_id': row['project_id'], 'daily_words': row['daily_words'], 
+            'today_goal': row['Wtarget'], 'total_progress': row['Wcount'], 'current_streak':row['streak']
+            }
+        projects_list.append(p_dict)
+    return projects_list
+
+
 ## 'Top Level' Funcs ##
 
 def create_author(author_name, password=''):    
@@ -361,7 +384,7 @@ class ProjectActions:
             conn.close()
         
 
-    def return_wordcounts(self):
+    def return_wordcounts_simple(self):
         """
         return all wordcounts for a given project
         """
@@ -374,7 +397,7 @@ class ProjectActions:
         return data
 
 
-    def return_freq_wordcounts(self, freq='D') -> dict:
+    def return_wordcounts(self, freq='D') -> dict:
         """
         Return frequency of wordcounts for a given project
         freq maps to the granularity of the data, in line with pandas timeseries granularity values.
@@ -399,6 +422,7 @@ class ProjectActions:
         df = df.fillna(method='ffill')
         df['Wtarget_sum'] = df['Wtarget'].cumsum()
         df['Wdate'] = df['Wdate'].apply(lambda x: x[:10])
+        df['daily_words'] = [(df[['Wcount']].iloc[i] - df[['Wcount']].iloc[i-1]).clip(0) for i in range(len(df))]
         df['streak'] = [is_streak(i, df['Wcount'], df['Wtarget']) for i in range(len(df))]
         d_list = streak_length(df['streak'])
         df['streak'] = pd.Series(d_list, index=new_index)
@@ -479,7 +503,7 @@ class ProjectActions:
         Re-calibrates daily_words accordingly
         Requires project_start_date, word_goal, and project_id to work
         """
-        if (self.project_start_date is not None) & (self.wordcount_goal is not None)
+        if (self.project_start_date is not None) & (self.wordcount_goal is not None):
             daily_words = daily_words_calculate(self.wordcount_goal, self.project_start_date, new_deadline)
             conn = sqlite3.connect(sqlite3_path)
             cur = conn.cursor()
@@ -509,3 +533,14 @@ class ProjectActions:
         conn.commit()
         conn.close()
         self.project_name = new_name
+
+
+## Additional Project Actions ##
+
+def get_max_streak(df: pd.DataFrame()) -> int():
+    """
+    Use on the output of get_wordcount to ge the max wordcount.
+    """
+    df = pd.DataFrame(records)
+    return df['streak'].max()
+
