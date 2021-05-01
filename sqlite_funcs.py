@@ -199,7 +199,16 @@ class AuthorActions:
         project_path=None):
         """
         Takes in a project info, then creates a new project for a given author.
+        Eric note: Add 'page conversion' later in the future
         """
+
+        if (wordcount_goal is None) & (current_daily_target is not None) & (project_start_date is not None) & (deadline is not None):
+            wordcount_goal = word_goal_calculate(current_daily_target, project_start_date, deadline)
+        elif (wordcount_goal is not None) & (current_daily_target is None) & (project_start_date is not None) & (deadline is not None):
+            current_daily_target = daily_words_calculate(wordcount_goal, project_start_date, deadline)
+        else:
+            pass
+        
         now = timestamp()
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
