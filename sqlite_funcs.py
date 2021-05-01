@@ -2,6 +2,7 @@
 from datetime import datetime
 from collections import namedtuple
 import time
+import os
 
 import numpy as np
 import pandas as pd
