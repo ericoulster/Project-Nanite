@@ -260,7 +260,7 @@ class AuthorActions:
         conn.commit()
         conn.close()
 
-    def return_all_wordcounts(self):
+    def return_all_wordcounts_simple(self):
         """Returns all wordcount records from all projects for a given author."""
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
@@ -270,7 +270,7 @@ class AuthorActions:
         conn.close()
         return data
 
-    def return_freq_wordcounts(self, freq='D') -> dict:
+    def return_all_wordcounts(self, freq='D') -> dict:
         """
         Return frequency of wordcounts for a given project
         freq maps to the granularity of the data, in line with pandas granularity values.
