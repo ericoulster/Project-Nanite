@@ -550,7 +550,7 @@ class ProjectActions:
 
 ## Additional Project Actions ##
 
-def get_max_streak(df: pd.DataFrame()) -> int():
+def get_max_streak(records: pd.DataFrame()) -> int():
     """
     Use on the output of get_wordcount to ge the max wordcount.
     """
