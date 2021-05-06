@@ -264,9 +264,9 @@ class AuthorActions:
         """Returns all wordcount records from all projects for a given author."""
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM words where author_id=?", self.author_id)
+        cur.execute("SELECT * FROM words where author_id=?", (self.author_id,))
         row = cur.fetchall()
-        data = [dict(WordVals(*row[i])._asdict()) for i in range(len(rows))]
+        data = [dict(WordVals(*row[i])._asdict()) for i in range(len(row))]
         conn.close()
         return data
 
@@ -278,7 +278,7 @@ class AuthorActions:
         freq = freq
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM words where author_id=?", self.author_id)
+        cur.execute("SELECT * FROM words where author_id=?", (self.author_id,))
         row = cur.fetchall()
         data = [dict(WordVals(*row[i])._asdict()) for i in range(len(row))]
         conn.close()
