@@ -274,6 +274,7 @@ class AuthorActions:
         """
         Return frequency of wordcounts for a given project
         freq maps to the granularity of the data, in line with pandas granularity values.
+        Eric note: I do not know if this will work as intended.
         """
         freq = freq
         conn = sqlite3.connect(sqlite3_path)
