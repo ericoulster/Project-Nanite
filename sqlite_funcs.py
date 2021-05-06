@@ -9,7 +9,7 @@ import pandas as pd
 
 import sqlite3
 
-from file_funcs import file_pipe, is_streak, streak_length, change_goal
+from file_funcs import file_pipe, is_streak, streak_length, change_goal, daily_words_calculate, word_goal_calculate
 ### Variables ###
 
 sqlite3_path = './database/nanite_storage.sqlite3'
