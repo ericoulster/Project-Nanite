@@ -1,0 +1,19 @@
+{% extends 'base-app.html' %}
+
+{% block content %}
+<h1>{{project.name}}: {{pagetitle}}</h1>
+<div id="main-content" class="container">
+    <div>Writing Goal: {{project.wordcountgoal}}</div>
+    <div id="project-summary" class="project-summary panels">
+      <div class="panel">
+        <progress id="project-progress" value="{{WCtotal}}" max="{{project.wordcountgoal}}"> {{WCtotal / project.wordcountgoal}} </progress>
+        <label for="project-progress"> <span class="progress-to-goal">{{WCtotal}} / {{project.wordcountgoal|int}} total words</span> <span class="last-update hidden">Last Update: No Update Yet!</span></label>
+      </div>
+      <div class="panel">
+        <progress id="project-progress-today" value="{{lastWordCount}}" max="{{project.todaystargetwordcount}}"> {{lastWordCount / project.todaystargetwordcount}} </progress>
+        <label for="project-progress-today"><span class="progress-to-goal">{{lastWordCount}} / {{project.todaystargetwordcount|int}} words needed today</span> <span class="last-update hidden">Last Update: No Update Yet!</span</label>
+      </div>
+      <div class="panel">{{streak}} days in a Row</div>
+    </div>
+</div>
+{% endblock %}

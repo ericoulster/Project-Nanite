@@ -1,0 +1,28 @@
+{% extends 'base-onboarding.html' %}
+
+{% block content %}
+<h1>{{pagetitle}}</h1>
+<div id="main-content" class="container">
+    <div class="welcome-form" >     
+      <form onsubmit="username_given()">
+        <legend>First, tell us a bit about yourself</legend>
+      <fieldset> 
+        <label>What is your first name?</label><br/><input id="username" type="text" name="username">
+        <input type="submit" value="Next ->">
+      </fieldset> 
+    </form> 
+  </div>
+</div>
+<script>
+  function username_given() {
+    username = document.querySelector('#username').value;
+    set_username(username) // set as current username
+    eel.new_author(username)(); // create author (or carry on if author exists)
+  }
+
+  function set_username(username) {
+      document.cookie = 'username=' + encodeURIComponent(username) + '; expires=Thu, 18 Dec 2100 12:00:00 UTC';
+    }
+
+</script>
+{% endblock %}
