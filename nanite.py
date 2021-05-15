@@ -15,4 +15,4 @@ db_init() # create database if needed
 import file_access
 
 # Start Eel
-eel.start('templates/home.html', size=(500, 500), jinja_templates='templates')
+eel.start('templates/home.html', size=(700, 700), jinja_templates='templates')

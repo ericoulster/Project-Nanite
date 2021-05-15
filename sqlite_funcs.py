@@ -9,7 +9,7 @@ import pandas as pd
 
 import sqlite3
 
-from file_funcs import file_pipe, is_streak, streak_length, change_goal, daily_words_calculate, word_goal_calculate
+from file_funcs import file_pipe, is_streak, streak_length, change_goal
 ### Variables ###
 
 sqlite3_path = './database/nanite_storage.sqlite3'
@@ -17,7 +17,7 @@ sqlite3_path = './database/nanite_storage.sqlite3'
 # Using namedtuple to define dict-like structure for retrieved data (using ._asdict() method on them)
 
 AuthorVals = namedtuple('Author', 'author_id username password acct_created_on')
-ProjectVals = namedtuple('Project', 'project_id author_id project_name project_created_on project_start_date deadline wordcount_goal current_daily_target filetype is_folder project_path')
+ProjectVals = namedtuple('Project', 'project_id author_id project_name project_created_on project_start_date deadline wordcount_goal current_daily_target wp_page project_path')
 WordVals = namedtuple('Wordcounts', 'record_id project_id author_id Wdate Wcount Wtarget')
 
 ## DDL init Queries ##
@@ -41,8 +41,7 @@ CREATE TABLE IF NOT EXISTS projects (
     deadline text,
     wordcount_goal int,
     current_daily_target int,
-    filetype text,
-    is_folder int,
+    wp_page int,
     project_path text,
     FOREIGN KEY (author_id) REFERENCES authors (author_id)
 )
@@ -199,16 +198,7 @@ class AuthorActions:
         project_path=None):
         """
         Takes in a project info, then creates a new project for a given author.
-        Eric note: Add 'page conversion' later in the future
         """
-
-        if (wordcount_goal is None) & (current_daily_target is not None) & (project_start_date is not None) & (deadline is not None):
-            wordcount_goal = word_goal_calculate(current_daily_target, project_start_date, deadline)
-        elif (wordcount_goal is not None) & (current_daily_target is None) & (project_start_date is not None) & (deadline is not None):
-            current_daily_target = daily_words_calculate(wordcount_goal, project_start_date, deadline)
-        else:
-            pass
-        
         now = timestamp()
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
@@ -223,13 +213,13 @@ class AuthorActions:
                 ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) '''
             params = [None, self.author_id, project_name, now, project_start_date, deadline, 
             wordcount_goal, current_daily_target, wp_page, project_path]
-            try:
-                cur.execute(query, params)
-                conn.commit()
-            except:
-                print("Query failed")
-            finally:
-                conn.close()
+            #try:
+            cur.execute(query, params)
+            conn.commit()
+            #except:
+                #print("Query failed")
+            #finally:
+            conn.close()
         else:
             print("project with this name already exists")
             conn.close()
@@ -246,7 +236,7 @@ class AuthorActions:
     def return_projects(self):
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM projects where author_id=?", self.author_id)
+        cur.execute("SELECT * FROM projects where author_id=?", (self.author_id, ))
         data = cur.fetchall()
         conn.close()
         return data
@@ -260,26 +250,25 @@ class AuthorActions:
         conn.commit()
         conn.close()
 
-    def return_all_wordcounts_simple(self):
+    def return_all_wordcounts(self):
         """Returns all wordcount records from all projects for a given author."""
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM words where author_id=?", (self.author_id,))
+        cur.execute("SELECT * FROM words where author_id=?", (self.author_id, ))
         row = cur.fetchall()
-        data = [dict(WordVals(*row[i])._asdict()) for i in range(len(row))]
+        data = [dict(WordVals(*row[i])._asdict()) for i in range(len(rows))]
         conn.close()
         return data
 
-    def return_all_wordcounts(self, freq='D') -> dict:
+    def return_freq_wordcounts(self, freq='D') -> dict:
         """
         Return frequency of wordcounts for a given project
         freq maps to the granularity of the data, in line with pandas granularity values.
-        Eric note: I do not know if this will work as intended.
         """
         freq = freq
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM words where author_id=?", (self.author_id,))
+        cur.execute("SELECT * FROM words where author_id=?", (self.author_id, ))
         row = cur.fetchall()
         data = [dict(WordVals(*row[i])._asdict()) for i in range(len(row))]
         conn.close()
@@ -340,7 +329,7 @@ class ProjectActions:
             pass
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM projects where project_id=?", (project_id,))
+        cur.execute("SELECT * FROM projects where project_id=?", (project_id, ))
         row = cur.fetchall()
         data = row[0]
         self.project_id = project_id
@@ -367,7 +356,7 @@ class ProjectActions:
         # checkproject id in the database- reset 
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM projects where project_id=?", (project_id,))
+        cur.execute("SELECT * FROM projects where project_id=?", (project_id, ))
         row = cur.fetchall()
         data = [dict(ProjectVals(*row[i])._asdict()) for i in range(len(row))]
         conn.close()
@@ -404,7 +393,7 @@ class ProjectActions:
         """
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM words where project_id=?", (self.project_id,))
+        cur.execute("SELECT * FROM words where project_id=?", (self.project_id, ))
         row = cur.fetchall()
         data = [dict(WordVals(*row[i])._asdict()) for i in range(len(row))]
         conn.close()
@@ -419,7 +408,7 @@ class ProjectActions:
         freq = freq
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM words where project_id=?", (self.project_id,))
+        cur.execute("SELECT * FROM words where project_id=?", (self.project_id, ))
         row = cur.fetchall()
         data = [dict(WordVals(*row[i])._asdict()) for i in range(len(row))]
         conn.close()
@@ -551,7 +540,7 @@ class ProjectActions:
 
 ## Additional Project Actions ##
 
-def get_max_streak(records: pd.DataFrame()) -> int():
+def get_max_streak(df: pd.DataFrame()) -> int():
     """
     Use on the output of get_wordcount to ge the max wordcount.
     """
