@@ -45,3 +45,9 @@ def eel_return_project_screen(author_id:int) -> list(dict()):
     Needs to be tested on entries without a table.
     """
     return return_project_screen(author_id)
+
+@eel.expose
+def eel_return_projects_by_name(author_name:str) -> list(dict()):
+    a = AuthorActions()
+    a.id_by_name(author_name)
+    return a.return_projects()

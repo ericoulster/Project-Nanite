@@ -3,11 +3,11 @@
 {% block content %}
 <h1>{{pagetitle}}</h1>
 <div id="main-content" class="container">
-  {% if not hasprojects %}
+  <!-- {% if not hasprojects %}
   <div class="greeting"><p class="username-greet">Hi, <span id="username">{{username}}</span>!</p>
     <p>Let's create your first project!</p>
   </div>
-  {% endif %}
+  {% endif %} -->
   {% with %}
     {% set modal_header_text = 'New Project' %}
     {% set modal_trigger_text = '+ New Project' %}
@@ -120,6 +120,19 @@
   </div>
 </div>
 <script> 
+  (async function () {
+    let projectslist = document.querySelector('#projectslist');
+    let project = document.createElement('div');
+    let a = await eel_return_projects_by_name(get_username());
+    project.textContent = a;
+    projectslist.appendChild(project);
+  }) ();
+
+  async function eel_return_projects_by_name(username) {
+    let a = await eel.eel_return_projects_by_name(username)();
+    return a;
+  }
+
   function add_new_project() {
     authorname = get_username();
     projectname = document.querySelector("#project-name").value;
