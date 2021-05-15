@@ -17,7 +17,7 @@ sqlite3_path = './database/nanite_storage.sqlite3'
 # Using namedtuple to define dict-like structure for retrieved data (using ._asdict() method on them)
 
 AuthorVals = namedtuple('Author', 'author_id username password acct_created_on')
-ProjectVals = namedtuple('Project', 'project_id author_id project_name project_created_on project_start_date deadline wordcount_goal current_daily_target filetype is_folder project_path')
+ProjectVals = namedtuple('Project', 'project_id author_id project_name project_created_on project_start_date deadline wordcount_goal current_daily_target wp_page project_path')
 WordVals = namedtuple('Wordcounts', 'record_id project_id author_id Wdate Wcount Wtarget')
 
 ## DDL init Queries ##
@@ -41,8 +41,7 @@ CREATE TABLE IF NOT EXISTS projects (
     deadline text,
     wordcount_goal int,
     current_daily_target int,
-    filetype text,
-    is_folder int,
+    wp_page int,
     project_path text,
     FOREIGN KEY (author_id) REFERENCES authors (author_id)
 )
@@ -211,9 +210,9 @@ class AuthorActions:
             conn = sqlite3.connect(sqlite3_path)
             cur = conn.cursor()
             query = '''INSERT INTO projects values (
-                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) '''
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) '''
             params = [None, self.author_id, project_name, now, project_start_date, deadline, 
-            wordcount_goal, current_daily_target, None, wp_page, project_path] # TODO: these don't match up to the database
+            wordcount_goal, current_daily_target, wp_page, project_path]
             #try:
             cur.execute(query, params)
             conn.commit()
