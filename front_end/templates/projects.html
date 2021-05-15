@@ -4,7 +4,7 @@
 <h1>{{pagetitle}}</h1>
 <div id="main-content" class="container">
   {% if not hasprojects %}
-  <div class="greeting"><p class="username-greet">Hi, {{username}}!</p>
+  <div class="greeting"><p class="username-greet">Hi, <span id="username">{{username}}</span>!</p>
     <p>Let's create your first project!</p>
   </div>
   {% endif %}

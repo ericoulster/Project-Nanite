@@ -211,16 +211,16 @@ class AuthorActions:
             conn = sqlite3.connect(sqlite3_path)
             cur = conn.cursor()
             query = '''INSERT INTO projects values (
-                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) '''
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) '''
             params = [None, self.author_id, project_name, now, project_start_date, deadline, 
-            wordcount_goal, current_daily_target, wp_page, project_path]
-            try:
-                cur.execute(query, params)
-                conn.commit()
-            except:
-                print("Query failed")
-            finally:
-                conn.close()
+            wordcount_goal, current_daily_target, None, wp_page, project_path] # TODO: these don't match up to the database
+            #try:
+            cur.execute(query, params)
+            conn.commit()
+            #except:
+                #print("Query failed")
+            #finally:
+            conn.close()
         else:
             print("project with this name already exists")
             conn.close()
@@ -237,7 +237,7 @@ class AuthorActions:
     def return_projects(self):
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM projects where author_id=?", self.author_id)
+        cur.execute("SELECT * FROM projects where author_id=?", (self.author_id, ))
         data = cur.fetchall()
         conn.close()
         return data
@@ -255,7 +255,7 @@ class AuthorActions:
         """Returns all wordcount records from all projects for a given author."""
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM words where author_id=?", self.author_id)
+        cur.execute("SELECT * FROM words where author_id=?", (self.author_id, ))
         row = cur.fetchall()
         data = [dict(WordVals(*row[i])._asdict()) for i in range(len(rows))]
         conn.close()
@@ -269,7 +269,7 @@ class AuthorActions:
         freq = freq
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM words where author_id=?", self.author_id)
+        cur.execute("SELECT * FROM words where author_id=?", (self.author_id, ))
         row = cur.fetchall()
         data = [dict(WordVals(*row[i])._asdict()) for i in range(len(row))]
         conn.close()
@@ -330,7 +330,7 @@ class ProjectActions:
             pass
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM projects where project_id=?", (project_id,))
+        cur.execute("SELECT * FROM projects where project_id=?", (project_id, ))
         row = cur.fetchall()
         data = row[0]
         self.project_id = project_id
@@ -357,7 +357,7 @@ class ProjectActions:
         # checkproject id in the database- reset 
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM projects where project_id=?", (project_id,))
+        cur.execute("SELECT * FROM projects where project_id=?", (project_id, ))
         row = cur.fetchall()
         data = [dict(ProjectVals(*row[i])._asdict()) for i in range(len(row))]
         conn.close()
@@ -394,7 +394,7 @@ class ProjectActions:
         """
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM words where project_id=?", (self.project_id,))
+        cur.execute("SELECT * FROM words where project_id=?", (self.project_id, ))
         row = cur.fetchall()
         data = [dict(WordVals(*row[i])._asdict()) for i in range(len(row))]
         conn.close()
@@ -409,7 +409,7 @@ class ProjectActions:
         freq = freq
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM words where project_id=?", (self.project_id,))
+        cur.execute("SELECT * FROM words where project_id=?", (self.project_id, ))
         row = cur.fetchall()
         data = [dict(WordVals(*row[i])._asdict()) for i in range(len(row))]
         conn.close()
