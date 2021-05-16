@@ -9,7 +9,7 @@ import pandas as pd
 
 import sqlite3
 
-from file_funcs import file_pipe, is_streak, streak_length, change_goal
+from file_funcs import file_pipe, is_streak, streak_length, change_goal, daily_words_calculate, word_goal_calculate
 ### Variables ###
 
 sqlite3_path = './database/nanite_storage.sqlite3'
@@ -199,6 +199,16 @@ class AuthorActions:
         """
         Takes in a project info, then creates a new project for a given author.
         """
+        
+        # This just fills in other variables that are missing when creating a project
+
+        if (wordcount_goal is None) & (current_daily_target is not None) & (project_start_date is not None) & (deadline is not None):
+            wordcount_goal = word_goal_calculate(current_daily_target, project_start_date, deadline)
+        elif (wordcount_goal is not None) & (current_daily_target is None) & (project_start_date is not None) & (deadline is not None):
+            current_daily_target = daily_words_calculate(wordcount_goal, project_start_date, deadline)
+        else:
+            pass        
+
         now = timestamp()
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
