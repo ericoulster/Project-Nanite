@@ -1,0 +1,5 @@
+swap 'scaleOrdinal' to 'scalelinear'.
+
+grab necessary value to preset to D3 
+
+You're going to have to take in two values: words written, and daily wordcount
