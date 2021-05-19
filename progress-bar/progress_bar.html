@@ -14,7 +14,7 @@
     <script>
         var data = {
             'Wtarget_sum': 1000.0,
-            'daily_words': 800.0
+            'daily_words': 1000.0
     };
         
         var progress_val = (data['daily_words'] / data['Wtarget_sum'])*100;
@@ -49,39 +49,55 @@
         var svg = d3.select('.progress')
             .append('svg')
             .attr('height', 100)
-            .attr('width', 500);
+            .attr('width', 800);
 
-    
+        var bar_width = 600;
+
+        var bar_height = 20
+
+
+        var bar_x = (bar_width/50);
+        var bar_y = (bar_height/3);
+
+        var bar_cap = (bar_width/100);
+
         svg.append('rect')
             .attr('class', 'bg-rect')
-            .attr('rx', 10)
-            .attr('ry', 10)
-            .attr('fill', 'gray')
-            .attr('height', 15)
+            .attr('rx', 20)
+            .attr('ry', 20)
+            .attr('fill', 'none')
+            .attr('stroke', '#333A40')
+            .attr('stroke-width', 5)
+            .attr('height', bar_height + (bar_height*1))
             .attr('width', function(){
-                return 500;
+                return bar_width + (bar_width*0.04);
             })
-            .attr('x', 0);
-    
+            .attr('x', bar_x)
+            .attr('y', bar_y);
+        
+
+        // svg.append("text")
+        //     .text("TEST")
+        
         var progress = svg.append('rect')
                         .attr('class', 'progress-rect')
                         .attr('fill', function(){
                             return progress_color;
                         })
-                        .attr('height', 15)
+                        .attr('height', bar_height)
                         .attr('width', 0)
                         .attr('rx', 10)
                         .attr('ry', 10)
-                        .attr('x', 0);
+                        .attr('x', bar_x + (bar_x*1))
+                        .attr('y', bar_y + (bar_y*1.50));
     
         progress.transition()
             .duration(1000)
             .attr('width', function(){
                 var index = progress_val_capped;
-                return index * 5;
+                return index * bar_cap;
             });
 
-    
     
         </script>
 
