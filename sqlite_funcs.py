@@ -70,13 +70,15 @@ def datestamp():
     return str(datetime.now().date())
 
 def samedate(date: str) -> bool():
-    day = datetime.strptime(date[:10], '%Y-%M-%d')
-    today = datetime.strptime(datestamp(), '%Y-%M-%d')
-    if day == today:
-        return True
-    else:
+    if date == None:
         return False
-
+    else:
+        day = datetime.strptime(date[:10], '%Y-%M-%d')
+        today = datetime.strptime(datestamp(), '%Y-%M-%d')
+        if day == today:
+            return True
+        else:
+            return False
 
 
 def db_init():
