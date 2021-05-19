@@ -39,21 +39,17 @@
         }
         else {
             progress_color = "#5CBFF6"
+        };
+
+        if (progress_val > 100) {
+            progress_val_capped = 100
         }
-        console.log(progress_val)
+        else {progress_val_capped = progress_val};
 
         var svg = d3.select('.progress')
             .append('svg')
             .attr('height', 100)
             .attr('width', 500);
-    
-        // var states = ['started', 'inProgress', 'completed'],
-        //     segmentWidth = 100,
-        //     currentState = 'started';
-    
-        // var colorScale = d3.scaleOrdinal()
-        //     .domain(states)
-        //     .range(['yellow', 'orange', 'green']);
 
     
         svg.append('rect')
@@ -81,21 +77,10 @@
         progress.transition()
             .duration(1000)
             .attr('width', function(){
-                var index = progress_val;
+                var index = progress_val_capped;
                 return index * 5;
             });
-    
-        // function moveProgressBar(state){
-        //     progress.transition()
-        //         .duration(1000)
-        //         .attr('fill', function(){
-        //             return progress_color;
-        //         })
-        //         .attr('width', function(){
-        //             var index = states.indexOf(state);
-        //             return (index + 1) * segmentWidth;
-        //         });
-        // }
+
     
     
         </script>
