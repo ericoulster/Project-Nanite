@@ -450,7 +450,10 @@ class ProjectActions:
         df = df.fillna(method='ffill')
         df['Wtarget_sum'] = df['Wtarget'].cumsum()
         df['Wdate'] = df['Wdate'].apply(lambda x: x[:10])
-        df['daily_words'] = [(df[['Wcount']].iloc[i] - df[['Wcount']].iloc[i-1]).clip(0) for i in range(len(df))]
+        df['daily_words'] = [
+            (df[['Wcount']].iloc[i] - df[['Wcount']].iloc[i-1]).clip(0) if i >= 1 
+            else df[['Wcount']].iloc[i] for i in range(len(df))
+            ]
         df['streak'] = [is_streak(i, df['Wcount'], df['Wtarget']) for i in range(len(df))]
         d_list = streak_length(df['streak'])
         df['streak'] = pd.Series(d_list, index=new_index)
