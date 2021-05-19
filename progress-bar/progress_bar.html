@@ -67,7 +67,7 @@
             .attr('ry', 20)
             .attr('fill', 'none')
             .attr('stroke', '#333A40')
-            .attr('stroke-width', 5)
+            .attr('stroke-width', 4)
             .attr('height', bar_height + (bar_height*1))
             .attr('width', function(){
                 return bar_width + (bar_width*0.04);
@@ -76,8 +76,7 @@
             .attr('y', bar_y);
         
 
-        // svg.append("text")
-        //     .text("TEST")
+
         
         var progress = svg.append('rect')
                         .attr('class', 'progress-rect')
@@ -98,6 +97,11 @@
                 return index * bar_cap;
             });
 
+        svg.append("text")
+            .text("TEST")
+            .attr('x', bar_width/2)
+            .attr('y', bar_height*1.5)
+            .raise()
     
         </script>
 
