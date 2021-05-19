@@ -8,29 +8,53 @@
     </head>
     <body>
         
-	<select class="progressSelector" onchange="moveProgressBar(value)">
-		<option value="started" selected>Started</option>
-		<option value="inProgress">In Progress</option>
-		<option value="completed">Completed</option>
-	</select>
 
 	<div class="progress"></div>
 
     <script>
+        var data = {
+            'Wtarget_sum': 1000.0,
+            'daily_words': 800.0
+    };
+        
+        var progress_val = (data['daily_words'] / data['Wtarget_sum'])*100;
 
+        if (progress_val < 25) {
+            progress_color = "#D0D0D0"
+        }
+        else if (progress_val < 50) {
+            progress_color = "#F6B85C"
+        }
+        else if (progress_val < 75) {
+            progress_color = "#F6D55C"
+        }
+        else if (progress_val < 100) {
+            progress_color = "#CEF65C"
+        }
+        else if (progress_val < 115) {
+            progress_color = "#96F65C"
+        }
+        else if (progress_val < 200) {
+            progress_color = "#5CF6D1"
+        }
+        else {
+            progress_color = "#5CBFF6"
+        }
+        console.log(progress_val)
 
         var svg = d3.select('.progress')
             .append('svg')
             .attr('height', 100)
             .attr('width', 500);
     
-        var states = ['started', 'inProgress', 'completed'],
-            segmentWidth = 100,
-            currentState = 'started';
+        // var states = ['started', 'inProgress', 'completed'],
+        //     segmentWidth = 100,
+        //     currentState = 'started';
     
-        var colorScale = d3.scaleOrdinal()
-            .domain(states)
-            .range(['yellow', 'orange', 'green']);
+        // var colorScale = d3.scaleOrdinal()
+        //     .domain(states)
+        //     .range(['yellow', 'orange', 'green']);
+
     
         svg.append('rect')
             .attr('class', 'bg-rect')
@@ -39,14 +63,14 @@
             .attr('fill', 'gray')
             .attr('height', 15)
             .attr('width', function(){
-                return segmentWidth * states.length;
+                return 500;
             })
             .attr('x', 0);
     
         var progress = svg.append('rect')
                         .attr('class', 'progress-rect')
                         .attr('fill', function(){
-                            return colorScale(currentState);
+                            return progress_color;
                         })
                         .attr('height', 15)
                         .attr('width', 0)
@@ -57,21 +81,21 @@
         progress.transition()
             .duration(1000)
             .attr('width', function(){
-                var index = states.indexOf(currentState);
-                return (index + 1) * segmentWidth;
+                var index = progress_val;
+                return index * 5;
             });
     
-        function moveProgressBar(state){
-            progress.transition()
-                .duration(1000)
-                .attr('fill', function(){
-                    return colorScale(state);
-                })
-                .attr('width', function(){
-                    var index = states.indexOf(state);
-                    return (index + 1) * segmentWidth;
-                });
-        }
+        // function moveProgressBar(state){
+        //     progress.transition()
+        //         .duration(1000)
+        //         .attr('fill', function(){
+        //             return progress_color;
+        //         })
+        //         .attr('width', function(){
+        //             var index = states.indexOf(state);
+        //             return (index + 1) * segmentWidth;
+        //         });
+        // }
     
     
         </script>
