@@ -11,6 +11,8 @@
   .Archivo {
       font-family: "Archivo";
   }
+  
+  
   </style>
 <!-- Create a div where the graph will take place -->
 <div id="wordcounter"></div>
@@ -79,6 +81,8 @@
     });
 
 
+
+    
   // Y axis
   var y = d3.scaleLinear()
     .domain([0, maxY])
@@ -87,8 +91,6 @@
     svg.append("g")
     .call(d3.axisLeft(y))
     .attr('font-family', 'Archivo');
-  
-
 
 // gridlines in y axis function
 function make_y_gridlines() {		
@@ -131,7 +133,7 @@ svg.append("path")
         )
 
 
-// Line-ticks
+// Line-bubbles
 svg.selectAll("circles")
     .data(data)
     .enter()
@@ -143,7 +145,7 @@ svg.selectAll("circles")
       .attr("cy", function(d) { return y(d.Wtarget) })
       .attr("r", 4)
 
-
+svg.selectAll("g").select(".domain").remove()
 
 
 
