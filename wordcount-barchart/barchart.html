@@ -11,7 +11,13 @@
   .Archivo {
       font-family: "Archivo";
   }
-  
+  .grid .tick {
+    stroke: lightgrey;
+    opacity: 0.7;
+}
+x.tick line{
+  visibility:hidden;
+}
   
   </style>
 <!-- Create a div where the graph will take place -->
@@ -67,6 +73,7 @@
       .attr('font-family', 'Archivo')
             .attr('font-weight', 100)
             .attr('font-size', 'small')
+            .attr('stroke', "#E3E3E3")
       .style("text-anchor", "end");
 
 
@@ -89,8 +96,9 @@
     .range([ height, 0]);
   
     svg.append("g")
-    .call(d3.axisLeft(y))
-    .attr('font-family', 'Archivo');
+    .call(d3.axisLeft(y).tickSize(0))
+    .attr('font-family', 'Archivo')
+    .attr('stroke', "#E3E3E3");
 
 // gridlines in y axis function
 function make_y_gridlines() {		
@@ -105,6 +113,7 @@ function make_y_gridlines() {
           .tickSize(-width)
           .tickFormat("")
           .ticks(6)
+          
       )
 
 
@@ -145,7 +154,7 @@ svg.selectAll("circles")
       .attr("cy", function(d) { return y(d.Wtarget) })
       .attr("r", 4)
 
-svg.selectAll("g").select(".domain").remove()
+svg.selectAll("g").select(".domain").remove();
 
 
 
