@@ -1,0 +1,9 @@
+<!doctype html>
+<html>
+
+{{ something }}
+{% macro input(name, value='', type='text') -%}
+    <input type="{{ type }}" value="{{ value|e }}" name="{{ name }}">
+{%- endmacro %}
+
+</html>
