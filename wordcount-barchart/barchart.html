@@ -19,16 +19,16 @@
 x.tick line{
   visibility:hidden;
 }
+
+body {
+  background-color: #333A40
+}
   
   </style>
 <!-- Create a div where the graph will take place -->
 <div id="wordcounter"></div>
 
 <script>
-
-
-// Maybe I don't need axisBottom
-// also look at axisOrdinalBottom
 
   // set the dimensions and margins of the graph
   var margin = {top: 30, right: 30, bottom: 70, left: 60},
@@ -74,7 +74,7 @@ x.tick line{
       .attr('font-family', 'Archivo')
             .attr('font-weight', 100)
             .attr('font-size', 'small')
-            .attr('stroke', "#E3E3E3")
+            .style('fill', "#E3E3E3")
       .style("text-anchor", "end");
 
 
@@ -99,18 +99,12 @@ x.tick line{
     svg.append("g")
     .call(d3.axisLeft(y).tickSize(0))
     .attr('font-family', 'Archivo')
-    .attr('stroke', "#E3E3E3");
-
-// gridlines in y axis function
-function make_y_gridlines() {		
-    return d3.axisLeft(y)
-        
-}
+    .selectAll("text").style('fill', "#E3E3E3").attr('font-size', 'small');
 
   // add the Y gridlines
   svg.append("g")			
       .attr("class", "grid")
-      .call(make_y_gridlines()
+      .call(d3.axisLeft(y)
           .tickSize(-width)
           .tickFormat("")
           .ticks(6)

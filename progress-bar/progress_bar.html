@@ -13,6 +13,10 @@
         .Archivo {
             font-family: "Archivo";
         }
+
+        body {
+  background-color: #474F56
+        }
         </style>
 
 
@@ -25,7 +29,7 @@
     <script>
         var data = {
             'Wtarget_sum': 1000.0,
-            'daily_words': 0.0
+            'daily_words': 900.0
     };
         
         var progress_val = (data['daily_words'] / data['Wtarget_sum'])*100;
@@ -72,6 +76,11 @@
 
         var bar_cap = (bar_width/100);
 
+        if (progress_val < 50) {
+            var text_color ='#E3E3E3'
+        }
+        else {
+            var text_color = '#1F2428'}
         svg.append('rect')
             .attr('class', 'bg-rect')
             .attr('rx', 20)
@@ -109,13 +118,14 @@
             });
 
         svg.append("text")
-            .text(`${data['daily_words']}/${data['Wtarget_sum']} words (${progress_val}%)`)
+            .text(`${data['daily_words']}/${data['Wtarget_sum']} words (${Math.floor(progress_val)}%)`)
             .attr('x', bar_width/2 -50)
             .attr('y', bar_height*1.5)
             .attr('fill', '#333A40')
             .attr('font-family', 'Archivo')
             .attr('font-weight', 100)
             .attr('font-size', 'small')
+            .style('fill', text_color)
             .raise()
     
         </script>
