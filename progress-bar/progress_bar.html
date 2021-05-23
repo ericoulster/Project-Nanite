@@ -100,9 +100,7 @@
         
         var progress = svg.append('rect')
                         .attr('class', 'progress-rect')
-                        .attr('fill', function(){
-                            return progress_color;
-                        })
+                        .attr('fill', progress_color)
                         .attr('height', bar_height)
                         .attr('width', 0)
                         .attr('rx', 10)
