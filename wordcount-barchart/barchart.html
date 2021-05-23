@@ -55,13 +55,13 @@ body {
 
   
   var data = [
-{Wdate: "2021-01-01", Wcount: 50, Wtarget:400},
+{Wdate: "2021-01-01", Wcount: 400, Wtarget:400},
 {Wdate: "2021-01-02", Wcount: 700, Wtarget:800},
 {Wdate: "2021-01-03", Wcount: 1000, Wtarget:1200},
 {Wdate: "2021-01-04", Wcount: 1200, Wtarget:1600},
 {Wdate: "2021-01-05", Wcount: 1700, Wtarget:2000},
 {Wdate: "2021-01-06", Wcount: 1900, Wtarget:2400},
-{Wdate: "2021-01-07", Wcount: 2000, Wtarget:2800}
+{Wdate: "2021-01-07", Wcount: 3000, Wtarget:2800}
 ];
 
   // X axis
@@ -127,50 +127,6 @@ body {
       .attr("ry", 2)
       .attr("fill", "#F6D55C");
   
-  // Make text w/rangeband x & y, but y is minus 20, then if x - 20 is 0, then 0
-  
-
-
-  svg.selectAll("bar-text")
-    .data(data)
-    .enter()
-    .append("text")
-      .attr("x", function(d) {
-        if (d.Wcount < 100) {
-          var x_offset = x.bandwidth()/3
-        }
-        else if (d.Wcount < 1000) {
-          var x_offset = x.bandwidth()/5
-        }
-        else if (d.Wcount < 10000) {
-          var x_offset = x.bandwidth()/7
-        }
-        else {
-          var x_offset = x.bandwidth()/19
-        }
-        return x(d.Wdate) + x_offset; })
-      
-      .attr("y", function(d) {
-        if ((height - d.Wcount) < 30) {
-            var barPad = y(d.Wcount) + 30}
-        else {
-          var barPad = y(d.Wcount) - 10
-        }
-          return barPad;
-      })
-      .text(function(d) {return d.Wcount})
-      .attr('font-family', 'Archivo')
-      .style('fill', function(d) {
-        if ((height - d.Wcount) < 30) {
-          var barTextColor = "#1F2428"
-        }
-        else {
-          var barTextColor = "#E3E3E3"
-        }
-        return barTextColor
-      })
-      .attr('font-size', 'small');
-
 
 
 // Line
@@ -197,10 +153,53 @@ svg.selectAll("circles")
       .attr("cy", function(d) { return y(d.Wtarget) })
       .attr("r", 4)
 
+
+  svg.selectAll("bar-text")
+    .data(data)
+    .enter()
+    .append("text")
+      .attr("x", function(d) {
+        if (d.Wcount < 100) {
+          var x_offset = x.bandwidth()/3
+        }
+        else if (d.Wcount < 1000) {
+          var x_offset = x.bandwidth()/5
+        }
+        else if (d.Wcount < 10000) {
+          var x_offset = x.bandwidth()/7
+        }
+        else {
+          var x_offset = x.bandwidth()/19
+        }
+        return x(d.Wdate) + x_offset; })
+      // set this y to more relative values
+      // also, move the text if it intersects with the line bubble
+      .attr("y", function(d) {
+        if ((height - d.Wcount) < 25) { 
+            var barPad = y(d.Wcount) + 25}
+        else {
+          var barPad = y(d.Wcount) - 10
+        }
+          return barPad;
+      })
+      .text(function(d) {return d.Wcount})
+      .attr('font-family', 'Archivo')
+      .style('fill', function(d) {
+        if ((height - d.Wcount) < 30) {
+          var barTextColor = "#1F2428"
+        }
+        else {
+          var barTextColor = "#E3E3E3"
+        }
+        return barTextColor
+      })
+      .attr('font-size', 'small');
+
+
 svg.selectAll("g").select(".domain").remove();
 
 
-// if the number of bars is less than 10, display words, else, do not
+// issue: put text on top of line graph
 
 
       //to add: weekly & monthly granularity
