@@ -8,9 +8,20 @@
 /* ///////////////////////////////// */
 /* /// Sitewide Styles /// */
 
-/* Global Fonts */
+/* Import Archivo */
+@font-face {
+    font-family: 'Archivo';
+    font-style: italic; 
+    src: url('/Archivo/Archivo-Italic-VariableFont_wdth,wght.ttf')  format('truetype'), /* Safari, Android, iOS */
+  }
+@font-face { 
+    font-family: 'Archivo'; 
+    src: url('Archivo/Archivo-VariableFont_wdth,wght.ttf');
+}
 
+/* Global Fonts */
 h1 {
+    font-family: Archivo, sans-serif;
     font-size: larger;
 }
 
@@ -102,7 +113,7 @@ h1 {
 
 /* Font */
 * {
-    font-family: 'IBM Plex Sans', cursive, sans-serif;
+    font-family: 'Archivo', sans-serif;
     /* font-size: large; */
 }
 

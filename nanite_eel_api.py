@@ -1,15 +1,36 @@
 import eel
 from sqlite_funcs import *
-
 from jinja2 import Template
+
 @eel.expose
-def list_projects_html():
+def get_author_id(authorname):
+    a = AuthorActions()
+    a.id_by_name(authorname)
+    authorinfo = a.return_info()
+
+    if 'author_id' in authorinfo:
+        return authorinfo['author_id']
+    else:
+        return None
+
+@eel.expose
+def list_projects_html(username):
     # Jinja template with for loop (for x amount of projects, which also can be input)
     # This passes the complete html into the javascript as a string for rendering (with DOMParser), for quick prototyping
 
+    author_id = get_author_id(username)
+    projects = return_project_screen(author_id)
+    # Sample returned: {'project_name': "Johnny's Other Manifesto", 'project_id': 1, 'daily_words': 0.0, 'today_goal': 0, 'total_progress': 0, 'current_streak': 0}, {'project_name': 'Bacon', 'project_id': 3, 'daily_words': 0.0, 'today_goal': 0, 'total_progress': 0, 'current_streak': 0}, {'project_name': 'adsf', 'project_id': 4, 'daily_words': 0.0, 'today_goal': 0, 'total_progress': 0, 'current_streak': 0}
+    # More Info Needed: this doesn't return today's progress
+
     # SAMPLE DATA EXPECTED BY THE TEMPLATE
-    projects = [{'name':'Sample Name', 'wordcountgoal':4000,'targetstartdate':'2021-01-01','targetenddate':'2021-07-01','filepath':'C:/Dummy/File/Path','filetype':'txt'},{'name':'Second P Name', 'wordcountgoal':7000,'targetstartdate':'2021-01-07','targetenddate':'2021-07-07','filepath':'D:/Dummy/File/Path','filetype':'docx'}]
+    projects2 = [{'name':'Sample Name', 'wordcountgoal':4000,'targetstartdate':'2021-01-01','targetenddate':'2021-07-01','filepath':'C:/Dummy/File/Path','filetype':'txt'},{'name':'Second P Name', 'wordcountgoal':7000,'targetstartdate':'2021-01-07','targetenddate':'2021-07-07','filepath':'D:/Dummy/File/Path','filetype':'docx'}]  
     WCtotal = [3000,5000]
+    
+    # Debugging
+    print(projects)
+    print(''' ------- ''')
+    print(projects2)
 
     t = Template("""{% for idx, project in projects %}
     <div id="project-{{idx}}" class="projects-item">
@@ -133,7 +154,7 @@ def eel_return_project_screen(author_id:int) -> list(dict()):
     return return_project_screen(author_id)
 
 @eel.expose
-def eel_return_projects_by_name(author_name:str) -> list(dict()):
+def return_projects_by_name(author_name:str) -> list(dict()):
     a = AuthorActions()
     a.id_by_name(author_name)
     return a.return_projects()

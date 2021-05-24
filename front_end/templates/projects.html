@@ -52,7 +52,7 @@
 <script>
   // Initial 
   (async function () {
-    eel_list_projects_html();
+    eel_list_projects_html_current_user();
   }) ();
 
 // REVIEW THIS FUNCTION: IS IT STILL NEEDED?
@@ -65,16 +65,22 @@
   }) ();
 
   async function eel_return_projects_by_name(username) {
-    let a = await eel.eel_return_projects_by_name(username)();
+    let a = await eel.return_projects_by_name(username)();
     return a;
   }
 
-  // THIS IS THE WORKING ONE
-  async function eel_list_projects_html() {
+  // THIS IS THE WORKING ONE (TWO FUNCTIONS)
+
+  async function eel_list_projects_html_current_user() {
+    let a = await eel_list_projects_html(get_username());
+    return a;
+  }
+
+  async function eel_list_projects_html(username) {
     const parser = new DOMParser();
     let projectslist = document.querySelector('#projectslist');
 
-    let htmlString = await eel.list_projects_html()();
+    let htmlString = await eel.list_projects_html(username)();
     let doc = parser.parseFromString(htmlString, "text/html");
 
     // append to projects list div
