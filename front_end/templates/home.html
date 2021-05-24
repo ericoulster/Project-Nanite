@@ -1,15 +1,16 @@
 {% extends 'base-nosidebar.html' %}
 
 {% block content %} 
-  <div id="main" class="main">   
+  <div id="main" class="home main">   
 
     <div id="main-content" class="container">
       <div class="nanite-welcome-image">
-        <img src="../static/imgs/innovation_.svg"/>
+        <img src="../static/imgs/nanite-home.png"/>
       </div>
-      <div class="nanite-welcome-text"><h1>Nanite</h1><p class="font-med">Increase your writing productivity in a fun and engaging way.</p></div>
-      <div class="nanite-start-button"><a role="button" class="btn" href="welcome.html">Let's Get Started</a></div>
-      <div class="skip"><a href="projects.html">Skip to Projects</a></div>
+      <div class="nanite-user-select">
+        <a class="user" href="projects.html" onclick="set_username('Johnny')"><img src="../static/imgs/new-user.png"><div class="user-info"><p value="Johnny" class="username">J_Sunderland</p><p class="last-login">Last logged in [d]</p></div><button class="delete-user">X</button></a>
+        <p class="other-login font-small"><a href="welcome.html">Log in as someone else</a></p>
+    </div>
     </div>
 
   </div>  
