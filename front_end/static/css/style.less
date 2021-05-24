@@ -23,7 +23,7 @@
 
 /* Global Colours */
 body {
-    background: #colors[dark-blue-grey];
+    background: #colors[mid-dark-blue-grey];
 }
 
 h1, h2, h3, h4, h5, div, p, legend, label {
@@ -51,7 +51,7 @@ p {
     grid-template-areas:
       "leftside main main main main main main main";
   }
-  .leftside { grid-area: leftside; background-color: #cccccc; }
+  .leftside { grid-area: leftside; background-color: #colors[mid-blue-grey]; }
   .main { grid-area: main; padding-left: 1rem; padding-right: 1rem;}
   
   @media all and (-ms-high-contrast:none) {
@@ -102,12 +102,12 @@ p {
         text-align: center;
         a {
             font-weight: bold;
-            color: black;
+            color: #colors-text[title-yellow];
             text-decoration: none;
         }
     }
     .username {
-        color: black;
+        color: #colors[dark-blue-grey];
         text-decoration: none;
     }
     .navbar li.nav-item {

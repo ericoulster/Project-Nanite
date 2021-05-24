@@ -17,7 +17,7 @@
 }
 /* Global Colours */
 body {
-  background: #1f2428;
+  background: #333a40;
 }
 h1,
 h2,
@@ -50,7 +50,7 @@ p {
 }
 .leftside {
   grid-area: leftside;
-  background-color: #cccccc;
+  background-color: #474f56;
 }
 .main {
   grid-area: main;
@@ -98,11 +98,11 @@ p {
 }
 .sidebar .logo a {
   font-weight: bold;
-  color: black;
+  color: #f6d55c;
   text-decoration: none;
 }
 .sidebar .username {
-  color: black;
+  color: #1f2428;
   text-decoration: none;
 }
 .sidebar .navbar li.nav-item {
