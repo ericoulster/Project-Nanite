@@ -6,24 +6,22 @@
     <div id="left-sidebar-content" class="content">
       <div class="logo"><a href="home.html">Nanite</a></div>
       <div id="sidebar-insights" class="insights">
-        <p><a id="username_link" class="username" href="welcome.html"><span id="username">{{username}}</span></a></p>
+        <p><a id="username_link" class="username" href="welcome.html"><img class="user-img" src="../static/imgs/new-user.png" alt="{{username}}"><div id="username">Writer</div></a></p>
       </div>
       <nav>
         <ul class="navbar">
           <li class="nav-item">
-            <a class="nav-link" href="home.html">Home</a> 
+            <a class="nav-link" href="home.html"><img class="icon" src="../static/imgs/icons/home.svg"></a> 
           </li>
-            <li class="nav-item">
-              <a class="nav-link" href="projects.html">Projects</a>
-              <ul id="projects-list-sidebar">
-                {% for idx, project in menuprojects %}
-                <li class="nav-item nav-sub-item"><a class="nav-link" href="/projects/{{idx}}">{{project['name']}}</a></li>
-                {% endfor %}
-              </ul>
-            </li>
-            <li class="nav-item">
-              {% include 'sidebar-info-list.html' %}
-            </li>
+          <li class="nav-item">
+            <a class="nav-link" href="home.html"><img class="icon" src="../static/imgs/icons/bell.svg"></a> 
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="home.html"><img class="icon" src="../static/imgs/icons/logout.svg"></a> 
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="home.html"><img class="icon" src="../static/imgs/icons/settings.svg"></a> 
+          </li>
         </ul>
       </nav>
     </div>
