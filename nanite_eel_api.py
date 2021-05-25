@@ -35,75 +35,92 @@ def list_projects_html(username):
     t = Template("""{% for idx, project in projects %}
     <div id="project-{{idx}}" class="projects-item">
       <div id="project-{{idx}}-summary" class="project-summary panels">
-        <div class="panel"><h2>{{ project.name }}</h2></div>
-        <div class="panel"><label for="project-progress">Writing Goal: {{project.wordcountgoal}} Total Words</label>
-          <progress id="project-progress" value="{{WCtotal[idx]}}" max="{{project.wordcountgoal}}"> {{WCtotal[idx] / project.wordcountgoal}} </progress><p> <span class="progress-to-goal">{{WCtotal[idx]}} / {{project.wordcountgoal}}</span> <span class="last-update hidden">Last Update: No Update Yet!</span> </p>
+        <div class="panel"><h2>{{ project.project_name }}</h2></div>
+        <div class="panel"><label for="project-progress">Today's Progress:</label>
+          <progress id="project-progress" value="111" max="234"> {{111 / 234}} </progress><p> <span class="progress-to-goal">111 / 234</span> <span class="last-update hidden">Last Update: No Update Yet!</span> </p>
         </div>
         <div class="panel">
-          <p>Start Date: {{ project.targetstartdate }}</p>
-          <p>Finish Date: {{ project.targetenddate }}</p>
-          <button onclick="pm = document.querySelector('#project-{{idx}}-more').classList.toggle('hidden');">More...</button>
-        </div>
-      </div>
-      <div id="project-{{idx}}-more" class="project-summary-more panels hidden">
-       <form id="project-{{idx}}-form" action="/project-options/{{idx}}" method="POST" class="project-form existing-project">
-        <div class="formfields">
-          <fieldset> 
-              <legend>Setup</legend>
-                <input type="text" name="projectid" value="{{idx}}" class="formfield" hidden required disabled>
-                <input type="text" name="name" value="{{ project.name }}" class="formfield" hidden required disabled>
-                <label>File/folder Path:</label><input type="text" name="filepath" value="{{ project.filepath }}" class="formfield" required disabled><br/>
-                <label>Files of type:</label>
-                  <select name="filetype" class="formfield" required disabled>
-                    <option value="" selected hidden>{{ project.filetype }}</option>
-                    <option value="txt">txt</option>
-                    <option value="rtf">rtf</option>
-                    <option value="docx">docx</option>
-                  </select><br/>
-          </fieldset>
-          <fieldset> 
-            <legend>Goals</legend>
-                <label>Word Count Goal:</label><input type="text" name="wordcountgoal" value="{{ project.wordcountgoal }}" class="formfield" required disabled> words
-                <div class="regularity selection" style="display:inline-block;">
-                  <input type="radio" id="daily-{{idx}}" name="wordcountreg" value="daily" class="formfield" required disabled>
-                  <label for="daily-{{idx}}">Daily</label>
-                  <input type="radio" id="total-{{idx}}" name="wordcountreg" value="total" class="formfield" required checked disabled>
-                  <label for="total-{{idx}}">Total</label>
-                </div>
-                <br/>
-                <label>Start Date:</label><input type="date" name="targetstartdate" value="{{ project.targetstartdate }}" class="formfield" required disabled><br/>
-                <label>Goal End Date:</label><input type="date" name="targetenddate" value="{{ project.targetenddate }}" class="formfield" required disabled><br/>
-            </fieldset>
-        </div>
-            <input type="submit" value="Update Project" class="formfield hidden" disabled> 
-        </form>
-        <div class="modal modal-{{idx}} hidden">
-          <form action = "/project-options/{{idx}}/ren" method = "POST">
-            <input type="text" name="name" value="{{ project.name }}" class="formfield" required hidden>
-            <input type="text" name="newname" value="{{ project.name }}" class="formfield" required>
-            <input type="submit" value="Rename Project">
-          </form>
-        </div>
-        <div id="project-actions-{{idx}}" class="project-actions project-actions-{{idx}}">
-          <form class="" action = "/current-project" method = "POST">
-              <input type="hidden" name="currentproject" value="{{idx}}">
-              <input type="submit" value="Show Insights">
-          </form>
-            <button class="debug" onclick="alert(document.cookie);">Cookie Alert</button>
-            <button onclick="m = document.querySelector('.modal-{{idx}}'); m.classList.toggle('hidden');">Rename Project</button>
-            <button onclick="pr = document.querySelectorAll('div#project-{{idx}} form#project-{{idx}}-form .formfield'); pr.forEach(function(x){x.toggleAttribute('disabled');}); document.querySelector('#project-{{idx}}-form > input[type=\'submit\']').classList.toggle('hidden');">Edit Project</button>
-          <form action = "/project-options/{{idx}}/del" method = "POST">
-              <input type="text" name="name" value="{{ project.name }}" class="formfield" required hidden>
-              <input type="submit" value="Delete Project">
-          </form>
-          <form action = "/project-options/{{idx}}" method = "POST">
-            <input type="text" name="name" value="{{ project.name }}" class="formfield" required hidden>
-            <input type="submit" value="Refresh Word Count">
-          </form>
+          <p>Total Progress: [NUMBER]</p>
+          <p>Current Streak: [NUMBER]</p>
+          <a class="btn">Project Stats</a>
+          <a class="btn">Refresh Project</a>
         </div>
       </div>
     </div>
-  {% endfor %}""") 
+  {% endfor %}""")
+
+#     t = Template("""{% for idx, project in projects %}
+#     <div id="project-{{idx}}" class="projects-item">
+#       <div id="project-{{idx}}-summary" class="project-summary panels">
+#         <div class="panel"><h2>{{ project.name }}</h2></div>
+#         <div class="panel"><label for="project-progress">Writing Goal: {{project.wordcountgoal}} Total Words</label>
+#           <progress id="project-progress" value="{{WCtotal[idx]}}" max="{{project.wordcountgoal}}"> {{WCtotal[idx] / project.wordcountgoal}} </progress><p> <span class="progress-to-goal">{{WCtotal[idx]}} / {{project.wordcountgoal}}</span> <span class="last-update hidden">Last Update: No Update Yet!</span> </p>
+#         </div>
+#         <div class="panel">
+#           <p>Start Date: {{ project.targetstartdate }}</p>
+#           <p>Finish Date: {{ project.targetenddate }}</p>
+#           <button onclick="pm = document.querySelector('#project-{{idx}}-more').classList.toggle('hidden');">More...</button>
+#         </div>
+#       </div>
+#       <div id="project-{{idx}}-more" class="project-summary-more panels hidden">
+#        <form id="project-{{idx}}-form" action="/project-options/{{idx}}" method="POST" class="project-form existing-project">
+#         <div class="formfields">
+#           <fieldset> 
+#               <legend>Setup</legend>
+#                 <input type="text" name="projectid" value="{{idx}}" class="formfield" hidden required disabled>
+#                 <input type="text" name="name" value="{{ project.name }}" class="formfield" hidden required disabled>
+#                 <label>File/folder Path:</label><input type="text" name="filepath" value="{{ project.filepath }}" class="formfield" required disabled><br/>
+#                 <label>Files of type:</label>
+#                   <select name="filetype" class="formfield" required disabled>
+#                     <option value="" selected hidden>{{ project.filetype }}</option>
+#                     <option value="txt">txt</option>
+#                     <option value="rtf">rtf</option>
+#                     <option value="docx">docx</option>
+#                   </select><br/>
+#           </fieldset>
+#           <fieldset> 
+#             <legend>Goals</legend>
+#                 <label>Word Count Goal:</label><input type="text" name="wordcountgoal" value="{{ project.wordcountgoal }}" class="formfield" required disabled> words
+#                 <div class="regularity selection" style="display:inline-block;">
+#                   <input type="radio" id="daily-{{idx}}" name="wordcountreg" value="daily" class="formfield" required disabled>
+#                   <label for="daily-{{idx}}">Daily</label>
+#                   <input type="radio" id="total-{{idx}}" name="wordcountreg" value="total" class="formfield" required checked disabled>
+#                   <label for="total-{{idx}}">Total</label>
+#                 </div>
+#                 <br/>
+#                 <label>Start Date:</label><input type="date" name="targetstartdate" value="{{ project.targetstartdate }}" class="formfield" required disabled><br/>
+#                 <label>Goal End Date:</label><input type="date" name="targetenddate" value="{{ project.targetenddate }}" class="formfield" required disabled><br/>
+#             </fieldset>
+#         </div>
+#             <input type="submit" value="Update Project" class="formfield hidden" disabled> 
+#         </form>
+#         <div class="modal modal-{{idx}} hidden">
+#           <form action = "/project-options/{{idx}}/ren" method = "POST">
+#             <input type="text" name="name" value="{{ project.name }}" class="formfield" required hidden>
+#             <input type="text" name="newname" value="{{ project.name }}" class="formfield" required>
+#             <input type="submit" value="Rename Project">
+#           </form>
+#         </div>
+#         <div id="project-actions-{{idx}}" class="project-actions project-actions-{{idx}}">
+#           <form class="" action = "/current-project" method = "POST">
+#               <input type="hidden" name="currentproject" value="{{idx}}">
+#               <input type="submit" value="Show Insights">
+#           </form>
+#             <button class="debug" onclick="alert(document.cookie);">Cookie Alert</button>
+#             <button onclick="m = document.querySelector('.modal-{{idx}}'); m.classList.toggle('hidden');">Rename Project</button>
+#             <button onclick="pr = document.querySelectorAll('div#project-{{idx}} form#project-{{idx}}-form .formfield'); pr.forEach(function(x){x.toggleAttribute('disabled');}); document.querySelector('#project-{{idx}}-form > input[type=\'submit\']').classList.toggle('hidden');">Edit Project</button>
+#           <form action = "/project-options/{{idx}}/del" method = "POST">
+#               <input type="text" name="name" value="{{ project.name }}" class="formfield" required hidden>
+#               <input type="submit" value="Delete Project">
+#           </form>
+#           <form action = "/project-options/{{idx}}" method = "POST">
+#             <input type="text" name="name" value="{{ project.name }}" class="formfield" required hidden>
+#             <input type="submit" value="Refresh Word Count">
+#           </form>
+#         </div>
+#       </div>
+#     </div>
+#   {% endfor %}""") 
 
     return t.render(projects=enumerate(projects), WCtotal=WCtotal)
 

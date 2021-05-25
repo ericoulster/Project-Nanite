@@ -41,6 +41,11 @@ p {
     color: #colors[off-white];
 }
 
+/* Global Layouts */
+fieldset {
+    padding: 1rem;
+}
+
 /* Layout: Grid */
 .grid-container {
     height: 100vh;
@@ -168,11 +173,38 @@ a.btn {
 }
 
 button, input[type="submit"], a.btn {
+    font-size: .875rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    border-radius: .25rem;
+    border-style: none;
+    border-width: 0;
+    cursor: pointer;
+    -webkit-appearance: button;
+    text-transform: none;
+    overflow: visible;
+    line-height: 1.15;
+    will-change: transform;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    transition: -webkit-transform .25s ease-out;
+    transition: transform .25s ease-out;
+    transition: transform .25s ease-out,-webkit-transform .25s ease-out;
+      
     margin: 0.5rem;
     color: #colors[dark-blue-grey];
     background-color: #colors-text[title-yellow];
     border-radius: 3px;
     /* font-size: larger; */
+    &:focus, &:hover {
+        -webkit-transform: scale(1.05);
+        transform: scale(1.05);
+        }
     &:disabled {
         background-color: shade(#f6d55c, 50%);
     }
@@ -245,7 +277,7 @@ ol li, ul li {
   
   .modal__header {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
   }
   
@@ -256,11 +288,14 @@ ol li, ul li {
     font-size: 1.25rem;
     line-height: 1.25;
     text-align: center;
-    color: #colors-text[title-yellow];
+    // color: #colors-text[title-yellow];
+    color: #colors-text[off-white];
     box-sizing: border-box;
   }
   
   .modal__close {
+    position: absolute;
+    right: 0px;
     background: transparent;
     border: 0;
   }
@@ -277,14 +312,18 @@ ol li, ul li {
     color: rgba(0,0,0,.8);
   }
   
+  .modal__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+   }
+  
   .modal__btn {
     font-size: .875rem;
     padding-left: 1rem;
     padding-right: 1rem;
     padding-top: .5rem;
     padding-bottom: .5rem;
-    background-color: #e6e6e6;
-    color: rgba(0,0,0,.8);
     border-radius: .25rem;
     border-style: none;
     border-width: 0;
@@ -309,12 +348,6 @@ ol li, ul li {
     -webkit-transform: scale(1.05);
     transform: scale(1.05);
   }
-  
-  .modal__btn-primary {
-    background-color: #074EE8;
-    color: #fff;
-  }
-  
   
   
   /**************************\
