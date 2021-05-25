@@ -35,6 +35,7 @@ body {
 
 <script>
 
+
   // set the dimensions and margins of the graph
   var margin = {top: 30, right: 30, bottom: 70, left: 60},
       width = 460 - margin.left - margin.right,
@@ -61,8 +62,14 @@ body {
 {Wdate: "2021-01-04", Wcount: 1200, Wtarget:1600},
 {Wdate: "2021-01-05", Wcount: 1700, Wtarget:2000},
 {Wdate: "2021-01-06", Wcount: 1900, Wtarget:2400},
-{Wdate: "2021-01-07", Wcount: 3000, Wtarget:2800}
+{Wdate: "2021-01-07", Wcount: 3000, Wtarget:2800},
+{Wdate: "2021-01-08", Wcount: 3500, Wtarget:3200},
+{Wdate: "2021-01-09", Wcount: 4000, Wtarget:3800}
+// {Wdate: "2021-01-10", Wcount: 4500, Wtarget:4400},
+// {Wdate: "2021-01-11", Wcount: 5000, Wtarget:5200}
 ];
+
+var data_length = data.length;
 
   // X axis
   var x = d3.scaleBand()
@@ -154,46 +161,63 @@ svg.selectAll("circles")
       .attr("r", 4)
 
 
-  svg.selectAll("bar-text")
-    .data(data)
-    .enter()
-    .append("text")
-      .attr("x", function(d) {
-        if (d.Wcount < 100) {
-          var x_offset = x.bandwidth()/3
-        }
-        else if (d.Wcount < 1000) {
-          var x_offset = x.bandwidth()/5
-        }
-        else if (d.Wcount < 10000) {
-          var x_offset = x.bandwidth()/7
-        }
-        else {
-          var x_offset = x.bandwidth()/19
-        }
-        return x(d.Wdate) + x_offset; })
-      // set this y to more relative values
-      // also, move the text if it intersects with the line bubble
-      .attr("y", function(d) {
-        if ((height - d.Wcount) < 25) { 
-            var barPad = y(d.Wcount) + 25}
-        else {
-          var barPad = y(d.Wcount) - 10
-        }
-          return barPad;
-      })
-      .text(function(d) {return d.Wcount})
-      .attr('font-family', 'Archivo')
-      .style('fill', function(d) {
-        if ((height - d.Wcount) < 30) {
-          var barTextColor = "#1F2428"
-        }
-        else {
-          var barTextColor = "#E3E3E3"
-        }
-        return barTextColor
-      })
-      .attr('font-size', 'small');
+      //having text beneath each bar. I'm finding this more trouble than it's worth.
+// if (data_length < 10)
+// {
+//   svg.selectAll("bar-text")
+//     .data(data)
+//     .enter()
+//     .append("text")
+//       .attr("x", function(d) {
+//         if (d.Wcount < 100) {
+//           var x_offset = x.bandwidth()/(data_length/2)
+//         }
+//         else if (d.Wcount < 1000) {
+//           var x_offset = x.bandwidth()/(data_length/1.15)
+//         }
+//         else if (d.Wcount < 10000) {
+//           var x_offset = x.bandwidth()/(data_length/0.7)
+//         }
+//         else {
+//           var x_offset = x.bandwidth()/(data_length/0.6)
+//         }
+//         return x(d.Wdate) + x_offset; })
+//       // set this y to more relative values
+//       // also, move the text if it intersects with the line bubble
+//       .attr("y", function(d) {
+//         if ((height - d.Wcount) < 25) { 
+//             var barPad = y(d.Wcount) + 25}
+//         else {
+//           var barPad = y(d.Wcount) - 10
+//         }
+//           return barPad;
+//       })
+//       .text(function(d) {return d.Wcount})
+//       .attr('font-family', 'Archivo')
+//       .style('fill', function(d) {
+//         if ((height - d.Wcount) < 30) {
+//           var barTextColor = "#1F2428"
+//         }
+//         else {
+//           var barTextColor = "#E3E3E3"
+//         }
+//         return barTextColor
+//       })
+//       .attr('font-size', 'small');
+//     }
+// else {}
+
+svg.append("text")         // Add the Y Axis
+        .attr("x", (width / 2))             
+        .attr("y", 0 - (margin.top / 2))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px") 
+        .attr('font-family', 'Archivo') 
+        .style("fill", "#E3E3E3")
+        .text("Wordcount Per Day"); // REPLACE THIS WITH PER DAY/WEEK/MONTH
+
+    // PUT THE NEW CODE HERE!
+
 
 
 svg.selectAll("g").select(".domain").remove();
