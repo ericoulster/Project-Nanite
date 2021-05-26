@@ -2,6 +2,7 @@
 
 <!-- Load d3.js -->
 <script type="text/javascript" src="../d3/d3.js"></script>
+<script src="data.js"></script>
 
 <style>
   @font-face {
@@ -31,9 +32,33 @@ body {
   
   </style>
 <!-- Create a div where the graph will take place -->
+
+<button type="button" onclick="timeType('daily')">Daily View</button>
+<button type="button" onclick="timeType('weekly')">Weekly View</button>
+<button type="button" onclick="timeType('weekly')">Monthly View</button>
+
+<!-- <label for="show_last">Show Last</label>
+<input type="text" name="name" pattern="[0-9]" title="Title" size=1/> 
+<label for="show_last_granularity"> </label> -->
+
 <div id="wordcounter"></div>
 
 <script>
+
+
+function timeType(time) {
+return time
+}
+
+// function timeType(time) {
+//   if (time === 'weekly')
+//   {return 'Week'}
+//   else if (time === 'monthly')
+//   {return 'Month'}
+//   else {return 'Day'}
+// }
+
+var data = Object.values(data);
 
 
   // set the dimensions and margins of the graph
@@ -55,20 +80,6 @@ body {
   // The data (which will be separated into another file later on)
 
   
-  var data = [
-{Wdate: "2021-01-01", Wcount: 400, Wtarget:400},
-{Wdate: "2021-01-02", Wcount: 700, Wtarget:800},
-{Wdate: "2021-01-03", Wcount: 1000, Wtarget:1200},
-{Wdate: "2021-01-04", Wcount: 1200, Wtarget:1600},
-{Wdate: "2021-01-05", Wcount: 1700, Wtarget:2000},
-{Wdate: "2021-01-06", Wcount: 1900, Wtarget:2400},
-{Wdate: "2021-01-07", Wcount: 3000, Wtarget:2800},
-{Wdate: "2021-01-08", Wcount: 3500, Wtarget:3200},
-{Wdate: "2021-01-09", Wcount: 4000, Wtarget:3800}
-// {Wdate: "2021-01-10", Wcount: 4500, Wtarget:4400},
-// {Wdate: "2021-01-11", Wcount: 5000, Wtarget:5200}
-];
-
 var data_length = data.length;
 
   // X axis
@@ -123,7 +134,7 @@ var data_length = data.length;
 
       
   // Bars
-  svg.selectAll("bar")
+ var bar = svg.selectAll("bar")
     .data(data)
     .enter()
     .append("rect")
@@ -134,7 +145,8 @@ var data_length = data.length;
       .attr("ry", 2)
       .attr("fill", "#F6D55C");
   
-
+  bar.transition()
+  .duration(1000)
 
 // Line
 svg.append("path")
@@ -207,6 +219,8 @@ svg.selectAll("circles")
 //     }
 // else {}
 
+var granularity = timeType('Day')
+
 svg.append("text")         // Add the Y Axis
         .attr("x", (width / 2))             
         .attr("y", 0 - (margin.top / 2))
@@ -214,7 +228,7 @@ svg.append("text")         // Add the Y Axis
         .style("font-size", "16px") 
         .attr('font-family', 'Archivo') 
         .style("fill", "#E3E3E3")
-        .text("Wordcount Per Day"); // REPLACE THIS WITH PER DAY/WEEK/MONTH
+        .text(`Wordcount Per ${granularity}`); // REPLACE THIS WITH PER DAY/WEEK/MONTH
 
     // PUT THE NEW CODE HERE!
 
