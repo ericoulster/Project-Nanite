@@ -88,6 +88,7 @@ fieldset {
 /* User */
 
 img.user-img {
+    background-color: rgba(0,0,0,.2);
     border-radius: 50%;
     width: 50px;
     height: 50px;
@@ -199,7 +200,6 @@ button, input[type="submit"], a.btn {
     margin: 0.5rem;
     color: #colors[dark-blue-grey];
     background-color: #colors-text[title-yellow];
-    border-radius: 3px;
     /* font-size: larger; */
     &:focus, &:hover {
         -webkit-transform: scale(1.05);
@@ -423,7 +423,9 @@ ol li, ul li {
         width: 21rem;
         margin-top: 1rem; 
         .user {
-            background-color: #colors[mid-dark-blue-grey];
+            background-color: #colors[mid-blue-grey];
+            border-radius: 10px;
+            padding: 0.25rem;
             display: flex;
             flex-flow: row nowrap;
             justify-content: space-between;
@@ -438,6 +440,7 @@ ol li, ul li {
                 }
             }
             .delete-user {
+                padding-left: 0px;
                 color: #colors-text[off-white];
                 background-color: transparent;
                 border-color: transparent;
@@ -531,6 +534,20 @@ ol li, ul li {
     // border: 3px solid #074EE8;
 }
 
+.projectslist .projects-item {
+    .header.panel {
+        display: flex;
+        flex-flow: row nowrap;
+        flex-basis: 100%;
+        align-items: center;
+        justify-content: space-between;
+    }  
+    .header .icon img {
+    width: 1rem;
+}
+}
+
+///////////////////////
 .projects .greeting {
     margin: 0.5rem 0px;
 }
@@ -611,7 +628,6 @@ ol li, ul li {
 .projects .projectslist .projects-item + .projects-item {
     margin-top: 1rem;
 }
-
 
 .projects .projectslist progress {
     width: 100%;

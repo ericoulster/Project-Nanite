@@ -13,6 +13,11 @@
   <button data-micromodal-trigger="modal-1" class="new-project">+ New Project</button>
   <button data-micromodal-trigger="modal-0" class="welcome-msg">?</button>
  
+  <!-- Projects List -->
+  <div id="projectslist" class="projectslist">
+    <!-- Projects listed here by JS -->
+  </div>
+  
   <!-- Onboarding Modal -->
   {% with %}
   {% set modal_id = 'modal-0' %}    
@@ -64,10 +69,6 @@
     {% include 'modal.html' %}
   {% endwith %}
   <!-- New Project Modal End -->
-    <div id="projectslist" class="projectslist">
-      <!-- Projects listed here -->
- 
-  </div>
 </div>
 <script>
   // Initial 

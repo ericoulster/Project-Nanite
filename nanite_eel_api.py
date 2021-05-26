@@ -33,9 +33,13 @@ def list_projects_html(username):
     print(projects2)
 
     t = Template("""{% for idx, project in projects %}
-    <div id="project-{{idx}}" class="projects-item">
+    <article id="project-{{idx}}" class="projects-item">
       <div id="project-{{idx}}-summary" class="project-summary panels">
-        <div class="panel"><h2>{{ project.project_name }}</h2></div>
+        <div class="header panel">
+            <h2>{{ project.project_name }}</h2>
+            <a class="edit-project icon" href="#"><img src="../static/imgs/icons/pencil.svg"></a>
+            <a class="del-project icon" href="#"><img src="../static/imgs/icons/trash.svg"></a>
+        </div>
         <div class="panel"><label for="project-progress">Today's Progress:</label>
           <progress id="project-progress" value="111" max="234"> {{111 / 234}} </progress><p> <span class="progress-to-goal">111 / 234</span> <span class="last-update hidden">Last Update: No Update Yet!</span> </p>
         </div>
@@ -46,7 +50,7 @@ def list_projects_html(username):
           <a class="btn">Refresh Project</a>
         </div>
       </div>
-    </div>
+    </article>
   {% endfor %}""")
 
 #     t = Template("""{% for idx, project in projects %}

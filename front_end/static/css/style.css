@@ -83,6 +83,7 @@ fieldset {
 }
 /* User */
 img.user-img {
+  background-color: rgba(0, 0, 0, 0.2);
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -182,7 +183,6 @@ a.btn {
   margin: 0.5rem;
   color: #1f2428;
   background-color: #f6d55c;
-  border-radius: 3px;
   /* font-size: larger; */
 }
 button:focus,
@@ -398,7 +398,9 @@ ul li {
   margin-top: 1rem;
 }
 .home .nanite-user-select .user {
-  background-color: #333a40;
+  background-color: #474f56;
+  border-radius: 10px;
+  padding: 0.25rem;
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
@@ -412,6 +414,7 @@ ul li {
   font-size: 10px;
 }
 .home .nanite-user-select .user .delete-user {
+  padding-left: 0px;
   color: #fafafa;
   background-color: transparent;
   border-color: transparent;
@@ -474,6 +477,16 @@ ul li {
 }
 .projects#main-content > * {
   /* width: 30rem; */
+}
+.projectslist .projects-item .header.panel {
+  display: flex;
+  flex-flow: row nowrap;
+  flex-basis: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+.projectslist .projects-item .header .icon img {
+  width: 1rem;
 }
 .projects .greeting {
   margin: 0.5rem 0px;
