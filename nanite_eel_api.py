@@ -41,6 +41,7 @@ def list_projects_html(username):
             <a class="del-project icon" href="#"><img src="../static/imgs/icons/trash.svg"></a>
         </div>
         <div class="panel"><label for="project-progress">Today's Progress:</label>
+        <div class="progress-{{idx}}"></div>
           <progress id="project-progress" value="111" max="234"> {{111 / 234}} </progress><p> <span class="progress-to-goal">111 / 234</span> <span class="last-update hidden">Last Update: No Update Yet!</span> </p>
         </div>
         <div class="panel">
