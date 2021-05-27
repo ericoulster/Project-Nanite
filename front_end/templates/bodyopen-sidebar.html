@@ -1,10 +1,13 @@
-{% extends 'base.html' %}
-
-{% block body_open_sidebar %} 
-<body class="{{pagetitle.lower().replace(' ', '-')}} grid-container"></body>
+<body class="{{pagetitle.lower().replace(' ', '-')}} grid-container">
+  <header class="nanite-header">
+    <a href="home.html">
+      <div class="header-logo"><img src="../static/imgs/nanite-icon.png">
+        <h1>Nanite</h1>
+      </div>
+    </a>
+  </header>
   <div id="left-sidebar" class="leftside sidebar">
     <div id="left-sidebar-content" class="content">
-      <div class="logo"><a href="home.html">Nanite</a></div>
       <div id="sidebar-insights" class="insights">
         <p><a id="username_link" class="username" href="welcome.html"><img class="user-img" src="../static/imgs/new-user.png" alt="{{username}}"><div id="username">Writer</div></a></p>
       </div>
@@ -25,6 +28,4 @@
         </ul>
       </nav>
     </div>
-  </div>
-{% endblock %}
-  
+  </div>  

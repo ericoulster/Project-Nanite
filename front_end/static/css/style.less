@@ -51,35 +51,81 @@ fieldset {
     height: 100vh;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr;
+    grid-template-rows: 3em 1fr;
     gap: 0px 0px;
     grid-template-areas:
+      "NH NH NH NH NH NH NH NH" 
       "leftside main main main main main main main";
   }
-  .leftside { grid-area: leftside; background-color: #colors[mid-blue-grey]; }
-  .main { grid-area: main; padding-left: 1rem; padding-right: 1rem;}
+  .nanite-header { 
+    // Sub-grid
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas:
+    "HL HL Hm Hm Hm Hm ";
+    // Position in main grid
+    grid-area: NH; 
+    background-color: #colors[dark-blue-grey]; 
+    padding-left: 1rem; 
+    padding-right: 1rem;
+}
+    .header-logo { 
+        grid-area: HL; 
+        display: flex;
+        align-items: center;
+        img {
+            height: 2rem;
+            margin: 0px 0.5rem;
+            width: auto; 
+            display: inline;
+        }
+        h1 {
+            display: inline-block;
+        }
+    }
+    .leftside { grid-area: leftside; background-color: #colors[mid-blue-grey]; }
+    .main { grid-area: main; padding-left: 1rem; padding-right: 1rem;}
   
-  @media all and (-ms-high-contrast:none) {
+@media all and (-ms-high-contrast:none) {
   
-  .grid-container {
-    display: -ms-grid;
-    -ms-grid-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    -ms-grid-rows: 1fr;
-    gap: 0px 0px;
-  }
-  
-  .leftside {
-    -ms-grid-row: 1;
-    -ms-grid-row-span: 1;
-    -ms-grid-column: 1;
-    -ms-grid-column-span: 1;
-  }
-  
-  .main {
-    -ms-grid-row: 1;
-    -ms-grid-row-span: 1;
-    -ms-grid-column: 2;
-    -ms-grid-column-span: 8;
+    .grid-container {
+        display: -ms-grid;
+        -ms-grid-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        -ms-grid-rows: 3em 1fr;
+        gap: 0px 0px;
+    }
+
+    .nanite-header {
+        display: -ms-grid;
+        -ms-grid-columns: 1fr 1fr 1fr 1fr 1fr;
+        -ms-grid-rows: 1fr;
+
+        -ms-grid-row: 1;
+        -ms-grid-row-span: 1;
+        -ms-grid-column: 1;
+        -ms-grid-column-span: 8;
+    }
+
+    .header-logo {
+        -ms-grid-row: 1;
+        -ms-grid-row-span: 2;
+        -ms-grid-column: 1;
+        -ms-grid-column-span: 1;
+    }
+    
+    .leftside {
+        -ms-grid-row: 2;
+        -ms-grid-row-span: 1;
+        -ms-grid-column: 1;
+        -ms-grid-column-span: 1;
+    }
+    
+    .main {
+        -ms-grid-row: 2;
+        -ms-grid-row-span: 1;
+        -ms-grid-column: 2;
+        -ms-grid-column-span: 7;
   }
   
   }
@@ -535,6 +581,7 @@ ol li, ul li {
 }
 
 .projectslist .projects-item {
+    background-color: #colors[mid-dark-blue-grey];
     .header.panel {
         display: flex;
         flex-flow: row nowrap;

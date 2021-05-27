@@ -1,4 +1,8 @@
-{% extends 'base-nosidebar.html' %}
+{% extends 'base.html' %}
+
+{% block body_open_sidebar %} 
+  {% include 'bodyopen-nosidebar.html' %}
+{% endblock %} 
 
 {% block content %} 
   <div id="main" class="home main">   
