@@ -1,9 +1,11 @@
 import eel
 import nanite_eel_api
-from sqlite_funcs import db_init
+import sqlite_funcs as sf
+
+sqlite3_path = sf.sqlite3_path
 
 eel.init('front_end')
-db_init() # create database if needed
+sf.db_init() # create database if needed
 
 # import or write exposed functions here
 # 

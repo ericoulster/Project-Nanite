@@ -9,7 +9,7 @@ import pandas as pd
 
 import sqlite3
 
-from file_funcs import file_pipe, is_streak, streak_length, change_goal
+from file_funcs import file_pipe, is_streak, streak_length, change_goal, daily_words_calculate, word_goal_calculate
 ### Variables ###
 
 sqlite3_path = './database/nanite_storage.sqlite3'
@@ -65,6 +65,21 @@ CREATE TABLE IF NOT EXISTS words (
 
 def timestamp(): 
     return str(datetime.now())
+
+def datestamp():
+    return str(datetime.now().date())
+
+def samedate(date: str) -> bool():
+    if date == None:
+        return False
+    else:
+        day = datetime.strptime(date[:10], '%Y-%M-%d')
+        today = datetime.strptime(datestamp(), '%Y-%M-%d')
+        if day == today:
+            return True
+        else:
+            return False
+
 
 def db_init():
     """
@@ -199,6 +214,16 @@ class AuthorActions:
         """
         Takes in a project info, then creates a new project for a given author.
         """
+        
+        # This just fills in other variables that are missing when creating a project
+
+        if (wordcount_goal is None) & (current_daily_target is not None) & (project_start_date is not None) & (deadline is not None):
+            wordcount_goal = word_goal_calculate(current_daily_target, project_start_date, deadline)
+        elif (wordcount_goal is not None) & (current_daily_target is None) & (project_start_date is not None) & (deadline is not None):
+            current_daily_target = daily_words_calculate(wordcount_goal, project_start_date, deadline)
+        else:
+            pass        
+
         now = timestamp()
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
@@ -425,7 +450,10 @@ class ProjectActions:
         df = df.fillna(method='ffill')
         df['Wtarget_sum'] = df['Wtarget'].cumsum()
         df['Wdate'] = df['Wdate'].apply(lambda x: x[:10])
-        df['daily_words'] = [(df[['Wcount']].iloc[i] - df[['Wcount']].iloc[i-1]).clip(0) for i in range(len(df))]
+        df['daily_words'] = [
+            (df[['Wcount']].iloc[i] - df[['Wcount']].iloc[i-1]).clip(0) if i >= 1 
+            else df[['Wcount']].iloc[i] for i in range(len(df))
+            ]
         df['streak'] = [is_streak(i, df['Wcount'], df['Wtarget']) for i in range(len(df))]
         d_list = streak_length(df['streak'])
         df['streak'] = pd.Series(d_list, index=new_index)
