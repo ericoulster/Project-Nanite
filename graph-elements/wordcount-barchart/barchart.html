@@ -1,0 +1,244 @@
+<meta charset="utf-8">
+
+<!-- Load d3.js -->
+<script type="text/javascript" src="../d3/d3.js"></script>
+<script src="data.js"></script>
+
+<style>
+  @font-face {
+      font-family: "Archivo";
+      src:url("../font/Archivo-SemiBold.ttf")
+  }
+  .Archivo {
+      font-family: "Archivo";
+  }
+  .grid .tick {
+    stroke: lightgrey;
+    opacity: 0.7;
+    stroke-width: 3;
+}
+x.tick line{
+  visibility:hidden;
+}
+
+line {
+    stroke: #333A40;
+    stroke-linecap: round;
+}
+
+body {
+  background-color: #1F2428
+}
+  
+  </style>
+<!-- Create a div where the graph will take place -->
+
+<button type="button" onclick="timeType('daily')">Daily View</button>
+<button type="button" onclick="timeType('weekly')">Weekly View</button>
+<button type="button" onclick="timeType('weekly')">Monthly View</button>
+
+<!-- <label for="show_last">Show Last</label>
+<input type="text" name="name" pattern="[0-9]" title="Title" size=1/> 
+<label for="show_last_granularity"> </label> -->
+
+<div id="wordcounter"></div>
+
+<script>
+
+
+function timeType(time) {
+return time
+}
+
+// function timeType(time) {
+//   if (time === 'weekly')
+//   {return 'Week'}
+//   else if (time === 'monthly')
+//   {return 'Month'}
+//   else {return 'Day'}
+// }
+
+var data = Object.values(data);
+
+
+  // set the dimensions and margins of the graph
+  var margin = {top: 30, right: 30, bottom: 70, left: 60},
+      width = 600 - margin.left - margin.right,
+      height = 400 - margin.top - margin.bottom;
+  
+  // append the svg object to the body of the page
+  var svg = d3.select("#wordcounter")
+    .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
+
+
+
+  // The data (which will be separated into another file later on)
+
+  
+var data_length = data.length;
+
+  // X axis
+  var x = d3.scaleBand()
+    .range([ 0, width ])
+    .domain(data.map(function(d) { return d.Wdate; }))
+    .padding(0.3);
+  
+    svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x).tickSize(0))
+    .selectAll("text")
+      .attr("transform", "translate(-10,0)rotate(-45)")
+      .attr('font-family', 'Archivo')
+            .attr('font-weight', 100)
+            .attr('font-size', 'small')
+            .style('fill', "#E3E3E3")
+      .style("text-anchor", "end");
+
+
+  // max of Y axis
+  var maxY = d3.max(data, (wordplot) => {
+      if (wordplot.Wcount > wordplot.Wtarget) {
+          return wordplot.Wcount
+      }
+      else {
+          return wordplot.Wtarget
+      }
+    });
+
+    
+  // Y axis
+  var y = d3.scaleLinear()
+    .domain([0, maxY])
+    .range([ height, 0]);
+  
+    svg.append("g")
+    .call(d3.axisLeft(y).tickSize(0))
+    .attr('font-family', 'Archivo')
+    .selectAll("text").style('fill', "#E3E3E3").attr('font-size', 'small');
+
+  // add the Y gridlines
+  svg.append("g")			
+      .attr("class", "grid")
+      .call(d3.axisLeft(y)
+          .tickSize(-width)
+          .tickFormat("")
+          .ticks(6)
+      )
+
+
+
+      
+  // Bars
+ var bar = svg.selectAll("bar")
+    .data(data)
+    .enter()
+    .append("rect")
+      .attr("x", function(d) { return x(d.Wdate); })
+      .attr("y", function(d) { return y(d.Wcount); })
+      .attr("width", x.bandwidth())
+      .attr("height", function(d) { return height - y(d.Wcount); })
+      .attr("ry", 2)
+      .attr("fill", "#F6D55C");
+  
+  bar.transition()
+  .duration(1000)
+
+// Line
+svg.append("path")
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", "#474F56")
+      .attr("stroke-width", 2)
+      .attr("d", d3.line()
+        .x(function(d) { return x(d.Wdate) + (x.bandwidth()/2)}) //Need a better system for this
+        .y(function(d) { return y(d.Wtarget) })
+        )
+
+
+// Line-bubbles
+svg.selectAll("circles")
+    .data(data)
+    .enter()
+    .append("circle")
+      .attr("fill", "#F6D55C")
+      .attr("stroke", "#474F56")
+      .attr("stroke-width", 2)
+      .attr("cx", function(d) { return x(d.Wdate) + (x.bandwidth()/2)})
+      .attr("cy", function(d) { return y(d.Wtarget) })
+      .attr("r", 4)
+
+
+      //having text beneath each bar. I'm finding this more trouble than it's worth.
+// if (data_length < 10)
+// {
+//   svg.selectAll("bar-text")
+//     .data(data)
+//     .enter()
+//     .append("text")
+//       .attr("x", function(d) {
+//         if (d.Wcount < 100) {
+//           var x_offset = x.bandwidth()/(data_length/2)
+//         }
+//         else if (d.Wcount < 1000) {
+//           var x_offset = x.bandwidth()/(data_length/1.15)
+//         }
+//         else if (d.Wcount < 10000) {
+//           var x_offset = x.bandwidth()/(data_length/0.7)
+//         }
+//         else {
+//           var x_offset = x.bandwidth()/(data_length/0.6)
+//         }
+//         return x(d.Wdate) + x_offset; })
+//       // set this y to more relative values
+//       // also, move the text if it intersects with the line bubble
+//       .attr("y", function(d) {
+//         if ((height - d.Wcount) < 25) { 
+//             var barPad = y(d.Wcount) + 25}
+//         else {
+//           var barPad = y(d.Wcount) - 10
+//         }
+//           return barPad;
+//       })
+//       .text(function(d) {return d.Wcount})
+//       .attr('font-family', 'Archivo')
+//       .style('fill', function(d) {
+//         if ((height - d.Wcount) < 30) {
+//           var barTextColor = "#1F2428"
+//         }
+//         else {
+//           var barTextColor = "#E3E3E3"
+//         }
+//         return barTextColor
+//       })
+//       .attr('font-size', 'small');
+//     }
+// else {}
+
+var granularity = timeType('Day')
+
+svg.append("text")         // Add the Y Axis
+        .attr("x", (width / 2))             
+        .attr("y", 0 - (margin.top / 2))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px") 
+        .attr('font-family', 'Archivo') 
+        .style("fill", "#E3E3E3")
+        .text(`Wordcount Per ${granularity}`); // REPLACE THIS WITH PER DAY/WEEK/MONTH
+
+    // PUT THE NEW CODE HERE!
+
+
+
+svg.selectAll("g").select(".domain").remove();
+
+
+// issue: put text on top of line graph
+
+
+      //to add: weekly & monthly granularity
+  </script>

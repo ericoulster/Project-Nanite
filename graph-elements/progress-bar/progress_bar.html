@@ -1,0 +1,133 @@
+<!-- index.html-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>hello world</title>
+        <script type="text/javascript" src="../d3/d3.js"></script>
+        <style>
+        @font-face {
+            font-family: "Archivo";
+            src:url("../font/Archivo-SemiBold.ttf")
+        }
+        .Archivo {
+            font-family: "Archivo";
+        }
+
+        body {
+  background-color: #474F56
+        }
+        </style>
+
+
+    </head>
+    <body>
+        
+
+	<div class="progress"></div>
+
+    <script>
+        var data = {
+            'Wtarget_sum': 1000.0,
+            'daily_words': 900.0
+    };
+        
+        var progress_val = (data['daily_words'] / data['Wtarget_sum'])*100;
+
+        if (progress_val < 25) {
+            progress_color = "#D0D0D0"
+        }
+        else if (progress_val < 50) {
+            progress_color = "#F6B85C"
+        }
+        else if (progress_val < 75) {
+            progress_color = "#F6D55C"
+        }
+        else if (progress_val < 100) {
+            progress_color = "#CEF65C"
+        }
+        else if (progress_val < 115) {
+            progress_color = "#96F65C"
+        }
+        else if (progress_val < 200) {
+            progress_color = "#5CF6D1"
+        }
+        else {
+            progress_color = "#5CBFF6"
+        };
+
+        if (progress_val > 100) {
+            progress_val_capped = 100
+        }
+        else {progress_val_capped = progress_val};
+
+        var svg = d3.select('.progress')
+            .append('svg')
+            .attr('height', 100)
+            .attr('width', 800);
+
+        var bar_width = 600;
+
+        var bar_height = 20
+
+
+        var bar_x = (bar_width/50);
+        var bar_y = (bar_height/3);
+
+        var bar_cap = (bar_width/100);
+
+        if (progress_val < 50) {
+            var text_color ='#E3E3E3'
+        }
+        else {
+            var text_color = '#1F2428'}
+        svg.append('rect')
+            .attr('class', 'bg-rect')
+            .attr('rx', 20)
+            .attr('ry', 20)
+            .attr('fill', 'none')
+            .attr('stroke', '#333A40')
+            .attr('stroke-width', 4)
+            .attr('height', bar_height + (bar_height*1))
+            .attr('width', function(){
+                return bar_width + (bar_width*0.04);
+            })
+            .attr('x', bar_x)
+            .attr('y', bar_y);
+        
+
+
+        
+        var progress = svg.append('rect')
+                        .attr('class', 'progress-rect')
+                        .attr('fill', progress_color)
+                        .attr('height', bar_height)
+                        .attr('width', 0)
+                        .attr('rx', 10)
+                        .attr('ry', 10)
+                        .attr('x', bar_x + (bar_x*1))
+                        .attr('y', bar_y + (bar_y*1.50));
+    
+        progress.transition()
+            .duration(1000)
+            .attr('width', function(){
+                var index = progress_val_capped;
+                return index * bar_cap;
+            });
+
+        svg.append("text")
+            .text(`${data['daily_words']}/${data['Wtarget_sum']} words (${Math.floor(progress_val)}%)`)
+            .attr('x', bar_width/2 -50)
+            .attr('y', bar_height*1.5)
+            .attr('fill', '#333A40')
+            .attr('font-family', 'Archivo')
+            .attr('font-weight', 100)
+            .attr('font-size', 'small')
+            .style('fill', text_color)
+            .raise()
+    
+        </script>
+
+
+    </body>
+</html>
