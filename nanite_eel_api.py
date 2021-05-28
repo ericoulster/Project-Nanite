@@ -3,6 +3,12 @@ from sqlite_funcs import *
 from jinja2 import Template
 
 @eel.expose
+def eel_return_wordcounts(project_id):
+    p = ProjectActions()
+    p = p.set_project(project_id)
+    return p.return_wordcounts('D')
+
+@eel.expose
 def get_author_id(authorname):
     a = AuthorActions()
     a.id_by_name(authorname)

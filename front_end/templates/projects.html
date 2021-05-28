@@ -76,25 +76,12 @@
 <script>
   // Initial 
   (async function () {
-    eel_list_projects_html_current_user();
+    let doc = await eel_list_projects_html_current_user();
+    progress_bars(doc);
   }) ();
 
-// REVIEW THIS FUNCTION: IS IT STILL NEEDED?
-  (async function () {
-    let projectslist = document.querySelector('#projectslist');
-    let project = document.createElement('div');
-    let a = await eel_return_projects_by_name(get_username());
-    project.textContent = a;
-    projectslist.appendChild(project);
-  }) ();
 
-  async function eel_return_projects_by_name(username) {
-    let a = await eel.return_projects_by_name(username)();
-    return a;
-  }
-
-  // THIS IS THE WORKING ONE (TWO FUNCTIONS)
-
+  // List all projects
   async function eel_list_projects_html_current_user() {
     let a = await eel_list_projects_html(get_username());
     return a;
@@ -112,6 +99,22 @@
 
     return doc;
   }
+
+  //////////////////////////////////////
+// DEBUGGER Function
+  (async function () {
+    let projectslist = document.querySelector('#projectslist');
+    let project = document.createElement('div');
+    let a = await eel_return_projects_by_name(get_username());
+    project.textContent = a;
+    projectslist.appendChild(project);
+  }) ();
+
+  async function eel_return_projects_by_name(username) {
+    let a = await eel.return_projects_by_name(username)();
+    return a;
+  }
+    //////////////////////////////////////
 
   function add_new_project() {
     authorname = get_username();
@@ -131,11 +134,23 @@
   };
   </script>
   <script>
-    function progress_bar() {
-      // Progress Bar Script (testing on the first project in the list .progress-0)
+
+      // Progress bar functions
+      // TODO: loop here  progress_bar(p_id, daily_words, today_goal)
+    function progress_bars(doc) {
+      waiting = doc;
+      let projectslist_items = document.querySelectorAll('#projectslist > .projects-item');
+      // TODO: GET THE REAL VALUES
+      p_id = 0;
+      daily_words = 123;
+      today_goal = 456;
+      projectslist_items.forEach(x => {progress_bar(p_id, daily_words, today_goal) })
+    }
+
+    function progress_bar(p_id, daily_words, today_goal) {
       var data = {
-            'Wtarget_sum': 1000.0,
-            'daily_words': 900.0
+            'Wtarget_sum': today_goal, 
+            'daily_words': daily_words
     };
         
         var progress_val = (data['daily_words'] / data['Wtarget_sum'])*100;
@@ -167,7 +182,7 @@
         }
         else {progress_val_capped = progress_val};
 
-        var svg = d3.select('.progress-0')
+        var svg = d3.select(`.progress-${String(p_id)}`)
             .append('svg')
             .attr('height', 100)
             .attr('width', 800);

@@ -1,3 +1,4 @@
+// Scripts at end of <head>
 // Cookies Functions
 function get_username() {
   return getCookie('username');
