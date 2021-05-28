@@ -116,10 +116,16 @@ def return_project_screen(author_id:int) -> list(dict()):
         except:
             # Maybe I should just raise an exception?
             row = {'Wcount': 0, 'Wdate': None, 'Wtarget': 0, 'project_id': p.project_id, 'record_id': None, 'Wtarget_sum': 0, 'daily_words': 0.0, 'streak': 0}
-        p_dict = {
+        if samedate(row['Wdate']) is False:
+            p_dict = {
+            'project_name': p.project_name, 'project_id': row['project_id'], 'daily_words': 0, 
+            'today_goal': row['Wtarget'], 'total_progress': row['Wcount'], 'current_streak':0
+            }   
+        else:   
+            p_dict = {
             'project_name': p.project_name, 'project_id': row['project_id'], 'daily_words': row['daily_words'], 
             'today_goal': row['Wtarget'], 'total_progress': row['Wcount'], 'current_streak':row['streak']
-            }
+            }            
         projects_list.append(p_dict)
     return projects_list
 
