@@ -27,19 +27,23 @@ def list_projects_html(username):
     author_id = get_author_id(username)
     projects = return_project_screen(author_id)
     # Sample returned: {'project_name': "Johnny's Other Manifesto", 'project_id': 1, 'daily_words': 0.0, 'today_goal': 0, 'total_progress': 0, 'current_streak': 0}, {'project_name': 'Bacon', 'project_id': 3, 'daily_words': 0.0, 'today_goal': 0, 'total_progress': 0, 'current_streak': 0}, {'project_name': 'adsf', 'project_id': 4, 'daily_words': 0.0, 'today_goal': 0, 'total_progress': 0, 'current_streak': 0}
+    # Sample returned with bug: [{'project_name': "Johnny's Manifesto", 'project_id': 1, 'daily_words': Wcount    0.0 dtype: float64, 'today_goal': 1000, 'total_progress': 100, 'current_streak': 0}, {'project_name': "Johnny's Other Manifesto", 'project_id': 2, 'daily_words': 0, 'today_goal': 0, 'total_progress': 0, 'current_streak': 0}]
     # More Info Needed: this doesn't return today's progress
 
-    # SAMPLE DATA EXPECTED BY THE TEMPLATE
-    projects2 = [{'name':'Sample Name', 'wordcountgoal':4000,'targetstartdate':'2021-01-01','targetenddate':'2021-07-01','filepath':'C:/Dummy/File/Path','filetype':'txt'},{'name':'Second P Name', 'wordcountgoal':7000,'targetstartdate':'2021-01-07','targetenddate':'2021-07-07','filepath':'D:/Dummy/File/Path','filetype':'docx'}]  
-    WCtotal = [3000,5000]
-    
     # Debugging
     print(projects)
-    print(''' ------- ''')
-    print(projects2)
+
+    #convert floats to ints
+    for p in projects:
+        for k,v in p.items():
+            if type(v)==float:
+                p[k]=int(v)
+
+    project_ids = [int(p['project_id']) for p in projects] # list project ids
+    projects_zip = zip(project_ids, projects) # zip for looping
 
     t = Template("""{% for idx, project in projects %}
-    <article id="project-{{idx}}" class="projects-item">
+    <article id="project-{{idx}}" class="projects-item" data-pid="{{ project.project_id }}">
       <div id="project-{{idx}}-summary" class="project-summary panels">
         <div class="header panel">
             <h2>{{ project.project_name }}</h2>
@@ -47,12 +51,11 @@ def list_projects_html(username):
             <a class="del-project icon" href="#"><img src="../static/imgs/icons/trash.svg"></a>
         </div>
         <div class="panel"><label for="project-progress">Today's Progress:</label>
-        <div class="progress-{{idx}}"></div>
-          <progress id="project-progress" value="111" max="234"> {{111 / 234}} </progress><p> <span class="progress-to-goal">111 / 234</span> <span class="last-update hidden">Last Update: No Update Yet!</span> </p>
+            <div class="progress-{{idx}}" data-pid="{{ project.project_id }}" data-todaywords="{{ project.daily_words }}" data-todaygoal="{{ project.today_goal }}"></div>
         </div>
         <div class="panel">
-          <p>Total Progress: [NUMBER]</p>
-          <p>Current Streak: [NUMBER]</p>
+          <p>Total Progress: {{ project.total_progress }}</p>
+          <p>Current Streak: {{ project.current_streak }}</p>
           <a class="btn">Project Stats</a>
           <a class="btn">Refresh Project</a>
         </div>
@@ -60,6 +63,13 @@ def list_projects_html(username):
     </article>
   {% endfor %}""")
 
+
+## PREVIOUS TEMPLATE - for dev
+
+    # SAMPLE DATA EXPECTED BY THE TEMPLATE
+    #projects2 = [{'name':'Sample Name', 'wordcountgoal':4000,'targetstartdate':'2021-01-01','targetenddate':'2021-07-01','filepath':'C:/Dummy/File/Path','filetype':'txt'},{'name':'Second P Name', 'wordcountgoal':7000,'targetstartdate':'2021-01-07','targetenddate':'2021-07-07','filepath':'D:/Dummy/File/Path','filetype':'docx'}]  
+    #WCtotal = [3000,5000]
+    
 #     t = Template("""{% for idx, project in projects %}
 #     <div id="project-{{idx}}" class="projects-item">
 #       <div id="project-{{idx}}-summary" class="project-summary panels">
@@ -133,7 +143,7 @@ def list_projects_html(username):
 #     </div>
 #   {% endfor %}""") 
 
-    return t.render(projects=enumerate(projects), WCtotal=WCtotal)
+    return t.render(projects=projects_zip)
 
 
 # Exposing Class Sqlite Funcs to Eel ##

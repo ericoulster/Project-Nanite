@@ -140,11 +140,17 @@
     function progress_bars(doc) {
       waiting = doc;
       let projectslist_items = document.querySelectorAll('#projectslist > .projects-item');
-      // TODO: GET THE REAL VALUES
-      p_id = 0;
-      daily_words = 123;
-      today_goal = 456;
-      projectslist_items.forEach(x => {progress_bar(p_id, daily_words, today_goal) })
+      // DUMMY VALUES FOR DEBUGGING
+      //p_id = 0;
+      //daily_words = 123;
+      //today_goal = 456;
+      projectslist_items.forEach(x => {
+        pb = x.querySelector('div[class^="progress-"]');
+        p_id = pb.dataset.pid;
+        daily_words = pb.dataset.todaywords;
+        today_goal = pb.dataset.todaygoal;
+        progress_bar(p_id, daily_words, today_goal);
+      })
     }
 
     function progress_bar(p_id, daily_words, today_goal) {

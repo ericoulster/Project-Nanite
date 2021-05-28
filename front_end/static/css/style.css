@@ -30,6 +30,9 @@ legend,
 label {
   color: #fafafa;
 }
+svg.site-icon {
+  fill: #f6d55c;
+}
 /* Global Fonts */
 h1 {
   font-family: Archivo, sans-serif;
