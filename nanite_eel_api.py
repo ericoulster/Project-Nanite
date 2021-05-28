@@ -56,6 +56,8 @@ def list_projects_html(username):
         <div class="panel">
           <p>Total Progress: {{ project.total_progress }}</p>
           <p>Current Streak: {{ project.current_streak }}</p>
+        </div>
+        <div class="panel">
           <a class="btn">Project Stats</a>
           <a class="btn">Refresh Project</a>
         </div>
