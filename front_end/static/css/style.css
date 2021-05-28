@@ -425,12 +425,18 @@ ul li {
   align-items: center;
 }
 .home .nanite-welcome-image {
-  width: 50vw;
+  width: 350px;
   margin-top: 10vh;
   margin-bottom: 10vh;
+  text-align: center;
 }
-.home .nanite-welcome-image img {
-  width: 100%;
+.home .nanite-welcome-image .icon-in-logo {
+  margin: 1rem;
+  width: 20%;
+}
+.home .nanite-welcome-image .nanite-in-logo {
+  display: inline-block;
+  font-weight: 100;
 }
 .home .nanite-user-select {
   width: 21rem;
