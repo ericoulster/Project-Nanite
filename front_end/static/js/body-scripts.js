@@ -15,9 +15,18 @@ function set_username(username) {
 }
 
 async function delete_project(username, projectname) {
-    let a = await eel.eel_delete_project(username, projectname)();
+    let a = await eel.delete_project(username, projectname)();
     (function(){
         w=a; //waiting for deletion
         window.location.href="http://localhost:8000/templates/projects.html";
     })();
+}
+
+async function rename_project(project_id, new_name) {
+    let a = await eel.rename_project(project_id, new_name)();
+    (function(){
+        w=a; //waiting for renaming
+        window.location.href="http://localhost:8000/templates/projects.html";
+    })()
+    return a;
 }

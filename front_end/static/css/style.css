@@ -65,18 +65,21 @@ fieldset {
   padding-left: 1rem;
   padding-right: 1rem;
 }
-.header-logo {
+.nanite-header a {
+  text-decoration: none;
+}
+.nanite-header .header-logo {
   grid-area: HL;
   display: flex;
   align-items: center;
 }
-.header-logo img {
+.nanite-header .header-logo img {
   height: 2rem;
   margin: 0px 0.5rem;
   width: auto;
   display: inline;
 }
-.header-logo h1 {
+.nanite-header .header-logo h1 {
   display: inline-block;
 }
 .leftside {

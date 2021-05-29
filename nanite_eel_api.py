@@ -46,7 +46,7 @@ def list_projects_html(username):
         <div class="header panel">
             <h2>{{ project.project_name }}</h2>
             <div class="project-header-buttons">
-                <a class="edit-project icon" href="#" onclick="edit_project({{idx}})"><img src="../static/imgs/icons/pencil.svg"></a>
+                <a class="edit-project icon" href="#" onclick="new_name_prompt({{idx}})"><img src="../static/imgs/icons/pencil.svg"></a>
                 <a class="del-project icon" href="#" onclick="delete_project(get_username(),'{{ project.project_name }}')"><img src="../static/imgs/icons/trash.svg"></a>
             </div>
         </div>
@@ -200,7 +200,13 @@ def return_projects_by_name(author_name:str) -> list(dict()):
     return a.return_projects()
 
 @eel.expose
-def eel_delete_project(authorname, project_name):
+def rename_project(project_id, new_name):
+    pa = ProjectActions(project_id)
+    pa.rename_project(new_name)
+    return new_name
+
+@eel.expose
+def delete_project(authorname, project_name):
     a = AuthorActions()
     a.id_by_name(authorname)
     a.delete_project(project_name)
