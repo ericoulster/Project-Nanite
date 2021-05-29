@@ -111,7 +111,7 @@ def file_pipe(path: str) -> str:
     
     if orig.is_dir() is True:
         try:
-            shutil.copytree(orig, copy)
+            shutil.copytree(orig, copy, dirs_exist_ok=True)
         except:
             raise Exception("Error: shutil copy failed")
     else:
