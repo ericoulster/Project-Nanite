@@ -26,12 +26,10 @@ def list_projects_html(username):
 
     author_id = get_author_id(username)
     projects = return_project_screen(author_id)
-    # Sample returned: {'project_name': "Johnny's Other Manifesto", 'project_id': 1, 'daily_words': 0.0, 'today_goal': 0, 'total_progress': 0, 'current_streak': 0}, {'project_name': 'Bacon', 'project_id': 3, 'daily_words': 0.0, 'today_goal': 0, 'total_progress': 0, 'current_streak': 0}, {'project_name': 'adsf', 'project_id': 4, 'daily_words': 0.0, 'today_goal': 0, 'total_progress': 0, 'current_streak': 0}
-    # Sample returned with bug: [{'project_name': "Johnny's Manifesto", 'project_id': 1, 'daily_words': Wcount    0.0 dtype: float64, 'today_goal': 1000, 'total_progress': 100, 'current_streak': 0}, {'project_name': "Johnny's Other Manifesto", 'project_id': 2, 'daily_words': 0, 'today_goal': 0, 'total_progress': 0, 'current_streak': 0}]
-    # More Info Needed: this doesn't return today's progress
+    # Sample returned: [{'project_name': "Johnny's Manifesto", 'project_id': 1.0, 'daily_words': 700.0, 'today_goal': 1000.0, 'total_progress': 23700.0, 'current_streak': 0}, {'project_name': "Johnny's Other Manifesto", 'project_id': 2, 'daily_words': 0, 'today_goal': 0, 'total_progress': 0, 'current_streak': 0}]
 
     # Debugging
-    print(projects)
+    # print(projects)
 
     #convert floats to ints
     for p in projects:
@@ -47,17 +45,19 @@ def list_projects_html(username):
       <div id="project-{{idx}}-summary" class="project-summary panels">
         <div class="header panel">
             <h2>{{ project.project_name }}</h2>
-            <a class="edit-project icon" href="#"><img src="../static/imgs/icons/pencil.svg"></a>
-            <a class="del-project icon" href="#"><img src="../static/imgs/icons/trash.svg"></a>
+            <div class="project-header-buttons">
+                <a class="edit-project icon" href="#" onclick="edit_project({{idx}})"><img src="../static/imgs/icons/pencil.svg"></a>
+                <a class="del-project icon" href="#" onclick="delete_project(get_username(),'{{ project.project_name }}')"><img src="../static/imgs/icons/trash.svg"></a>
+            </div>
         </div>
-        <div class="panel"><label for="project-progress">Today's Progress:</label>
+        <div class="progress panel"><label for="project-progress">Today's Progress:</label>
             <div class="progress-{{idx}}" data-pid="{{ project.project_id }}" data-todaywords="{{ project.daily_words }}" data-todaygoal="{{ project.today_goal }}"></div>
         </div>
-        <div class="panel">
+        <div class="quickstats panel">
           <p>Total Progress: {{ project.total_progress }}</p>
           <p>Current Streak: {{ project.current_streak }}</p>
         </div>
-        <div class="panel">
+        <div class="actions panel">
           <a class="btn">Project Stats</a>
           <a class="btn">Refresh Project</a>
         </div>
@@ -198,3 +198,10 @@ def return_projects_by_name(author_name:str) -> list(dict()):
     a = AuthorActions()
     a.id_by_name(author_name)
     return a.return_projects()
+
+@eel.expose
+def eel_delete_project(authorname, project_name):
+    a = AuthorActions()
+    a.id_by_name(authorname)
+    a.delete_project(project_name)
+    return

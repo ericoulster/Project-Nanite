@@ -263,7 +263,6 @@ ul li {
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
-  flex-basis: 170px;
   flex-grow: 1;
 }
 .panels .panel p {
@@ -527,96 +526,60 @@ ul li {
   /* width: 30rem; */
 }
 .projectslist .projects-item {
-  background-color: #333a40;
+  margin: 1rem;
+  padding: 0.5rem;
+  background-color: #474f56;
+  border-radius: 10px;
+  -webkit-box-shadow: 5px 5px 10px 1px #1f2428;
+  box-shadow: 5px 5px 10px 1px #1f2428;
 }
-.projectslist .projects-item .header.panel {
+.projectslist .projects-item .project-summary {
+  padding: 0.5rem;
+}
+.projectslist .projects-item .project-summary .header.panel {
   display: flex;
   flex-flow: row nowrap;
   flex-basis: 100%;
   align-items: center;
   justify-content: space-between;
 }
-.projectslist .projects-item .header .icon img {
-  width: 1rem;
+.projectslist .projects-item .project-summary .header.panel h2 {
+  margin-block-start: 0em;
+  margin-block-end: 0em;
 }
-.projects .greeting {
-  margin: 0.5rem 0px;
+.projectslist .projects-item .project-summary .header.panel .project-header-buttons .icon img {
+  width: 1.5rem;
+  margin: 0px 0.5rem;
 }
-.projects .greeting p.username-greet {
-  font-weight: bold;
+.projectslist .projects-item .project-summary .progress.panel {
+  flex-basis: 100%;
+  width: 100%;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
 }
-.projects .greeting p {
-  margin: 0.5rem 0px;
-}
-.projects .new-project-form-container {
-  width: 30rem;
-  margin: 0 auto;
-}
-.projects .project-form.new-project input[type="text"],
-.projects .project-form.new-project input[type="date"] {
-  display: block;
-  margin-right: 1rem;
-}
-.projects .project-form.new-project fieldset {
-  border: none;
-  padding-left: 0;
-  display: flex;
-  flex-flow: column;
-}
-.projects .project-form.new-project fieldset input,
-.projects .project-form.new-project fieldset select {
-  max-width: 80%;
-}
-.projects .project-form.new-project fieldset input[type="text"] {
-  border-color: #aaaaaa;
-  border-radius: 5px;
-}
-.projects .project-form.new-project fieldset > label {
-  line-height: 2rem;
-}
-.projects .project-form.new-project fieldset .writing-goal {
-  display: flex;
-}
-.projects .project-form.new-project fieldset .writing-goal .radio-buttons {
-  margin: 0px 1rem;
-}
-.projects .project-form.new-project fieldset .writing-goal .radio-buttons input[type="radio"] {
-  display: none;
-}
-.projects .project-form.new-project fieldset .writing-goal .radio-buttons label {
-  cursor: pointer;
-  color: #074EE8;
+.projectslist .projects-item .project-summary .progress.panel label {
   display: inline-block;
-  width: 4rem;
-  border: solid 2px #074EE8;
-  text-align: center;
 }
-.projects .project-form.new-project fieldset .writing-goal .radio-buttons input[type="radio"]:checked + label {
-  color: #ffffff;
-  background: #074EE8;
+.projectslist .projects-item .project-summary .progress.panel [class^="progress-"] {
+  display: inline-block;
 }
-.projects .project-form.new-project input[type="submit"] {
-  width: fit-content;
-  margin-left: 0rem;
-}
-.project-form.existing-project .formfields {
-  display: flex;
-}
-.projects .projectslist .projects-item + .projects-item {
-  margin-top: 1rem;
-}
-.projects .projectslist progress {
+.projectslist .projects-item .project-summary .progress.panel svg {
+  height: 50px;
   width: 100%;
 }
-.projects .project-summary {
-  border: 3px solid #cccccc;
+.projectslist .projects-item .project-summary .quickstats.panel {
+  flex-basis: 70px;
 }
-.projects .project-summary h2 {
-  text-align: center;
+.projectslist .projects-item .project-summary .quickstats.panel p {
+  text-align: left;
 }
-.project-actions {
-  margin: 1rem;
-  display: flex;
+.projectslist .projects-item .project-summary .actions.panel {
   flex-flow: row wrap;
-  justify-content: space-evenly;
+  justify-content: flex-end;
+}
+.projectslist .projects-item .project-summary .actions.panel .btn {
+  flex-basis: 40%;
+  font-weight: bold;
+  text-align: center;
 }

@@ -13,3 +13,11 @@ window.location.href="http://localhost:8000/templates/projects.html";
 function set_username(username) {
     document.cookie = 'username=' + encodeURIComponent(username) + '; expires=Thu, 18 Dec 2100 12:00:00 UTC';
 }
+
+async function delete_project(username, projectname) {
+    let a = await eel.eel_delete_project(username, projectname)();
+    (function(){
+        w=a; //waiting for deletion
+        window.location.href="http://localhost:8000/templates/projects.html";
+    })();
+}

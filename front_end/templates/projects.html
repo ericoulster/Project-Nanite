@@ -102,13 +102,13 @@
 
   //////////////////////////////////////
 // DEBUGGER Function
-  (async function () {
+  async function debug_p() {
     let projectslist = document.querySelector('#projectslist');
     let project = document.createElement('div');
     let a = await eel_return_projects_by_name(get_username());
     project.textContent = a;
     projectslist.appendChild(project);
-  }) ();
+  };
 
   async function eel_return_projects_by_name(username) {
     let a = await eel.return_projects_by_name(username)();
@@ -136,24 +136,19 @@
   <script>
 
       // Progress bar functions
-      // TODO: loop here  progress_bar(p_id, daily_words, today_goal)
     function progress_bars(doc) {
-      waiting = doc;
+      waiting = doc; // this function should only run once doc has been awaited (from the previous function)
       let projectslist_items = document.querySelectorAll('#projectslist > .projects-item');
-      // DUMMY VALUES FOR DEBUGGING
-      //p_id = 0;
-      //daily_words = 123;
-      //today_goal = 456;
       projectslist_items.forEach(x => {
         pb = x.querySelector('div[class^="progress-"]');
         p_id = pb.dataset.pid;
         daily_words = pb.dataset.todaywords;
         today_goal = pb.dataset.todaygoal;
-        progress_bar(p_id, daily_words, today_goal);
+        progress_bar(p_id, daily_words, today_goal, 300);
       })
     }
 
-    function progress_bar(p_id, daily_words, today_goal) {
+    function progress_bar(p_id, daily_words, today_goal, svgwidth) {
       var data = {
             'Wtarget_sum': today_goal, 
             'daily_words': daily_words
@@ -191,11 +186,11 @@
         var svg = d3.select(`.progress-${String(p_id)}`)
             .append('svg')
             .attr('height', 100)
-            .attr('width', 800);
+            .attr('width', svgwidth); // svgwidth previously set to 800
 
-        var bar_width = 600;
+        var bar_width = svgwidth * 0.9; // previously 600 (or 0.75 * svg width)
 
-        var bar_height = 20
+        var bar_height = 20;
 
 
         var bar_x = (bar_width/50);
@@ -225,12 +220,12 @@
         var progress = svg.append('rect')
                         .attr('class', 'progress-rect')
                         .attr('fill', progress_color)
-                        .attr('height', bar_height)
+                        .attr('height', bar_height + (bar_height*0.8))
                         .attr('width', 0)
-                        .attr('rx', 10)
-                        .attr('ry', 10)
-                        .attr('x', bar_x + (bar_x*1))
-                        .attr('y', bar_y + (bar_y*1.50));
+                        .attr('rx', 20)
+                        .attr('ry', 20)
+                        .attr('x', bar_x + (bar_x*0.2))
+                        .attr('y', bar_y + (bar_y*0.2));
     
         progress.transition()
             .duration(1000)

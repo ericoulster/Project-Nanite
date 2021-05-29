@@ -285,7 +285,7 @@ ol li, ul li {
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
-    flex-basis: 170px;
+    // flex-basis: 170px;
     flex-grow: 1;
 }
 
@@ -591,117 +591,162 @@ ol li, ul li {
 }
 
 .projectslist .projects-item {
-    background-color: #colors[mid-dark-blue-grey];
-    .header.panel {
-        display: flex;
-        flex-flow: row nowrap;
-        flex-basis: 100%;
-        align-items: center;
-        justify-content: space-between;
-    }  
-    .header .icon img {
-    width: 1rem;
-}
+    margin: 1rem;
+    padding: 0.5rem;
+    background-color: #colors[mid-blue-grey];
+    border-radius: 10px;
+    -webkit-box-shadow: 5px 5px 10px 1px #colors[dark-blue-grey]; 
+    box-shadow: 5px 5px 10px 1px #colors[dark-blue-grey];
+    .project-summary{  
+        padding: 0.5rem;  
+        .header.panel {
+            display: flex;
+            flex-flow: row nowrap;
+            flex-basis: 100%;
+            align-items: center;
+            justify-content: space-between;
+            h2 {
+                margin-block-start: 0em;
+                margin-block-end: 0em;
+            }
+            .project-header-buttons .icon img {
+                width: 1.5rem;
+                margin: 0px 0.5rem;
+                }
+        }  
+        .progress.panel {
+            flex-basis: 100%;
+            width: 100%;
+            flex-flow: row wrap;
+            justify-content: space-between;
+            align-items: center;
+            label {
+                display: inline-block;
+            }
+            [class^="progress-"] {
+                display: inline-block;
+            }
+            svg {
+                height: 50px;
+                width: 100%;
+            }
+        }
+        .quickstats.panel {
+            flex-basis: 70px;
+            p {
+                text-align: left;
+            }
+        }
+        .actions.panel {
+            flex-flow: row wrap;
+            justify-content: flex-end;
+            .btn {
+                flex-basis: 40%;
+                font-weight: bold;
+                text-align: center;
+            }
+        }
+    }
 }
 
 ///////////////////////
-.projects .greeting {
-    margin: 0.5rem 0px;
-}
+// .projects .greeting {
+//     margin: 0.5rem 0px;
+// }
 
-.projects .greeting p.username-greet {
-    font-weight: bold;
-}
+// .projects .greeting p.username-greet {
+//     font-weight: bold;
+// }
 
-.projects .greeting p {
-    margin: 0.5rem 0px;
-}
+// .projects .greeting p {
+//     margin: 0.5rem 0px;
+// }
 
-.projects .new-project-form-container {
-    width: 30rem;
-    margin: 0 auto;
-}
+// .projects .new-project-form-container {
+//     width: 30rem;
+//     margin: 0 auto;
+// }
 
-.projects .project-form.new-project input[type="text"], .projects .project-form.new-project input[type="date"] {
-    display: block;
-    margin-right: 1rem;
-}
+// .projects .project-form.new-project input[type="text"], .projects .project-form.new-project input[type="date"] {
+//     display: block;
+//     margin-right: 1rem;
+// }
 
-.projects .project-form.new-project fieldset {
-    border: none;
-    padding-left: 0;
-    display: flex;
-    flex-flow: column;
-}
+// .projects .project-form.new-project fieldset {
+//     border: none;
+//     padding-left: 0;
+//     display: flex;
+//     flex-flow: column;
+// }
 
-.projects .project-form.new-project fieldset input, .projects .project-form.new-project fieldset select {
-    max-width: 80%;
-}
+// .projects .project-form.new-project fieldset input, .projects .project-form.new-project fieldset select {
+//     max-width: 80%;
+// }
 
-.projects .project-form.new-project fieldset input[type="text"] {
-    border-color: #aaaaaa;
-    border-radius: 5px;
-}
+// .projects .project-form.new-project fieldset input[type="text"] {
+//     border-color: #aaaaaa;
+//     border-radius: 5px;
+// }
 
-.projects .project-form.new-project fieldset > label {
-    line-height: 2rem;
-}
+// .projects .project-form.new-project fieldset > label {
+//     line-height: 2rem;
+// }
 
-.projects .project-form.new-project fieldset .writing-goal {
-    display: flex;
-}
+// .projects .project-form.new-project fieldset .writing-goal {
+//     display: flex;
+// }
 
-.projects .project-form.new-project fieldset .writing-goal .radio-buttons {
-    margin: 0px 1rem;
-}
+// .projects .project-form.new-project fieldset .writing-goal .radio-buttons {
+//     margin: 0px 1rem;
+// }
 
-.projects .project-form.new-project fieldset .writing-goal .radio-buttons input[type="radio"] {
-    display: none;
-}
+// .projects .project-form.new-project fieldset .writing-goal .radio-buttons input[type="radio"] {
+//     display: none;
+// }
 
-.projects .project-form.new-project fieldset .writing-goal .radio-buttons label {
-    cursor: pointer;
-    color: #074EE8;
-    display: inline-block;
-    width: 4rem;
-    border: solid 2px #074EE8;
-    text-align: center;
-}
+// .projects .project-form.new-project fieldset .writing-goal .radio-buttons label {
+//     cursor: pointer;
+//     color: #074EE8;
+//     display: inline-block;
+//     width: 4rem;
+//     border: solid 2px #074EE8;
+//     text-align: center;
+// }
 
-.projects .project-form.new-project fieldset .writing-goal .radio-buttons input[type="radio"]:checked + label {
-    color: #ffffff;
-    background: #074EE8;
-}
+// .projects .project-form.new-project fieldset .writing-goal .radio-buttons input[type="radio"]:checked + label {
+//     color: #ffffff;
+//     background: #074EE8;
+// }
 
-.projects .project-form.new-project input[type="submit"] {
-    width: fit-content;
-    margin-left: 0rem;
-}
+// .projects .project-form.new-project input[type="submit"] {
+//     width: fit-content;
+//     margin-left: 0rem;
+// }
 
-.project-form.existing-project .formfields {
-    display: flex;
-}
+// .project-form.existing-project .formfields {
+//     display: flex;
+// }
 
-.projects .projectslist .projects-item + .projects-item {
-    margin-top: 1rem;
-}
+// .projects .projectslist .projects-item + .projects-item {
+//     margin-top: 1rem;
+// }
 
-.projects .projectslist progress {
-    width: 100%;
-}
+// .projects .projectslist progress {
+//     width: 100%;
+// }
 
-.projects .project-summary {
-    border: 3px solid #cccccc;
-}
+// .projects .project-summary {
+//     border: 3px solid #cccccc;
+// }
 
 
-.projects .project-summary h2 {
-    text-align: center;
-}
+// .projects .project-summary h2 {
+//     text-align: center;
+// }
 
-.project-actions {
-    margin: 1rem;
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: space-evenly;
-}
+// .project-actions {
+//     margin: 1rem;
+//     display: flex;
+//     flex-flow: row wrap;
+//     justify-content: space-evenly;
+// }

@@ -260,6 +260,7 @@ class AuthorActions:
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
         cur.execute("DELETE FROM projects where project_name=? AND author_id=?", (project_name, self.author_id))
+        ## TODO: also delete FROM words ??
         conn.commit()
         conn.close()
 
