@@ -59,7 +59,7 @@ def list_projects_html(username):
         </div>
         <div class="actions panel">
           <a class="btn">Project Stats</a>
-          <a class="btn">Refresh Project</a>
+          <a onclick="refresh_wordcounts({{project.project_id}})" class="btn">Refresh Project</a>
         </div>
       </div>
     </article>
@@ -211,3 +211,10 @@ def delete_project(authorname, project_name):
     a.id_by_name(authorname)
     a.delete_project(project_name)
     return
+
+@eel.expose
+def eel_refresh_wordcounts(project_id):
+    pa = ProjectActions()
+    pa.set_project(project_id)
+    pa.enter_wordcount()
+    return 

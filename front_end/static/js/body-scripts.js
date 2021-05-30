@@ -30,3 +30,12 @@ async function rename_project(project_id, new_name) {
     })()
     return a;
 }
+
+async function refresh_wordcounts(project_id) {
+    let a = await eel.eel_refresh_wordcounts(project_id)();
+    (function(){
+        w=a; //waiting 
+        window.location.href="http://localhost:8000/templates/projects.html";
+    })()
+    return a;
+}
