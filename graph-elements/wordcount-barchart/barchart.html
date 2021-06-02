@@ -33,9 +33,15 @@ body {
   </style>
 <!-- Create a div where the graph will take place -->
 
-<button type="button" onclick="timeType('daily')">Daily View</button>
+<!-- <button type="button" onclick="timeType('daily')">Daily View</button>
 <button type="button" onclick="timeType('weekly')">Weekly View</button>
-<button type="button" onclick="timeType('weekly')">Monthly View</button>
+<button type="button" onclick="timeType('weekly')">Monthly View</button> -->
+
+<select id="selDataset">
+  <option value="dataset1">Daily</option>
+  <option value="dataset2">Weekly</option>
+  <option value="dataset2">Monthly</option>
+</select>
 
 <!-- <label for="show_last">Show Last</label>
 <input type="text" name="name" pattern="[0-9]" title="Title" size=1/> 
@@ -46,9 +52,9 @@ body {
 <script>
 
 
-function timeType(time) {
-return time
-}
+// function timeType(time) {
+// return time
+// }
 
 // function timeType(time) {
 //   if (time === 'weekly')
@@ -58,7 +64,13 @@ return time
 //   else {return 'Day'}
 // }
 
-var data = Object.values(data);
+function timeDataSelect() {
+  var dropdownMenu = d3.select("#selDataset");
+  var dataset = dropdownMenu.property("value");
+
+}
+
+var data = Object.values(data['daily']);
 
 
   // set the dimensions and margins of the graph
