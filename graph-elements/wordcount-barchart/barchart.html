@@ -38,9 +38,9 @@ body {
 <button type="button" onclick="timeType('weekly')">Monthly View</button> -->
 
 <select id="selDataset">
-  <option value="dataset1">Daily</option>
-  <option value="dataset2">Weekly</option>
-  <option value="dataset2">Monthly</option>
+  <option value="Daily">Daily</option>
+  <option value="Weekly">Weekly</option>
+  <option value="Monthly">Monthly</option>
 </select>
 
 <!-- <label for="show_last">Show Last</label>
@@ -64,13 +64,39 @@ body {
 //   else {return 'Day'}
 // }
 
-function timeDataSelect() {
+
+var whole_data = Object.values(data)
+
+function updateGraph()
+{
+
+  d3.selectAll("svg").remove();
+
   var dropdownMenu = d3.select("#selDataset");
-  var dataset = dropdownMenu.property("value");
+  var granularity = dropdownMenu.property("value");
 
-}
 
-var data = Object.values(data['daily']);
+
+  if (granularity === 'Daily') {
+    var data = Object.values(whole_data[0]);
+    var time_name = 'Day';
+  }
+  else if (granularity === 'Weekly') {
+    var data = Object.values(whole_data[1]);
+    var time_name = 'Week';
+  }
+  else if (granularity === 'Monthly') {
+    var data = Object.values(whole_data[2]);
+    var time_name = 'Month';
+  }
+  else {
+    var data = Object.values(whole_data[0]);
+    var time_name = 'Day';
+  };
+
+
+
+
 
 
   // set the dimensions and margins of the graph
@@ -231,8 +257,6 @@ svg.selectAll("circles")
 //     }
 // else {}
 
-var granularity = timeType('Day')
-
 svg.append("text")         // Add the Y Axis
         .attr("x", (width / 2))             
         .attr("y", 0 - (margin.top / 2))
@@ -240,7 +264,7 @@ svg.append("text")         // Add the Y Axis
         .style("font-size", "16px") 
         .attr('font-family', 'Archivo') 
         .style("fill", "#E3E3E3")
-        .text(`Wordcount Per ${granularity}`); // REPLACE THIS WITH PER DAY/WEEK/MONTH
+        .text(`Wordcount Per ${time_name}`); // REPLACE THIS WITH PER DAY/WEEK/MONTH
 
     // PUT THE NEW CODE HERE!
 
@@ -248,7 +272,10 @@ svg.append("text")         // Add the Y Axis
 
 svg.selectAll("g").select(".domain").remove();
 
+};
+updateGraph();
 
+d3.selectAll("#selDataset").on("change", updateGraph)
 // issue: put text on top of line graph
 
 
