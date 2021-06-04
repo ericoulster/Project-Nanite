@@ -46,9 +46,10 @@ body {
 
 
 <!-- <label for="show_last">Show Last</label> -->
-<input type="text" name="numBars" pattern="[0-9]" title="numBars" size=1/> 
+<form name="myform" onSubmit="return updateGraph">
+<input type="text" id="numBars" pattern="[0-9]+" title="numBars" size=1 placeholder=7 />
 <!-- <label for="show_last_granularity"> </label> -->
-
+</form>
 <div id="wordcounter"></div>
 
 <script>
@@ -73,6 +74,8 @@ function updateGraph()
 {
 
   d3.selectAll("svg").remove();
+
+  console.log(document.getElementById("numBars").value);
 
   var dropdownMenu = d3.select("#selDataset");
   var granularity = dropdownMenu.property("value");
