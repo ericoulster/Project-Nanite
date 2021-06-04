@@ -46,26 +46,14 @@ body {
 
 
 <!-- <label for="show_last">Show Last</label> -->
-<form name="myform" onSubmit="return updateGraph">
-<input type="text" id="numBars" pattern="[0-9]+" title="numBars" size=1 placeholder=7 />
+<form name="myForm" onSubmit="return functionNameHere">
+<input type="text" id="numBars" pattern="[0-9]+" size=1 placeholder=7 />
 <!-- <label for="show_last_granularity"> </label> -->
 </form>
 <div id="wordcounter"></div>
 
 <script>
 
-
-// function timeType(time) {
-// return time
-// }
-
-// function timeType(time) {
-//   if (time === 'weekly')
-//   {return 'Week'}
-//   else if (time === 'monthly')
-//   {return 'Month'}
-//   else {return 'Day'}
-// }
 
 
 var whole_data = Object.values(data)
@@ -75,11 +63,10 @@ function updateGraph()
 
   d3.selectAll("svg").remove();
 
-  console.log(document.getElementById("numBars").value);
+  
 
   var dropdownMenu = d3.select("#selDataset");
   var granularity = dropdownMenu.property("value");
-
 
 
   if (granularity === 'Daily') {
@@ -124,6 +111,11 @@ function updateGraph()
 
   
 var data_length = data.length;
+
+// if data_range > data_length then data_range = data_length
+// else data_range = input for html element
+
+//var data_range = 
 
   // X axis
   var x = d3.scaleBand()
@@ -281,6 +273,10 @@ svg.selectAll("g").select(".domain").remove();
 updateGraph();
 
 d3.selectAll("#selDataset").on("change", updateGraph)
+
+// maybe delete
+// d3.select("#myForm").on("submit", console.log(document.getElementById("numBars")))
+
 // issue: put text on top of line graph
 
 
