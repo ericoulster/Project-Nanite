@@ -9,51 +9,106 @@
       font-family: "Archivo";
       src:url("../font/Archivo-SemiBold.ttf")
   }
+  
   .Archivo {
       font-family: "Archivo";
   }
+  
   .grid .tick {
     stroke: lightgrey;
     opacity: 0.7;
     stroke-width: 3;
-}
-x.tick line{
-  visibility:hidden;
-}
+  }
 
-line {
+  x.tick line{
+    visibility:hidden;
+  }
+
+  line {
     stroke: #333A40;
     stroke-linecap: round;
-}
+  }
 
-body {
-  background-color: #1F2428
-}
-  
-  </style>
-<!-- Create a div where the graph will take place -->
-
-<!-- <button type="button" onclick="timeType('daily')">Daily View</button>
-<button type="button" onclick="timeType('weekly')">Weekly View</button>
-<button type="button" onclick="timeType('weekly')">Monthly View</button> -->
-
-<select id="selDataset">
-  <option value="Daily">Daily</option>
-  <option value="Weekly">Weekly</option>
-  <option value="Monthly">Monthly</option>
-</select>
+  body {
+    background-color: #1F2428;
+    width: 100%;
+  }
 
 
+  /*
+  Force of habit this  
+  .wordcountContainer {
+    width: 90%;
+    margin: 5vh auto 0 auto;
+  } */
 
-<!-- <label for="show_last">Show Last</label> -->
-<form name="myForm" onSubmit="return functionNameHere">
-<input type="text" id="numBars" pattern="[0-9]+" size=1 placeholder=7 />
-<!-- <label for="show_last_granularity"> </label> -->
-</form>
-<div id="wordcounter"></div>
+  #userInputRow {
+    display: flex;
+    margin-top: 0;
+    margin-bottom: .5em;
+    justify-content: space-between;
+  }
+
+  #numBars {
+    margin: 0 .3em;
+  }
+
+  .numBarsContainer {
+    color: #fff;
+  }
+
+  /* For whatever reason, it kept adding this margin to this p tag and I was not about that life*/
+  .numBarsContainer p {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  #alert {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    transition-duration: .5s;
+    padding: .35em 0;
+    z-index: 4;
+  }
+
+</style>
+
+<!--Displays error message if user enters non-number into input-->
+<div id="alert"></div>
+<!--Contains the rest of the stuff; here in case styling needed-->
+<div class="wordcountContainer">
+  <!--Div directly above graph-->
+  <div id="userInputRow">
+    <select id="selDataset">
+      <option value="Daily">Daily</option>
+      <option value="Weekly">Weekly</option>
+      <option value="Monthly">Monthly</option>
+    </select>
+
+    <!--Have a div here so that justify-content will slap it onto the right side of the screen-->
+    <div class="numBarsContainer Archivo">
+      <p>
+        Past 
+      <input type="text" id="numBars" pattern="[0-9]+" size=1 placeholder=7 />
+        <span id="currMeasurement">Measurement</span>
+      </p>
+    </div>
+  </div>
+
+  <!--Graph's outside the userInputRow-->
+  <div id="wordcounter"></div>
+
+</div>
 
 <script>
-
+var sel_userInputRow = document.getElementById("userInputRow");
+var sel_numBars = document.getElementById("numBars");
+var sel_alertDiv = document.getElementById("alert");
+// I think I end up using this outside of updateGraph, hence the redefinition
+var sel_dropDown = document.getElementById("selDataset");
 
 
 var whole_data = Object.values(data)
@@ -86,16 +141,18 @@ function updateGraph()
     var time_name = 'Day';
   };
 
-
-
-
-
+  // Adds the currently selected measurement to the numBars selection input line
+  document.getElementById("currMeasurement").innerText = time_name + "s";
 
   // set the dimensions and margins of the graph
   var margin = {top: 30, right: 30, bottom: 70, left: 60},
       width = 600 - margin.left - margin.right,
       height = 400 - margin.top - margin.bottom;
-  
+   
+  // setting the width and padding of the userInputDiv to match the graph
+  sel_userInputRow.style.width = width + margin.left - margin.right; // ㅎㅎㅎ
+  sel_userInputRow.style.paddingLeft = margin.right;
+
   // append the svg object to the body of the page
   var svg = d3.select("#wordcounter")
     .append("svg")
@@ -104,7 +161,6 @@ function updateGraph()
     .append("g")
       .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
-
 
 
   // The data (which will be separated into another file later on)
@@ -269,10 +325,44 @@ svg.append("text")         // Add the Y Axis
 
 svg.selectAll("g").select(".domain").remove();
 
+
 };
 updateGraph();
 
+
+// Run when input entered into numBars input
+function handleNumBarChange() {
+  // Originally takes in as string
+  var rawNumBars = parseInt(this.value);
+
+  // Making sure user actually did type in a number
+  if (!isNaN(rawNumBars)){
+    // Placeholder console.log; needs to run updateGraph
+    console.log(`Current numBars: ${rawNumBars}`);
+    console.log(`Current TypeOf: ${typeof rawNumBars}`);
+    console.log(`Current dropdown: ${sel_dropDown.value}`);
+  } else{
+    // Flashes error message to user if non-number entered 
+    var displayAlert = setInterval(() => {
+      if (!sel_alertDiv.style.opacity) {
+        sel_alertDiv.style.background = "red";
+        sel_alertDiv.style.opacity = 1;
+        sel_alertDiv.innerText = "Input must be number";
+      }
+      if (sel_alertDiv.style.opacity > 0) {
+        sel_alertDiv.style.opacity -= 0.1;
+      } else {
+        clearInterval(displayAlert);
+        sel_alertDiv.innerHTML = "";
+      }
+    }, 400);
+
+  }
+}
+
 d3.selectAll("#selDataset").on("change", updateGraph)
+// Waits for change in the input box and runs handleNumBar
+sel_numBars.addEventListener("change", handleNumBarChange)
 
 // maybe delete
 // d3.select("#myForm").on("submit", console.log(document.getElementById("numBars")))
