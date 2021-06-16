@@ -110,7 +110,6 @@ var sel_alertDiv = document.getElementById("alert");
 // I think I end up using this outside of updateGraph, hence the redefinition
 var sel_dropDown = document.getElementById("selDataset");
 
-
 var whole_data = Object.values(data)
 
 function updateGraph()
@@ -333,12 +332,12 @@ svg.append("text")         // Add the Y Axis
         .style("font-size", "16px") 
         .attr('font-family', 'Archivo') 
         .style("fill", "#E3E3E3")
-        .text(`Wordcount Per ${time_name}`); // REPLACE THIS WITH PER DAY/WEEK/MONTH
-
-    // PUT THE NEW CODE HERE!
+        .text(`Wordcount Per ${time_name}`);
 
 
 
+
+//Erasing previous values when new ones pop up
 svg.selectAll("g").select(".domain").remove();
 
 
