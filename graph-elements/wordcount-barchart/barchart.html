@@ -141,6 +141,18 @@ function updateGraph()
     var time_name = 'Day';
   };
 
+
+  // Originally takes in numbars value as string
+  var rawNumBars = parseInt(sel_numBars.value);
+  var numBars; 
+  // Making sure user actually did type in a number
+  if (!isNaN(rawNumBars)){
+    numBars = rawNumBars;
+  } else{
+    // Not sure what the default should be?
+    numBars = 7; 
+  }
+
   // Adds the currently selected measurement to the numBars selection input line
   document.getElementById("currMeasurement").innerText = time_name + "s";
 
@@ -152,6 +164,10 @@ function updateGraph()
   // setting the width and padding of the userInputDiv to match the graph
   sel_userInputRow.style.width = width + margin.left - margin.right; // ㅎㅎㅎ
   sel_userInputRow.style.paddingLeft = margin.right;
+
+  console.log(`Current numBars: ${numBars}`);
+  console.log(`Current TypeOf: ${typeof numBars}`);
+  console.log(`Current granularity: ${granularity}`);
 
   // append the svg object to the body of the page
   var svg = d3.select("#wordcounter")
@@ -330,39 +346,9 @@ svg.selectAll("g").select(".domain").remove();
 updateGraph();
 
 
-// Run when input entered into numBars input
-function handleNumBarChange() {
-  // Originally takes in as string
-  var rawNumBars = parseInt(this.value);
-
-  // Making sure user actually did type in a number
-  if (!isNaN(rawNumBars)){
-    // Placeholder console.log; needs to run updateGraph
-    console.log(`Current numBars: ${rawNumBars}`);
-    console.log(`Current TypeOf: ${typeof rawNumBars}`);
-    console.log(`Current dropdown: ${sel_dropDown.value}`);
-  } else{
-    // Flashes error message to user if non-number entered 
-    var displayAlert = setInterval(() => {
-      if (!sel_alertDiv.style.opacity) {
-        sel_alertDiv.style.background = "red";
-        sel_alertDiv.style.opacity = 1;
-        sel_alertDiv.innerText = "Input must be number";
-      }
-      if (sel_alertDiv.style.opacity > 0) {
-        sel_alertDiv.style.opacity -= 0.1;
-      } else {
-        clearInterval(displayAlert);
-        sel_alertDiv.innerHTML = "";
-      }
-    }, 400);
-
-  }
-}
-
 d3.selectAll("#selDataset").on("change", updateGraph)
 // Waits for change in the input box and runs handleNumBar
-sel_numBars.addEventListener("change", handleNumBarChange)
+sel_numBars.addEventListener("change", updateGraph)
 
 // maybe delete
 // d3.select("#myForm").on("submit", console.log(document.getElementById("numBars")))
