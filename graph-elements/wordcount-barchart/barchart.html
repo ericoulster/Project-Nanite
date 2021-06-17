@@ -266,10 +266,17 @@ svg.append("path")
       .attr("fill", "none")
       .attr("stroke", "#474F56")
       .attr("stroke-width", 2)
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round")
       .attr("d", d3.line()
         .x(function(d) { return x(d.Wdate) + (x.bandwidth()/2)}) //Need a better system for this
         .y(function(d) { return y(d.Wtarget) })
-        )
+      )
+      .attr("stroke-dashoffset", 1000)
+      .attr("stroke-dasharray", 1000)
+      .transition(d3.transition().ease(d3.easeSin).duration(2500))
+      // .duration(950)
+      .attr("stroke-dashoffset",0);
 
 
 // Line-bubbles
