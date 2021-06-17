@@ -357,11 +357,11 @@ svg.selectAll("g").select(".domain").remove();
 
 
 };
+
+
 updateGraph();
 
-
 d3.selectAll("#selDataset").on("change", updateGraph)
-// Waits for change in the input box and runs handleNumBar
 sel_numBars.addEventListener("change", updateGraph)
 
 // maybe delete
