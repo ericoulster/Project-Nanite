@@ -212,10 +212,10 @@ function updateGraph()
   // max of Y axis
   var maxY = d3.max(data, (wordplot) => {
       if (wordplot.Wcount > wordplot.Wtarget) {
-          return wordplot.Wcount
+          return wordplot.Wcount;
       }
       else {
-          return wordplot.Wtarget
+          return wordplot.Wtarget;
       }
     });
 
@@ -241,7 +241,7 @@ function updateGraph()
           .tickSize(-width)
           .tickFormat("")
           .ticks(6)
-      )
+      );
       
   // Bars
  var bar = svg.selectAll("bar")
@@ -259,9 +259,6 @@ function updateGraph()
       .attr("ry", 2)
       .attr("fill", "#F6D55C")
       .delay((d, i) => { return (i * 100)});
-  
-  // bar.transition()
-  // .duration(1000)
 
 // Line
 svg.append("path")
@@ -280,12 +277,15 @@ svg.selectAll("circles")
     .data(data)
     .enter()
     .append("circle")
-      .attr("fill", "#F6D55C")
-      .attr("stroke", "#474F56")
       .attr("stroke-width", 2)
       .attr("cx", function(d) { return x(d.Wdate) + (x.bandwidth()/2)})
       .attr("cy", function(d) { return y(d.Wtarget) })
+      .transition()
+      .duration(950)
+      .attr("fill", "#F6D55C")
+      .attr("stroke", "#474F56")
       .attr("r", 4)
+      .delay((d, i) => { return (i * 100)});
 
 
       //having text beneath each bar. I'm finding this more trouble than it's worth.
