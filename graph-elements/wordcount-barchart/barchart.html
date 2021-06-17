@@ -117,43 +117,70 @@ function updateGraph()
 
   d3.selectAll("svg").remove();
 
-  
-
   var dropdownMenu = d3.select("#selDataset");
   var granularity = dropdownMenu.property("value");
-
-
-  if (granularity === 'Daily') {
-    var data = Object.values(whole_data[0]);
-    var time_name = 'Day';
-  }
-  else if (granularity === 'Weekly') {
-    var data = Object.values(whole_data[1]);
-    var time_name = 'Week';
-  }
-  else if (granularity === 'Monthly') {
-    var data = Object.values(whole_data[2]);
-    var time_name = 'Month';
-  }
-  else {
-    var data = Object.values(whole_data[0]);
-    var time_name = 'Day';
-  };
-
+  var data, time_name, numBars;
 
   // Originally takes in numbars value as string
   var rawNumBars = parseInt(sel_numBars.value);
   var numBars; 
-  // Making sure user actually did type in a number
-  if (!isNaN(rawNumBars)){
-    numBars = rawNumBars;
+  // Making sure user actually did type in a uint
+  // Numbars is negative so that (later) the slice will nab the most recent
+  if (!isNaN(rawNumBars) && rawNumBars > 1){
+    numBars = rawNumBars * -1;
   } else{
-    // Not sure what the default should be?
-    numBars = 7; 
+    // Sets the default based on what the granularity is
+    // Once again, we're using negatives so the slice will nab the most recent
+    switch (granularity) {
+      case "Daily":
+        numBars = -7;
+        break;
+      case "Weekly":
+        numBars = -3;
+        break;
+      case "Daily":
+        numBars = -3;
+        break;
+      default:
+        numBars = -7;
+    } 
   }
+
+  if (granularity === 'Daily') {
+    data = Object.values(whole_data[0]);
+    time_name = "Day";
+  }
+  else if (granularity === 'Weekly') {
+    data = Object.values(whole_data[1]);
+    time_name = "Week";
+  }
+  else if (granularity === 'Monthly') {
+    data = Object.values(whole_data[2]);
+    time_name = "Month";
+  }
+  else {
+    data = Object.values(whole_data[0]);
+    time_name = "Day;"
+  };
+
+  // Actually slicing the data based on user's numBar input
+  // First ensuring that the user doesn't break things by inputting a higher numBars
+  //   than there is data available for Day / Week / Month.
+  // If they input a number that's higher than the available data, we just set it to
+  //   the max amount of data available.
+  if ((data.length * -1) > numBars){
+    numBars = (data.length * -1);
+  } 
+  data = data.slice(numBars)
 
   // Adds the currently selected measurement to the numBars selection input line
   document.getElementById("currMeasurement").innerText = time_name + "s";
+
+  console.log("===============================");
+  console.log(`Current numBars: ${numBars}`);
+  console.log(`Current TypeOf: ${typeof numBars}`);
+  console.log(`Current granularity: ${granularity}`);
+
 
   // set the dimensions and margins of the graph
   var margin = {top: 30, right: 30, bottom: 70, left: 60},
@@ -164,10 +191,6 @@ function updateGraph()
   sel_userInputRow.style.width = width + margin.left - margin.right; // ㅎㅎㅎ
   sel_userInputRow.style.paddingLeft = margin.right;
 
-  console.log(`Current numBars: ${numBars}`);
-  console.log(`Current TypeOf: ${typeof numBars}`);
-  console.log(`Current granularity: ${granularity}`);
-
   // append the svg object to the body of the page
   var svg = d3.select("#wordcounter")
     .append("svg")
@@ -177,11 +200,10 @@ function updateGraph()
       .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
-
   // The data (which will be separated into another file later on)
 
-  
-var data_length = data.length;
+  // The current number of values
+  var data_length = data.length;
 
 // if data_range > data_length then data_range = data_length
 // else data_range = input for html element
@@ -235,9 +257,6 @@ var data_length = data.length;
           .tickFormat("")
           .ticks(6)
       )
-
-
-
       
   // Bars
  var bar = svg.selectAll("bar")
@@ -245,14 +264,19 @@ var data_length = data.length;
     .enter()
     .append("rect")
       .attr("x", function(d) { return x(d.Wdate); })
+      .transition()
+      .duration(450)
       .attr("y", function(d) { return y(d.Wcount); })
       .attr("width", x.bandwidth())
+      .transition()
+      .duration(950)
       .attr("height", function(d) { return height - y(d.Wcount); })
       .attr("ry", 2)
-      .attr("fill", "#F6D55C");
+      .attr("fill", "#F6D55C")
+      .delay((d, i) => { return (i * 100)});
   
-  bar.transition()
-  .duration(1000)
+  // bar.transition()
+  // .duration(1000)
 
 // Line
 svg.append("path")
