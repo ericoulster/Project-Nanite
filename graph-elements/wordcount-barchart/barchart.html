@@ -104,7 +104,7 @@ function updateGraph()
   var numBars; 
   // Making sure user actually did type in a uint
   // Numbars is negative so that (later) the slice will nab the most recent
-  if (!isNaN(rawNumBars) && rawNumBars > 1){
+  if (!isNaN(rawNumBars) && rawNumBars > 0){
     numBars = rawNumBars * -1;
   } else{
     // Sets the default based on what the granularity is
@@ -275,7 +275,6 @@ svg.append("path")
       .attr("stroke-dashoffset", 1000)
       .attr("stroke-dasharray", 1000)
       .transition(d3.transition().ease(d3.easeSin).duration(2500))
-      // .duration(950)
       .attr("stroke-dashoffset",0);
 
 
