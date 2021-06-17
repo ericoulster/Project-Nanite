@@ -203,10 +203,7 @@ function updateGraph()
             .attr('font-weight', 100)
             .attr('font-size', 'small')
             .style("text-anchor", "end")
-            .transition()
-            .duration(400)
-            .style('fill', "#E3E3E3")
-      .delay((d, i) => { return (i * 150)});
+            .style('fill', "#E3E3E3");
 
 
   // max of Y axis
@@ -229,10 +226,7 @@ function updateGraph()
     .call(d3.axisLeft(y).tickSize(0))
     .attr('font-family', 'Archivo')
     .selectAll("text")
-      .transition()
-      .duration(250)
-      .style('fill', "#E3E3E3").attr('font-size', 'small')
-      .delay((d, i) => { return (i * 75)});
+      .style('fill', "#E3E3E3").attr('font-size', 'small');
 
   // add the Y gridlines
   svg.append("g")			
@@ -249,16 +243,11 @@ function updateGraph()
     .enter()
     .append("rect")
       .attr("x", function(d) { return x(d.Wdate); })
-      .transition()
-      .duration(450)
       .attr("y", function(d) { return y(d.Wcount); })
       .attr("width", x.bandwidth())
-      .transition()
-      .duration(950)
       .attr("height", function(d) { return height - y(d.Wcount); })
       .attr("ry", 2)
-      .attr("fill", "#F6D55C")
-      .delay((d, i) => { return (i * 100)});
+      .attr("fill", "#F6D55C");
 
 // Line
 svg.append("path")
@@ -266,16 +255,10 @@ svg.append("path")
       .attr("fill", "none")
       .attr("stroke", "#474F56")
       .attr("stroke-width", 2)
-      .attr("stroke-linejoin", "round")
-      .attr("stroke-linecap", "round")
       .attr("d", d3.line()
         .x(function(d) { return x(d.Wdate) + (x.bandwidth()/2)}) //Need a better system for this
         .y(function(d) { return y(d.Wtarget) })
-      )
-      .attr("stroke-dashoffset", 1000)
-      .attr("stroke-dasharray", 1000)
-      .transition(d3.transition().ease(d3.easeSin).duration(2500))
-      .attr("stroke-dashoffset",0);
+      );
 
 
 // Line-bubbles
@@ -286,12 +269,9 @@ svg.selectAll("circles")
       .attr("stroke-width", 2)
       .attr("cx", function(d) { return x(d.Wdate) + (x.bandwidth()/2)})
       .attr("cy", function(d) { return y(d.Wtarget) })
-      .transition()
-      .duration(1500)
       .attr("fill", "#F6D55C")
       .attr("stroke", "#474F56")
-      .attr("r", 4)
-      .delay((d, i) => { return (i * 100)});
+      .attr("r", 4);
 
 
       //having text beneath each bar. I'm finding this more trouble than it's worth.
