@@ -224,8 +224,11 @@ function updateGraph()
       .attr('font-family', 'Archivo')
             .attr('font-weight', 100)
             .attr('font-size', 'small')
+            .transition()
+            .duration(450)
             .style('fill', "#E3E3E3")
-      .style("text-anchor", "end");
+      .style("text-anchor", "end")
+      .delay((d, i) => { return (i * 450)});
 
 
   // max of Y axis
@@ -247,7 +250,11 @@ function updateGraph()
     svg.append("g")
     .call(d3.axisLeft(y).tickSize(0))
     .attr('font-family', 'Archivo')
-    .selectAll("text").style('fill', "#E3E3E3").attr('font-size', 'small');
+    .selectAll("text")
+      .transition()
+      .duration(250)
+      .style('fill', "#E3E3E3").attr('font-size', 'small')
+      .delay((d, i) => { return (i * 75)});
 
   // add the Y gridlines
   svg.append("g")			
