@@ -34,14 +34,6 @@
     width: 100%;
   }
 
-
-  /*
-  Force of habit this  
-  .wordcountContainer {
-    width: 90%;
-    margin: 5vh auto 0 auto;
-  } */
-
   #userInputRow {
     display: flex;
     margin-top: 0;
@@ -63,21 +55,8 @@
     margin-bottom: 0 !important;
   }
 
-  #alert {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    transition-duration: .5s;
-    padding: .35em 0;
-    z-index: 4;
-  }
-
 </style>
 
-<!--Displays error message if user enters non-number into input-->
-<div id="alert"></div>
 <!--Contains the rest of the stuff; here in case styling needed-->
 <div class="wordcountContainer">
   <!--Div directly above graph-->
@@ -106,7 +85,6 @@
 <script>
 var sel_userInputRow = document.getElementById("userInputRow");
 var sel_numBars = document.getElementById("numBars");
-var sel_alertDiv = document.getElementById("alert");
 // I think I end up using this outside of updateGraph, hence the redefinition
 var sel_dropDown = document.getElementById("selDataset");
 
@@ -224,11 +202,11 @@ function updateGraph()
       .attr('font-family', 'Archivo')
             .attr('font-weight', 100)
             .attr('font-size', 'small')
+            .style("text-anchor", "end")
             .transition()
-            .duration(450)
+            .duration(400)
             .style('fill', "#E3E3E3")
-      .style("text-anchor", "end")
-      .delay((d, i) => { return (i * 450)});
+      .delay((d, i) => { return (i * 150)});
 
 
   // max of Y axis
