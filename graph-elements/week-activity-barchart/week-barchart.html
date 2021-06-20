@@ -30,7 +30,7 @@
     }
   
     body {
-      background-color: #1F2428;
+      background-color: #474F56;
       width: 100%;
     }
 
@@ -61,7 +61,7 @@ var bardata = Object.values(barData)
     .padding(0.44);
   
     svg.append("g")
-    .attr("transform", "translate(10," + (height+10) + ")")
+    .attr("transform", "translate(10.5," + (height+10) + ")")
     .call(d3.axisBottom(x).tickSize(0))
     .call(g => g.select(".domain").remove())
     .selectAll("text")
@@ -77,7 +77,7 @@ var bardata = Object.values(barData)
   // max of Y axis
   var maxY = d3.max(bardata, (d) => {return +d.Wcount})
 
-
+  //"#F6D55C"
     
   // Y axis
   var y = d3.scaleLinear()
@@ -93,7 +93,9 @@ var bardata = Object.values(barData)
       .attr("width", x.bandwidth())
       .attr("height", function(d) { return height - y(d.Wcount); })
       .attr("ry", 8)
-      .attr("fill", "#F6D55C");
+      .attr("fill", function(d) {if (d.IsMax === false) {return "#1F2428"} else {return "#F6D55C"}}
+      
+      );
 
     
 console.log(bardata)
