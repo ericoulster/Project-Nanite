@@ -1,11 +1,11 @@
 var barData = [
 
-    {Day: "Monday", Wcount: 747},
-    {Day: "Tuesday", Wcount: 342},
-    {Day: "Wednesday", Wcount: 392},
-    {Day: "Thursday", Wcount: 992},
-    {Day: "Friday", Wcount: 722},
-    {Day: "Saturday", Wcount: 802},
-    {Day: "Sunday", Wcount: 562}
+    {Day: "Mon", Wcount: 747},
+    {Day: "Tues", Wcount: 342},
+    {Day: "Wed", Wcount: 392},
+    {Day: "Thu", Wcount: 992},
+    {Day: "Fri", Wcount: 722},
+    {Day: "Sat", Wcount: 802},
+    {Day: "Sun", Wcount: 562}
 
 ]
