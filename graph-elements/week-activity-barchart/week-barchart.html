@@ -58,11 +58,12 @@ var bardata = Object.values(barData)
   var x = d3.scaleBand()
     .range([ 0, width ])
     .domain(bardata.map(function(d) { return d.Day; }))
-    .padding(0.4);
+    .padding(0.44);
   
     svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
+    .attr("transform", "translate(10," + (height+10) + ")")
     .call(d3.axisBottom(x).tickSize(0))
+    .call(g => g.select(".domain").remove())
     .selectAll("text")
     //center text to middle of bars (bandwidth/2), have lower
     //make xaxis line invisible
