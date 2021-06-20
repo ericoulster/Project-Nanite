@@ -9,52 +9,84 @@
       font-family: "Archivo";
       src:url("../font/Archivo-SemiBold.ttf")
   }
+  
   .Archivo {
       font-family: "Archivo";
   }
+  
   .grid .tick {
     stroke: lightgrey;
     opacity: 0.7;
     stroke-width: 3;
-}
-x.tick line{
-  visibility:hidden;
-}
+  }
 
-line {
+  x.tick line{
+    visibility:hidden;
+  }
+
+  line {
     stroke: #333A40;
     stroke-linecap: round;
-}
+  }
 
-body {
-  background-color: #1F2428
-}
-  
-  </style>
-<!-- Create a div where the graph will take place -->
+  body {
+    background-color: #1F2428;
+    width: 100%;
+  }
 
-<!-- <button type="button" onclick="timeType('daily')">Daily View</button>
-<button type="button" onclick="timeType('weekly')">Weekly View</button>
-<button type="button" onclick="timeType('weekly')">Monthly View</button> -->
+  #userInputRow {
+    display: flex;
+    margin-top: 0;
+    margin-bottom: .5em;
+    justify-content: space-between;
+  }
 
-<select id="selDataset">
-  <option value="Daily">Daily</option>
-  <option value="Weekly">Weekly</option>
-  <option value="Monthly">Monthly</option>
-</select>
+  #numBars {
+    margin: 0 .3em;
+  }
 
+  .numBarsContainer {
+    color: #fff;
+  }
 
+  /* For whatever reason, it kept adding this margin to this p tag and I was not about that life*/
+  .numBarsContainer p {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
 
-<!-- <label for="show_last">Show Last</label> -->
-<form name="myForm" onSubmit="return functionNameHere">
-<input type="text" id="numBars" pattern="[0-9]+" size=1 placeholder=7 />
-<!-- <label for="show_last_granularity"> </label> -->
-</form>
-<div id="wordcounter"></div>
+</style>
+
+<!--Contains the rest of the stuff; here in case styling needed-->
+<div class="wordcountContainer">
+  <!--Div directly above graph-->
+  <div id="userInputRow">
+    <select id="selDataset">
+      <option value="Daily">Daily</option>
+      <option value="Weekly">Weekly</option>
+      <option value="Monthly">Monthly</option>
+    </select>
+
+    <!--Have a div here so that justify-content will slap it onto the right side of the screen-->
+    <div class="numBarsContainer Archivo">
+      <p>
+        Past 
+      <input type="text" id="numBars" pattern="[0-9]+" size=1 placeholder=7 />
+        <span id="currMeasurement">Measurement</span>
+      </p>
+    </div>
+  </div>
+
+  <!--Graph's outside the userInputRow-->
+  <div id="wordcounter"></div>
+
+</div>
 
 <script>
-
-
+var sel_userInputRow = document.getElementById("userInputRow");
+var sel_numBars = document.getElementById("numBars");
+// I think I end up using this outside of updateGraph, hence the redefinition
+var sel_dropDown = document.getElementById("selDataset");
 
 var whole_data = Object.values(data)
 
@@ -63,39 +95,80 @@ function updateGraph()
 
   d3.selectAll("svg").remove();
 
-  
-
   var dropdownMenu = d3.select("#selDataset");
   var granularity = dropdownMenu.property("value");
+  var data, time_name, numBars;
 
+  // Originally takes in numbars value as string
+  var rawNumBars = parseInt(sel_numBars.value);
+  var numBars; 
+  // Making sure user actually did type in a uint
+  // Numbars is negative so that (later) the slice will nab the most recent
+  if (!isNaN(rawNumBars) && rawNumBars > 0){
+    numBars = rawNumBars * -1;
+  } else{
+    // Sets the default based on what the granularity is
+    // Once again, we're using negatives so the slice will nab the most recent
+    switch (granularity) {
+      case "Daily":
+        numBars = -7;
+        break;
+      case "Weekly":
+        numBars = -3;
+        break;
+      case "Daily":
+        numBars = -3;
+        break;
+      default:
+        numBars = -7;
+    } 
+  }
 
   if (granularity === 'Daily') {
-    var data = Object.values(whole_data[0]);
-    var time_name = 'Day';
+    data = Object.values(whole_data[0]);
+    time_name = "Day";
   }
   else if (granularity === 'Weekly') {
-    var data = Object.values(whole_data[1]);
-    var time_name = 'Week';
+    data = Object.values(whole_data[1]);
+    time_name = "Week";
   }
   else if (granularity === 'Monthly') {
-    var data = Object.values(whole_data[2]);
-    var time_name = 'Month';
+    data = Object.values(whole_data[2]);
+    time_name = "Month";
   }
   else {
-    var data = Object.values(whole_data[0]);
-    var time_name = 'Day';
+    data = Object.values(whole_data[0]);
+    time_name = "Day;"
   };
 
+  // Actually slicing the data based on user's numBar input
+  // First ensuring that the user doesn't break things by inputting a higher numBars
+  //   than there is data available for Day / Week / Month.
+  // If they input a number that's higher than the available data, we just set it to
+  //   the max amount of data available.
+  if ((data.length * -1) > numBars){
+    numBars = (data.length * -1);
+  } 
+  data = data.slice(numBars)
 
+  // Adds the currently selected measurement to the numBars selection input line
+  document.getElementById("currMeasurement").innerText = time_name + "s";
 
-
+  console.log("===============================");
+  console.log(`Current numBars: ${numBars}`);
+  console.log(`Current TypeOf: ${typeof numBars}`);
+  console.log(`Current granularity: ${granularity}`);
 
 
   // set the dimensions and margins of the graph
   var margin = {top: 30, right: 30, bottom: 70, left: 60},
       width = 600 - margin.left - margin.right,
       height = 400 - margin.top - margin.bottom;
-  
+   
+  // setting the width and padding of the userInputDiv to match the graph
+  sel_userInputRow.style.width = width + margin.left - margin.right; // ㅎㅎㅎ
+  sel_userInputRow.style.paddingLeft = margin.right;
+
   // append the svg object to the body of the page
   var svg = d3.select("#wordcounter")
     .append("svg")
@@ -105,12 +178,10 @@ function updateGraph()
       .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
-
-
   // The data (which will be separated into another file later on)
 
-  
-var data_length = data.length;
+  // The current number of values
+  var data_length = data.length;
 
 // if data_range > data_length then data_range = data_length
 // else data_range = input for html element
@@ -131,17 +202,17 @@ var data_length = data.length;
       .attr('font-family', 'Archivo')
             .attr('font-weight', 100)
             .attr('font-size', 'small')
-            .style('fill', "#E3E3E3")
-      .style("text-anchor", "end");
+            .style("text-anchor", "end")
+            .style('fill', "#E3E3E3");
 
 
   // max of Y axis
   var maxY = d3.max(data, (wordplot) => {
       if (wordplot.Wcount > wordplot.Wtarget) {
-          return wordplot.Wcount
+          return wordplot.Wcount;
       }
       else {
-          return wordplot.Wtarget
+          return wordplot.Wtarget;
       }
     });
 
@@ -154,7 +225,8 @@ var data_length = data.length;
     svg.append("g")
     .call(d3.axisLeft(y).tickSize(0))
     .attr('font-family', 'Archivo')
-    .selectAll("text").style('fill', "#E3E3E3").attr('font-size', 'small');
+    .selectAll("text")
+      .style('fill', "#E3E3E3").attr('font-size', 'small');
 
   // add the Y gridlines
   svg.append("g")			
@@ -163,10 +235,7 @@ var data_length = data.length;
           .tickSize(-width)
           .tickFormat("")
           .ticks(6)
-      )
-
-
-
+      );
       
   // Bars
  var bar = svg.selectAll("bar")
@@ -179,9 +248,6 @@ var data_length = data.length;
       .attr("height", function(d) { return height - y(d.Wcount); })
       .attr("ry", 2)
       .attr("fill", "#F6D55C");
-  
-  bar.transition()
-  .duration(1000)
 
 // Line
 svg.append("path")
@@ -192,7 +258,7 @@ svg.append("path")
       .attr("d", d3.line()
         .x(function(d) { return x(d.Wdate) + (x.bandwidth()/2)}) //Need a better system for this
         .y(function(d) { return y(d.Wtarget) })
-        )
+      );
 
 
 // Line-bubbles
@@ -200,12 +266,12 @@ svg.selectAll("circles")
     .data(data)
     .enter()
     .append("circle")
-      .attr("fill", "#F6D55C")
-      .attr("stroke", "#474F56")
       .attr("stroke-width", 2)
       .attr("cx", function(d) { return x(d.Wdate) + (x.bandwidth()/2)})
       .attr("cy", function(d) { return y(d.Wtarget) })
-      .attr("r", 4)
+      .attr("fill", "#F6D55C")
+      .attr("stroke", "#474F56")
+      .attr("r", 4);
 
 
       //having text beneath each bar. I'm finding this more trouble than it's worth.
@@ -261,18 +327,22 @@ svg.append("text")         // Add the Y Axis
         .style("font-size", "16px") 
         .attr('font-family', 'Archivo') 
         .style("fill", "#E3E3E3")
-        .text(`Wordcount Per ${time_name}`); // REPLACE THIS WITH PER DAY/WEEK/MONTH
-
-    // PUT THE NEW CODE HERE!
+        .text(`Wordcount Per ${time_name}`);
 
 
 
+
+//Erasing previous values when new ones pop up
 svg.selectAll("g").select(".domain").remove();
 
+
 };
+
+
 updateGraph();
 
 d3.selectAll("#selDataset").on("change", updateGraph)
+sel_numBars.addEventListener("change", updateGraph)
 
 // maybe delete
 // d3.select("#myForm").on("submit", console.log(document.getElementById("numBars")))
