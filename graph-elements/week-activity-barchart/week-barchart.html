@@ -39,7 +39,9 @@
 <div id="weekbar"></div>
 
 <script>
-var bardata = Object.values(barData)
+var bardata = Object.values(barData.weekmeans)
+
+var maxday = Object.values(barData.maxday)
 
  // set the dimensions and margins of the graph
  var margin = {top: 30, right: 30, bottom: 70, left: 60},
@@ -101,7 +103,7 @@ var bardata = Object.values(barData)
         .attr("text-anchor", "middle")  
         .attr('font-family', 'Archivo')
         .style('fill', "#E3E3E3")
-        .text("You are most active on: ");
+        .text("You are most active on: " + maxday);
 
 
 console.log(bardata)

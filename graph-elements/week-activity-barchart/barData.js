@@ -1,4 +1,5 @@
-var barData = [
+var barData = {
+    weekmeans: [
 
     {Day: "Mon", Wcount: 747, IsMax:false},
     {Day: "Tues", Wcount: 342, IsMax:false},
@@ -8,4 +9,6 @@ var barData = [
     {Day: "Sat", Wcount: 802, IsMax:false},
     {Day: "Sun", Wcount: 562, IsMax:false}
 
-]
+],
+maxday: ["Thursday"]
+}
