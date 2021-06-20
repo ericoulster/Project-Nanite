@@ -44,7 +44,7 @@ var bardata = Object.values(barData)
  // set the dimensions and margins of the graph
  var margin = {top: 30, right: 30, bottom: 70, left: 60},
       width = 600 - margin.left - margin.right,
-      height = 400 - margin.top - margin.bottom;
+      height = 300 - margin.top - margin.bottom;
 
   // append the svg object to the body of the page
   var svg = d3.select("#weekbar")
@@ -61,16 +61,14 @@ var bardata = Object.values(barData)
     .padding(0.44);
   
     svg.append("g")
-    .attr("transform", "translate(10.5," + (height+10) + ")")
+    .attr("transform", "translate(0," + (height+10) + ")")
     .call(d3.axisBottom(x).tickSize(0))
     .call(g => g.select(".domain").remove())
     .selectAll("text")
-    //center text to middle of bars (bandwidth/2), have lower
-    //make xaxis line invisible
       .attr('font-family', 'Archivo')
             .attr('font-weight', 100)
             .attr('font-size', 'small')
-            .style("text-anchor", "end")
+            .style("text-anchor", "middle")
             .style('fill', "#E3E3E3");
 
 
@@ -97,6 +95,14 @@ var bardata = Object.values(barData)
       
       );
 
-    
+  svg.append("text")
+        .attr("x", (width / 2))             
+        .attr("y", 0 - (margin.top / 2))
+        .attr("text-anchor", "middle")  
+        .attr('font-family', 'Archivo')
+        .style('fill', "#E3E3E3")
+        .text("You are most active on: ");
+
+
 console.log(bardata)
 </script>
