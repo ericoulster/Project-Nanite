@@ -1,0 +1,11 @@
+// TEMPORARY RESIZE PREVENTION FIX -- Need to research actual minimum screensize
+// Adds an event listener to resize; checks current screen size; forces window to width > 533
+window.addEventListener('resize', () => {
+    let currWidth = window.innerWidth;
+    let currHeight = window.innerHeight;
+
+    // Responsivity breaks around 533, so if the screen is less than that--NO IT'S NOT
+    if (currWidth < 533) {
+        window.resizeTo(534, currHeight); // Height we don't care so much about so it can stay the same
+    }
+})
