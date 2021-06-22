@@ -528,6 +528,10 @@ ul li {
 .projects#main-content > * {
   /* width: 30rem; */
 }
+#projectslist { 
+  height: 83vh;
+  overflow-y:scroll;
+}
 .projectslist .projects-item {
   margin: 1rem;
   padding: 0.5rem;
@@ -585,4 +589,25 @@ ul li {
   flex-basis: 40%;
   font-weight: bold;
   text-align: center;
+}
+
+/* SCROLLBAR STUFF */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #333a40;;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #474f56;
+  border-radius: 10px;
+}
+
+/* Makes bar thicker when page width exceeds 900px */
+@media only screen and (min-width: 900px) {
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
 }

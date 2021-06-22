@@ -4,8 +4,8 @@ window.addEventListener('resize', () => {
     let currWidth = window.innerWidth;
     let currHeight = window.innerHeight;
 
-    // Responsivity breaks around 533, so if the screen is less than that--NO IT'S NOT
-    if (currWidth < 533) {
-        window.resizeTo(534, currHeight); // Height we don't care so much about so it can stay the same
+    // Responsivity breaks around 680, so if the screen is less than that--NO IT'S NOT
+    if (currWidth < 680) {
+        window.resizeTo(680, currHeight); // Height we don't care so much about so it can stay the same
     }
 })
