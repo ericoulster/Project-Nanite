@@ -1,4 +1,11 @@
-
+*.code-workspace
+.vscode
+__pycache__
+front_end/__pycache__
+venv/
+dummyProjects/
+dev_notes/
+wordcount_meta.csv
 database/nanite_storage.sqlite3
-
 __pycache__/file_funcs.cpython-36.pyc
+database/

@@ -1,0 +1,55 @@
+<!doctype html>
+
+<!-- set defaults -->
+{% set pagetitle = 'Nanite' %}
+{% set username = 'Writer' %}
+
+<html>
+<head>
+  <!-- <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script> -->
+  <!-- <link rel="stylesheet" href="static/styles/normalize.css"> -->
+  <!-- <link rel="stylesheet" href="static/styles/cavepaint.css"> -->
+
+  <!-- Adding a Theme Colour for tabs on different devices -->
+  <meta name="theme-color" content="#56d55c" />
+  <meta name="msapplication-navbutton-color" content="#56d55c">
+  <meta name="apple-mobile-web-app-status-bar-style" content="#56d55c">
+
+  <!-- <link rel="icon" sizes="192x192" href="hi-res-favicon.png"> -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link rel="stylesheet" href="../static/css/sanitize.css">
+  <link rel="stylesheet" href="../static/css/style.css">
+  <!-- Include EEL.JS -->
+  <script type='text/javascript' src='/eel.js'></script>
+  <script type="text/javascript" src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
+  <!-- Include D3 -->
+  <script type="text/javascript" src="../static/js/d3/d3.js"></script>
+  <!--  JS Functions Head-->
+  <script type='text/javascript' src='../static/js/head-scripts.js'></script>
+
+  <title> Nanite</title>
+
+  {% block head_content %}
+
+  {% endblock %}
+
+</head>
+
+{% block body_open_sidebar %} 
+
+
+{% endblock %}
+
+  <div id="main" class="main">
+    
+    {% block content %} 
+
+    {% endblock %}
+  </div>
+
+<!--  JS Functions After Body -->
+<script type='text/javascript' src='../static/js/body-scripts.js'></script>
+<script>MicroModal.init();</script>
+</body>
+
+</html>

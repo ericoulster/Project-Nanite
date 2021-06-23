@@ -1,0 +1,263 @@
+{% extends 'base.html' %}
+
+{% block body_open_sidebar %} 
+  {% include 'bodyopen-sidebar.html' %}
+{% endblock %} 
+
+{% block content %}
+<div id="main-content" class="container">
+  <!-- {% if not hasprojects %}
+  <div class="greeting"><p class="username-greet">Hi, <span id="username">{{username}}</span>!</p>
+    <p>Let's create your first project!</p>
+  </div>
+  {% endif %} -->
+
+  <!-- Modal Triggers -->
+  <button data-micromodal-trigger="modal-1" class="new-project">+ New Project</button>
+  <button data-micromodal-trigger="modal-0" class="welcome-msg">?</button>
+ 
+  <!-- Projects List -->
+  <div id="projectslist" class="projectslist">
+    <!-- Projects listed here by JS -->
+  </div>
+
+  <!-- Onboarding Modal -->
+  {% with %}
+  {% set modal_id = 'modal-0' %}    
+  {% set modal_header_text = 'Welcome to Nanite' %}
+  {% set modal_trigger_text = '?' %}
+  {% set modal_trigger_classes = 'welcome-msg' %}
+  {% set close_button_text = 'Continue' %}
+  {% set modal_contents_html = '<p>Nanite is designed to help you keep track of your writing habits and increase your productivity the more you use it.</p>
+  <p>To get started, click the "New Project" button an link your text file to Nanite. Nanite will then traack your progress and give you useful insights.</p>'|safe %}
+    {% include 'modal.html' %}
+  {% endwith %}
+  <!-- Onboarding Modal End -->
+  <!-- New Project Modal -->
+  {% with %}
+    {% set modal_id = 'modal-1' %}
+    {% set modal_header_text = 'Add A New Project' %}
+    {% set modal_trigger_text = '+ New Project' %}
+    {% set modal_trigger_classes = 'new-project' %}
+    {% set close_button_text = 'Cancel' %}
+    {% set modal_contents_html = '<div id="new-project" class="new-project-form-container {% if hasprojects %}hidden{% endif %}">
+      <form class="project-form new-project" onsubmit="add_new_project()">
+        <fieldset> 
+            <!-- <legend class="hidden">Add a new project here:</legend> -->
+              <label>What\'s the name of your project?</label><input id="project-name" type="text" name="name" required>
+              <label>File/folder Path:</label><input id="project-path" type="text" name="filepath" placeholder="C:/filepath/filename.txt" required>
+              <button onclick="dir_select_tk_input()">Select Directory</button>
+              <!-- <label>Files of type:</label> -->
+              <!-- <select id="filetype" name="filetype" required>
+                <option value="txt">txt</option>
+                <option value="rtf">rtf</option>
+                <option value="docx">docx</option>
+              </select> -->
+              <label>What\'s your writing goal?</label>
+              <div class="writing-goal">
+                <input id="wordcountgoal" type="text" name="wordcountgoal" required> words            
+                <div class="radio-buttons">
+                  <input type="radio" id="daily-new" name="wordcountreg" value="daily" required checked>
+                  <label for="daily-new">Daily</label>
+                  <input type="radio" id="total-new" name="wordcountreg" value="total" required>
+                  <label for="total-new">Total</label>
+                </div>
+              </div>
+              <div class="start-date-in"><label>Start Date:</label><input id="targetstartdate" type="date" name="targetstartdate" required></div>
+              <div class="end-date-in"><label>Target End Date:</label><input id="targetenddate" type="date" name="targetenddate" required></div>
+              <input type="submit" value="Add New Project">
+        </fieldset> 
+      </form>
+    </div>'|safe %}
+    {% include 'modal.html' %}
+  {% endwith %}
+  <!-- New Project Modal End -->
+</div>
+<script>
+  // Initial 
+  (async function () {
+    let doc = await eel_list_projects_html_current_user();
+    progress_bars(doc);
+  }) ();
+
+
+  // List all projects
+  async function eel_list_projects_html_current_user() {
+    let a = await eel_list_projects_html(get_username());
+    return a;
+  }
+
+  async function eel_list_projects_html(username) {
+    const parser = new DOMParser();
+    let projectslist = document.querySelector('#projectslist');
+
+    let htmlString = await eel.list_projects_html(username)();
+    let doc = parser.parseFromString(htmlString, "text/html");
+
+    // append to projects list div
+    doc.querySelectorAll('body > *').forEach(x => {projectslist.appendChild(x);} )
+
+    return doc;
+  }
+
+  // Rename Project
+
+async function new_name_prompt(p_id) {
+  let projectname =  document.querySelector('#project-' + String(p_id) + '-summary h2');
+  let editbuttonimg =  document.querySelector('#project-' + String(p_id) + '-summary .edit-project.icon img');
+  // Set title to be editable
+  projectname.contentEditable = "true";
+  projectname.focus();
+  // Set edit button to be OK button
+  editbuttonimg.src = '../static/imgs/icons/green-tick.svg';
+  editbuttonimg.parentElement.onclick = function(){rename_project(p_id,projectname.textContent);}; // When tick is clicked, change name
+}
+
+  //////////////////////////////////////
+// DEBUGGER Function
+  async function debug_p() {
+    let projectslist = document.querySelector('#projectslist');
+    let project = document.createElement('div');
+    let a = await eel_return_projects_by_name(get_username());
+    project.textContent = a;
+    projectslist.appendChild(project);
+  };
+
+  async function eel_return_projects_by_name(username) {
+    let a = await eel.return_projects_by_name(username)();
+    return a;
+  }
+    //////////////////////////////////////
+
+  function add_new_project() {
+    authorname = get_username();
+    projectname = document.querySelector("#project-name").value;
+    targetstartdate = document.querySelector("#targetstartdate").value;
+    targetenddate = document.querySelector("#targetenddate").value;
+    wordcountgoal = document.querySelector("#wordcountgoal").value;
+    // work out current_daily_target
+    dailynew = document.querySelector("#daily-new").value;
+    totalnew = document.querySelector("#total-new").value;
+    current_daily_target = 123; // work out wordcountgoal and current_daily_target based on whether the amount given in #wordcountgoal is #daily-new or #total-new
+    wp_page = 0; // TODO: DUMMY HERE
+    projectpath = document.querySelector("#project-path").value;
+    //filetype = document.querySelector("#filetype").value;
+
+    eel.new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath);
+  };
+  </script>
+  <script>
+
+      // Progress bar functions
+    function progress_bars(doc) {
+      waiting = doc; // this function should only run once doc has been awaited (from the previous function)
+      let projectslist_items = document.querySelectorAll('#projectslist > .projects-item');
+      projectslist_items.forEach(x => {
+        pb = x.querySelector('div[class^="progress-"]');
+        p_id = pb.dataset.pid;
+        daily_words = pb.dataset.todaywords;
+        today_goal = pb.dataset.todaygoal;
+        progress_bar(p_id, daily_words, today_goal, 300);
+      })
+    }
+
+    function progress_bar(p_id, daily_words, today_goal, svgwidth) {
+      var data = {
+            'Wtarget_sum': today_goal, 
+            'daily_words': daily_words
+    };
+        
+        var progress_val = (data['daily_words'] / data['Wtarget_sum'])*100;
+
+        if (progress_val < 25) {
+            progress_color = "#D0D0D0"
+        }
+        else if (progress_val < 50) {
+            progress_color = "#F6B85C"
+        }
+        else if (progress_val < 75) {
+            progress_color = "#F6D55C"
+        }
+        else if (progress_val < 100) {
+            progress_color = "#CEF65C"
+        }
+        else if (progress_val < 115) {
+            progress_color = "#96F65C"
+        }
+        else if (progress_val < 200) {
+            progress_color = "#5CF6D1"
+        }
+        else {
+            progress_color = "#5CBFF6"
+        };
+
+        if (progress_val > 100) {
+            progress_val_capped = 100
+        }
+        else {progress_val_capped = progress_val};
+
+        var svg = d3.select(`.progress-${String(p_id)}`)
+            .append('svg')
+            .attr('height', 100)
+            .attr('width', svgwidth); // svgwidth previously set to 800
+
+        var bar_width = svgwidth * 0.9; // previously 600 (or 0.75 * svg width)
+
+        var bar_height = 20;
+
+
+        var bar_x = (bar_width/50);
+        var bar_y = (bar_height/3);
+
+        var bar_cap = (bar_width/100);
+
+        if (progress_val < 50) {
+            var text_color ='#E3E3E3'
+        }
+        else {
+            var text_color = '#1F2428'}
+        svg.append('rect')
+            .attr('class', 'bg-rect')
+            .attr('rx', 20)
+            .attr('ry', 20)
+            .attr('fill', 'none')
+            .attr('stroke', '#333A40')
+            .attr('stroke-width', 4)
+            .attr('height', bar_height + (bar_height*1))
+            .attr('width', function(){
+                return bar_width + (bar_width*0.04);
+            })
+            .attr('x', bar_x)
+            .attr('y', bar_y);
+        
+        var progress = svg.append('rect')
+                        .attr('class', 'progress-rect')
+                        .attr('fill', progress_color)
+                        .attr('height', bar_height + (bar_height*0.8))
+                        .attr('width', 0)
+                        .attr('rx', 20)
+                        .attr('ry', 20)
+                        .attr('x', bar_x + (bar_x*0.2))
+                        .attr('y', bar_y + (bar_y*0.2));
+    
+        progress.transition()
+            .duration(1000)
+            .attr('width', function(){
+                var index = progress_val_capped;
+                return index * bar_cap;
+            });
+
+        svg.append("text")
+            .text(`${data['daily_words']}/${data['Wtarget_sum']} words (${Math.floor(progress_val)}%)`)
+            .attr('x', bar_width/2 -50)
+            .attr('y', bar_height*1.5)
+            .attr('fill', '#333A40')
+            .attr('font-family', 'Archivo')
+            .attr('font-weight', 100)
+            .attr('font-size', 'small')
+            .style('fill', text_color)
+            .raise()
+    }
+    
+  </script>
+{% endblock %}

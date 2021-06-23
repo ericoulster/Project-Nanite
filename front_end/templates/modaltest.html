@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block body_open_sidebar %} 
+  {% include 'bodyopen-sidebar.html' %}
+{% endblock %} 
+
+{% block content %}
+{% with %}
+    {% set modal_header_text = 'Micromodal' %}
+    {% set modal_trigger_text = 'Trigger Modal' %}
+    {% set modal_trigger_classes = 'btn' %}
+    {% set close_button_text = 'Close' %}
+    {% set modal_contents_html = '<p>Try hitting the <code>tab</code> key and notice how the focus stays within the modal itself. Also, <code>esc</code> to close modal.</p>'|safe %}
+    {% include 'modal.html' %}
+{% endwith %}
+{% endblock %}

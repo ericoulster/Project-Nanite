@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block body_open_sidebar %} 
+  {% include 'bodyopen-sidebar.html' %}
+{% endblock %} 
+
+{% block content %}
+<h1>{{pagetitle}}</h1>
+<div id="main-content" class="container">
+    <div>Project Name: {{projectname}} </div>
+    <div>Today's Target Word Count is {{wctoday_target}}</div>
+<div>Today's Word Count: {{WCtoday}}</div>
+</div>
+{% endblock %}

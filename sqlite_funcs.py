@@ -9,7 +9,7 @@ import pandas as pd
 
 import sqlite3
 
-from file_funcs import file_pipe, is_streak, streak_length, change_goal
+from file_funcs import file_pipe, is_streak, streak_length, change_goal, daily_words_calculate, word_goal_calculate
 ### Variables ###
 
 sqlite3_path = './database/nanite_storage.sqlite3'
@@ -17,7 +17,7 @@ sqlite3_path = './database/nanite_storage.sqlite3'
 # Using namedtuple to define dict-like structure for retrieved data (using ._asdict() method on them)
 
 AuthorVals = namedtuple('Author', 'author_id username password acct_created_on')
-ProjectVals = namedtuple('Project', 'project_id author_id project_name project_created_on project_start_date deadline wordcount_goal current_daily_target filetype is_folder project_path')
+ProjectVals = namedtuple('Project', 'project_id author_id project_name project_created_on project_start_date deadline wordcount_goal current_daily_target wp_page project_path')
 WordVals = namedtuple('Wordcounts', 'record_id project_id author_id Wdate Wcount Wtarget')
 
 ## DDL init Queries ##
@@ -41,8 +41,7 @@ CREATE TABLE IF NOT EXISTS projects (
     deadline text,
     wordcount_goal int,
     current_daily_target int,
-    filetype text,
-    is_folder int,
+    wp_page int,
     project_path text,
     FOREIGN KEY (author_id) REFERENCES authors (author_id)
 )
@@ -66,6 +65,21 @@ CREATE TABLE IF NOT EXISTS words (
 
 def timestamp(): 
     return str(datetime.now())
+
+def datestamp():
+    return str(datetime.now().date())
+
+def samedate(date: str) -> bool():
+    if date == None:
+        return False
+    else:
+        day = datetime.strptime(date[:10], '%Y-%M-%d')
+        today = datetime.strptime(datestamp(), '%Y-%M-%d')
+        if day == today:
+            return True
+        else:
+            return False
+
 
 def db_init():
     """
@@ -102,10 +116,16 @@ def return_project_screen(author_id:int) -> list(dict()):
         except:
             # Maybe I should just raise an exception?
             row = {'Wcount': 0, 'Wdate': None, 'Wtarget': 0, 'project_id': p.project_id, 'record_id': None, 'Wtarget_sum': 0, 'daily_words': 0.0, 'streak': 0}
-        p_dict = {
+        if samedate(row['Wdate']) is False:
+            p_dict = {
+            'project_name': p.project_name, 'project_id': row['project_id'], 'daily_words': 0, 
+            'today_goal': row['Wtarget'], 'total_progress': row['Wcount'], 'current_streak':0
+            }   
+        else:   
+            p_dict = {
             'project_name': p.project_name, 'project_id': row['project_id'], 'daily_words': row['daily_words'], 
             'today_goal': row['Wtarget'], 'total_progress': row['Wcount'], 'current_streak':row['streak']
-            }
+            }            
         projects_list.append(p_dict)
     return projects_list
 
@@ -199,16 +219,17 @@ class AuthorActions:
         project_path=None):
         """
         Takes in a project info, then creates a new project for a given author.
-        Eric note: Add 'page conversion' later in the future
         """
+        
+        # This just fills in other variables that are missing when creating a project
 
         if (wordcount_goal is None) & (current_daily_target is not None) & (project_start_date is not None) & (deadline is not None):
             wordcount_goal = word_goal_calculate(current_daily_target, project_start_date, deadline)
         elif (wordcount_goal is not None) & (current_daily_target is None) & (project_start_date is not None) & (deadline is not None):
             current_daily_target = daily_words_calculate(wordcount_goal, project_start_date, deadline)
         else:
-            pass
-        
+            pass        
+
         now = timestamp()
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
@@ -223,13 +244,13 @@ class AuthorActions:
                 ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) '''
             params = [None, self.author_id, project_name, now, project_start_date, deadline, 
             wordcount_goal, current_daily_target, wp_page, project_path]
-            try:
-                cur.execute(query, params)
-                conn.commit()
-            except:
-                print("Query failed")
-            finally:
-                conn.close()
+            #try:
+            cur.execute(query, params)
+            conn.commit()
+            #except:
+                #print("Query failed")
+            #finally:
+            conn.close()
         else:
             print("project with this name already exists")
             conn.close()
@@ -239,6 +260,7 @@ class AuthorActions:
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
         cur.execute("DELETE FROM projects where project_name=? AND author_id=?", (project_name, self.author_id))
+        ## TODO: also delete FROM words ??
         conn.commit()
         conn.close()
 
@@ -246,7 +268,7 @@ class AuthorActions:
     def return_projects(self):
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM projects where author_id=?", self.author_id)
+        cur.execute("SELECT * FROM projects where author_id=?", (self.author_id, ))
         data = cur.fetchall()
         conn.close()
         return data
@@ -264,7 +286,7 @@ class AuthorActions:
         """Returns all wordcount records from all projects for a given author."""
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM words where author_id=?", self.author_id)
+        cur.execute("SELECT * FROM words where author_id=?", (self.author_id, ))
         row = cur.fetchall()
         data = [dict(WordVals(*row[i])._asdict()) for i in range(len(rows))]
         conn.close()
@@ -278,7 +300,7 @@ class AuthorActions:
         freq = freq
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM words where author_id=?", self.author_id)
+        cur.execute("SELECT * FROM words where author_id=?", (self.author_id, ))
         row = cur.fetchall()
         data = [dict(WordVals(*row[i])._asdict()) for i in range(len(row))]
         conn.close()
@@ -339,7 +361,7 @@ class ProjectActions:
             pass
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM projects where project_id=?", (project_id,))
+        cur.execute("SELECT * FROM projects where project_id=?", (project_id, ))
         row = cur.fetchall()
         data = row[0]
         self.project_id = project_id
@@ -366,7 +388,7 @@ class ProjectActions:
         # checkproject id in the database- reset 
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM projects where project_id=?", (project_id,))
+        cur.execute("SELECT * FROM projects where project_id=?", (project_id, ))
         row = cur.fetchall()
         data = [dict(ProjectVals(*row[i])._asdict()) for i in range(len(row))]
         conn.close()
@@ -403,7 +425,7 @@ class ProjectActions:
         """
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM words where project_id=?", (self.project_id,))
+        cur.execute("SELECT * FROM words where project_id=?", (self.project_id, ))
         row = cur.fetchall()
         data = [dict(WordVals(*row[i])._asdict()) for i in range(len(row))]
         conn.close()
@@ -418,7 +440,7 @@ class ProjectActions:
         freq = freq
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM words where project_id=?", (self.project_id,))
+        cur.execute("SELECT * FROM words where project_id=?", (self.project_id, ))
         row = cur.fetchall()
         data = [dict(WordVals(*row[i])._asdict()) for i in range(len(row))]
         conn.close()
@@ -435,7 +457,14 @@ class ProjectActions:
         df = df.fillna(method='ffill')
         df['Wtarget_sum'] = df['Wtarget'].cumsum()
         df['Wdate'] = df['Wdate'].apply(lambda x: x[:10])
-        df['daily_words'] = [(df[['Wcount']].iloc[i] - df[['Wcount']].iloc[i-1]).clip(0) for i in range(len(df))]
+        # df['daily_words'] = [
+        #     (df[['Wcount']].iloc[i] - df[['Wcount']].iloc[i-1]).clip(0) if i >= 1 
+        #     else df[['Wcount']].iloc[i] for i in range(len(df))
+        #     ]
+        df['daily_words'] = [
+            (df.iloc[i]['Wcount'] - df.iloc[i-1]['Wcount']).clip(0) if i >= 1 
+            else df.iloc[i]['Wcount'] for i in range(len(df))
+            ]
         df['streak'] = [is_streak(i, df['Wcount'], df['Wtarget']) for i in range(len(df))]
         d_list = streak_length(df['streak'])
         df['streak'] = pd.Series(d_list, index=new_index)

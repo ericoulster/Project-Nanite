@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block body_open_sidebar %} 
+  {% include 'bodyopen-sidebar.html' %}
+{% endblock %} 
+
+
+{% block content %}
+<h1>{{pagetitle}}</h1>
+<div id="main-content" class="container">
+    <p class="headline">As simple as 1-2-3!</p>
+    <div class="panels">
+      <div class="panel"><img src="../static/imgs/creative_process_.svg"/><div class="caption"><p class="headline">Create a Project</p><p>Set your writing goal</p></div></div>
+      <div class="panel"><img src="../static/imgs/files_and_folder.svg"/><div class="caption"><p class="headline">Link Your Writing</p><p>Direct Nanite to your writing file</p></div></div>
+      <div class="panel"><img src="../static/imgs/data_analysis_.svg"/><div class="caption"><p class="headline">Track Your Progress</p><p>View Your Project Stats</p></div></div>
+    </div>
+</div>
+{% endblock %}
