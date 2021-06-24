@@ -477,6 +477,7 @@ class ProjectActions:
     def return_weekly_avg(self):
         """
         return days of writing
+        YOU NEED TO CALCULATE DIFFERENCE BASED ON LAST ROW (THAT EXISTS ELSEWHERE)
         """
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
@@ -495,8 +496,14 @@ class ProjectActions:
         df_g = df.groupby(['Wdate']).agg({'daily_words':'mean', 'Wtarget':'last'}).reset_index()
         df_g['Day of week'] = pd.to_datetime(df_g['Wdate']).dt.day_name()
         df_g = pd.DataFrame(df_g.groupby('Day of week')['daily_words'].mean())
-        df_g['is_max'] = np.where(df_g >= np.max(df_g), 1, 0)
-        return df_g.to_dict(orient='index')
+        df_g['IsMax'] = np.where(df_g >= np.max(df_g), 1, 0)
+        df_g['Day'] = df_g.index.str[:3]
+        df_g ['Wcount'] = df_g['daily_words']
+        df_g = df_g.drop(columns='daily_words')
+        weekmeans = df_g.to_dict(orient='records')
+        maxday = df_g[df_g['IsMax'] == 1].index[0]
+        barData = {'weekmeans': weekmeans, 'maxday': maxday}
+        return barData
 
 
     def enter_wordcount(self):
