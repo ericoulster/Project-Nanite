@@ -474,6 +474,31 @@ class ProjectActions:
         return records
 
 
+    def return_weekly_avg(self):
+        """
+        return days of writing
+        YOU NEED TO CALCULATE DIFFERENCE BASED ON LAST ROW (THAT EXISTS ELSEWHERE)
+        """
+        conn = sqlite3.connect(sqlite3_path)
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM words where project_id=?", (self.project_id,))
+        row = cur.fetchall()
+        data = [dict(WordVals(*row[i])._asdict()) for i in range(len(row))]
+        conn.close()
+        df = pd.DataFrame(data)
+        df['Wdate'] = pd.to_datetime(df['Wdate'], format='%Y-%m-%d').dt.date
+        df['daily_words'] = [
+            (df[['Wcount']].iloc[i] - df[['Wcount']].iloc[i-1]).clip(0) if i >= 1 
+            else df[['Wcount']].iloc[i] for i in range(len(df))
+            ]
+        #I'm getting a glitch where extra meta-data comes with daily_words, the line below fixes it
+        df['daily_words'] = [df['daily_words'][i][0] for i in range(len(df))]
+        df_g = df.groupby(['Wdate']).agg({'daily_words':'mean', 'Wtarget':'last'}).reset_index()
+        df_g['Day of week'] = pd.to_datetime(df_g['Wdate']).dt.day_name()
+        df_g = df_g.groupby('Day of week')['daily_words'].mean().sort_values(ascending=False)
+        return df_g
+
+
     def enter_wordcount(self):
         """
         Input Daily Wordcounts
@@ -575,6 +600,7 @@ class ProjectActions:
         conn.commit()
         conn.close()
         self.project_name = new_name
+
 
 
 ## Additional Project Actions ##
