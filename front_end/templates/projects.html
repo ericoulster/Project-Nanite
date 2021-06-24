@@ -135,13 +135,27 @@ async function new_name_prompt(p_id) {
     targetstartdate = document.querySelector("#targetstartdate").value;
     targetenddate = document.querySelector("#targetenddate").value;
     wordcountgoal = document.querySelector("#wordcountgoal").value;
+    // Using localStorage in lieu of console.log since form submit refreshes page
+    // localStorage.setItem('Start Date', `${typeof targetstartdate} ${targetstartdate}`)
+    // localStorage.setItem('End Date', `${typeof targetenddate} ${targetenddate}`)
+
+    /*------------------------------------------------------------!!!
+     * TO DO: Double triple make sure wordcountgoal is an int
+     *------------------------------------------------------------!!!
+     */
+
     // work out current_daily_target
     dailynew = document.querySelector("#daily-new").checked;
     totalnew = document.querySelector("#total-new").checked;
+
     if (dailynew){
-      current_daily_target = wordcountgoal;  
+      // localStorage.setItem('DAILY - Curr Daily type', `${typeof wordcountgoal}`)
+      current_daily_target = parseInt(wordcountgoal);  
     } else {
-      current_daily_target = 123; // work out wordcountgoal and current_daily_target based on whether the amount given in #wordcountgoal is #daily-new or #total-new
+      let daysBetwenDates = (Date.parse(targetenddate) - Date.parse(targetstartdate)) / (1000 * 3600 * 24)
+      // localStorage.setItem('TOTAL - Days Between', `${typeof daysBetwenDates} ${daysBetwenDates}`)
+      current_daily_target = Math.round(parseInt(wordcountgoal) / daysBetwenDates); // work out wordcountgoal and current_daily_target based on whether the amount given in #wordcountgoal is #daily-new or #total-new
+      // localStorage.setItem('TOTAL - Curr Daily ', `${typeof current_daily_target} ${current_daily_target}`)
     }
     wp_page = 0; // TODO: DUMMY HERE
     projectpath = document.querySelector("#project-path").value;
