@@ -136,9 +136,13 @@ async function new_name_prompt(p_id) {
     targetenddate = document.querySelector("#targetenddate").value;
     wordcountgoal = document.querySelector("#wordcountgoal").value;
     // work out current_daily_target
-    dailynew = document.querySelector("#daily-new").value;
-    totalnew = document.querySelector("#total-new").value;
-    current_daily_target = 123; // work out wordcountgoal and current_daily_target based on whether the amount given in #wordcountgoal is #daily-new or #total-new
+    dailynew = document.querySelector("#daily-new").checked;
+    totalnew = document.querySelector("#total-new").checked;
+    if (dailynew){
+      current_daily_target = 999;  
+    } else {
+      current_daily_target = 123; // work out wordcountgoal and current_daily_target based on whether the amount given in #wordcountgoal is #daily-new or #total-new
+    }
     wp_page = 0; // TODO: DUMMY HERE
     projectpath = document.querySelector("#project-path").value;
     //filetype = document.querySelector("#filetype").value;
