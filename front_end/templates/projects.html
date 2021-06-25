@@ -265,8 +265,11 @@ async function new_name_prompt(p_id) {
                 return index * bar_cap;
             });
 
+
+
+        let wordPerc = isNaN(Math.floor(progress_val)) ? 0 : Math.floor(progress_val);
         svg.append("text")
-            .text(`${data['daily_words']}/${data['Wtarget_sum']} words (${Math.floor(progress_val)}%)`)
+            .text(`${data['daily_words']}/${data['Wtarget_sum']} words (${wordPerc}%)`)
             .attr('x', bar_width/2 -50)
             .attr('y', bar_height*1.5)
             .attr('fill', '#333A40')
