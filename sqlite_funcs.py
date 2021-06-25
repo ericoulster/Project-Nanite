@@ -73,7 +73,7 @@ def samedate(date: str) -> bool():
     if date == None:
         return False
     else:
-        day = datetime.strptime(date[:10], '%Y-%M-%d')
+        day = date
         today = datetime.strptime(datestamp(), '%Y-%M-%d')
         if day == today:
             return True
@@ -294,7 +294,7 @@ class AuthorActions:
 
     def return_freq_wordcounts(self, freq='D') -> dict:
         """
-        Return frequency of wordcounts for a given project
+        Return frequency of wordcounts for a given author's projects
         freq maps to the granularity of the data, in line with pandas granularity values.
         """
         freq = freq
@@ -455,6 +455,7 @@ class ProjectActions:
         df = df.groupby(pd.Grouper(freq='D')).last()
         df = df.reindex(new_index, method='ffill')
         df = df.fillna(method='ffill')
+        df = df.drop(columns='Wdate')
         df['Wtarget_sum'] = df['Wtarget'].cumsum()
         df['Wdate'] = df['Wdate'].apply(lambda x: x[:10])
         # df['daily_words'] = [
@@ -470,6 +471,7 @@ class ProjectActions:
         df['streak'] = pd.Series(d_list, index=new_index)
         
         df = df.groupby(pd.Grouper(freq=freq)).last()
+        df = df.reset_index().rename(columns={'index':'Wdate'})
         records = df.to_dict(orient='records')
         return records
 
