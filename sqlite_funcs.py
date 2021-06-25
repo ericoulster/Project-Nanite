@@ -130,6 +130,45 @@ def return_project_screen(author_id:int) -> list(dict()):
     return projects_list
 
 
+def return_stats_screen(p_id:int) -> dict():
+    """
+    Returns a dict of the following:
+    -current wordcount
+    -wordcount goal
+
+    -average daily wordcount
+    -highest daily wordcount
+    -current streak
+    -max streak
+
+    -wordcount freq, daily, weekly, monthly
+    -day-of-week averages
+    -current deadline
+    """
+    p = ProjectActions()
+    p.set_project(project_id=p_id)
+    
+    wgad = p.return_wordgoal_and_deadline()
+    weekBar = p.return_weekly_avg()
+    
+    daily = p.return_wordcounts('D')
+    weekly = p.return_wordcounts('W')
+    monthly = p.return_wordcounts('M')
+    
+    day_df = pd.DataFrame(daily)
+    max_streak = day_df['streak'].max()
+    current_streak = day_df['streak'].iloc[-1]
+
+    max_wc = day_df['daily_words'].max()
+    mean_wc = day_df['daily_words'].mean()
+    
+    current_wc = day_df['Wcount'].iloc[-1]
+
+    stats_screen = {'word_goal_and_deadline': wgad, 'barData': {'daily':daily, 'weekly':weekly, 'monthly':monthly}, 'weekBar': weekBar, 'max_streak':max_streak, 'current_streak': current_streak, 'max_wc': max_wc, 'mean_wc':mean_wc, 'current_wc':current_wc}
+    
+    return stats_screen
+
+
 ## 'Top Level' Funcs ##
 
 def create_author(author_name, password=''):    
