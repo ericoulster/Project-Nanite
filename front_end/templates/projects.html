@@ -161,6 +161,15 @@ async function new_name_prompt(p_id) {
     projectpath = document.querySelector("#project-path").value;
     //filetype = document.querySelector("#filetype").value;
 
+    localStorage.setItem('authorname', authorname)
+    localStorage.setItem('projectname', projectname)
+    localStorage.setItem('targetstartdate', targetenddate)
+    localStorage.setItem('targetenddate', targetenddate)
+    localStorage.setItem('wordcountgoal', wordcountgoal)
+    localStorage.setItem('currentdailygoal', current_daily_target)
+    localStorage.setItem('wp_page', wp_page)
+    localStorage.setItem('projectpath', projectpath)
+
     eel.new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath);
   };
   </script>
@@ -176,17 +185,24 @@ async function new_name_prompt(p_id) {
         daily_words = pb.dataset.todaywords;
         today_goal = pb.dataset.todaygoal;
 
+        console.log(pb.dataset);
+
         progress_bar(p_id, daily_words, today_goal, 300);
       })
     }
 
     function progress_bar(p_id, daily_words, today_goal, svgwidth) {
+      
       var data = {
             'Wtarget_sum': today_goal, 
             'daily_words': daily_words
-    };
+      };
         
-        var progress_val = (data['daily_words'] / data['Wtarget_sum'])*100;
+      // ======================================!!!
+      // TEMP FIX
+      // This sucker turns NaN if Wtarget_sum is 0, which is A PROBLEM for d3.js render later
+      //=======================================!!!
+        var progress_val = data.Wtarget_sum == 0 ? 0 : (data.daily_words / data.Wtarget_sum)*100;
 
         if (progress_val < 25) {
             progress_color = "#D0D0D0"
@@ -215,10 +231,12 @@ async function new_name_prompt(p_id) {
         }
         else {progress_val_capped = progress_val};
 
+        
         var svg = d3.select(`.progress-${String(p_id)}`)
             .append('svg')
             .attr('height', 100)
             .attr('width', svgwidth); // svgwidth previously set to 800
+        
 
         var bar_width = svgwidth * 0.9; // previously 600 (or 0.75 * svg width)
         var bar_height = 20;
@@ -234,6 +252,7 @@ async function new_name_prompt(p_id) {
         }
         else {
             var text_color = '#1F2428'}
+
         svg.append('rect')
             .attr('class', 'bg-rect')
             .attr('rx', 20)
