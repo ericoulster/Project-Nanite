@@ -135,9 +135,6 @@ async function new_name_prompt(p_id) {
     targetstartdate = document.querySelector("#targetstartdate").value;
     targetenddate = document.querySelector("#targetenddate").value;
     wordcountgoal = document.querySelector("#wordcountgoal").value;
-    // Using localStorage in lieu of console.log since form submit refreshes page
-    // localStorage.setItem('Start Date', `${typeof targetstartdate} ${targetstartdate}`)
-    // localStorage.setItem('End Date', `${typeof targetenddate} ${targetenddate}`)
 
     /*------------------------------------------------------------!!!
      * TO DO: Double triple make sure wordcountgoal is an int
@@ -148,16 +145,13 @@ async function new_name_prompt(p_id) {
     dailynew = document.querySelector("#daily-new").checked;
     totalnew = document.querySelector("#total-new").checked;
 
-    if (dailynew){
-      // localStorage.setItem('DAILY - Curr Daily type', `${typeof wordcountgoal}`)
-      current_daily_target = parseInt(wordcountgoal);  
+    if (dailynew) {
+      current_daily_target = wordcountgoal;  
     } else {
       let daysBetwenDates = (Date.parse(targetenddate) - Date.parse(targetstartdate)) / (1000 * 3600 * 24)
-      // localStorage.setItem('TOTAL - Days Between', `${typeof daysBetwenDates} ${daysBetwenDates}`)
-      current_daily_target = Math.round(parseInt(wordcountgoal) / daysBetwenDates); // work out wordcountgoal and current_daily_target based on whether the amount given in #wordcountgoal is #daily-new or #total-new
-      // localStorage.setItem('TOTAL - Curr Daily ', `${typeof current_daily_target} ${current_daily_target}`)
+      current_daily_target = `${Math.round(parseInt(wordcountgoal) / daysBetwenDates)}`;
     }
-    wp_page = 0; // TODO: DUMMY HERE
+    wp_page = 0; // TO DO: Used for later if someone wants to count pages rather than words
     projectpath = document.querySelector("#project-path").value;
     //filetype = document.querySelector("#filetype").value;
 
@@ -183,10 +177,14 @@ async function new_name_prompt(p_id) {
     function progress_bar(p_id, daily_words, today_goal, svgwidth) {
       var data = {
             'Wtarget_sum': today_goal, 
-            'daily_words': daily_words
-    };
+            'daily_words': 500 // !!! HARD CODING TO TEST - daily_words !!!
+      };
+
+      console.log(data);
         
-        var progress_val = (data['daily_words'] / data['Wtarget_sum'])*100;
+        
+      // Sets progress_val to 0 if data.Wtarget_sum is 0 to avoid division by 0
+        var progress_val = data.Wtarget_sum == 0 ? 0 : (data.daily_words / data.Wtarget_sum) * 100;
 
         if (progress_val < 25) {
             progress_color = "#D0D0D0"
