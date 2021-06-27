@@ -496,7 +496,6 @@ class ProjectActions:
         df = df.fillna(method='ffill')
         df = df.drop(columns='Wdate')
         df['Wtarget_sum'] = df['Wtarget'].cumsum()
-        df['Wdate'] = df['Wdate'].apply(lambda x: x[:10])
         # df['daily_words'] = [
         #     (df[['Wcount']].iloc[i] - df[['Wcount']].iloc[i-1]).clip(0) if i >= 1 
         #     else df[['Wcount']].iloc[i] for i in range(len(df))
