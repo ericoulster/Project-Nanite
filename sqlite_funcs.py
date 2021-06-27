@@ -73,7 +73,7 @@ def samedate(date: str) -> bool():
     if date == None:
         return False
     else:
-        day = datetime.strptime(date[:10], '%Y-%M-%d')
+        day = date
         today = datetime.strptime(datestamp(), '%Y-%M-%d')
         if day == today:
             return True
@@ -128,6 +128,45 @@ def return_project_screen(author_id:int) -> list(dict()):
             }            
         projects_list.append(p_dict)
     return projects_list
+
+
+def return_stats_screen(p_id:int) -> dict():
+    """
+    Returns a dict of the following:
+    -current wordcount
+    -wordcount goal
+
+    -average daily wordcount
+    -highest daily wordcount
+    -current streak
+    -max streak
+
+    -wordcount freq, daily, weekly, monthly
+    -day-of-week averages
+    -current deadline
+    """
+    p = ProjectActions()
+    p.set_project(project_id=p_id)
+    
+    wgad = p.return_wordgoal_and_deadline()
+    weekBar = p.return_weekly_avg()
+    
+    daily = p.return_wordcounts('D')
+    weekly = p.return_wordcounts('W')
+    monthly = p.return_wordcounts('M')
+    
+    day_df = pd.DataFrame(daily)
+    max_streak = day_df['streak'].max()
+    current_streak = day_df['streak'].iloc[-1]
+
+    max_wc = day_df['daily_words'].max()
+    mean_wc = day_df['daily_words'].mean()
+    
+    current_wc = day_df['Wcount'].iloc[-1]
+
+    stats_screen = {'word_goal_and_deadline': wgad, 'barData': {'daily':daily, 'weekly':weekly, 'monthly':monthly}, 'weekBar': weekBar, 'max_streak':max_streak, 'current_streak': current_streak, 'max_wc': max_wc, 'mean_wc':mean_wc, 'current_wc':current_wc}
+    
+    return stats_screen
 
 
 ## 'Top Level' Funcs ##
@@ -294,7 +333,7 @@ class AuthorActions:
 
     def return_freq_wordcounts(self, freq='D') -> dict:
         """
-        Return frequency of wordcounts for a given project
+        Return frequency of wordcounts for a given author's projects
         freq maps to the granularity of the data, in line with pandas granularity values.
         """
         freq = freq
@@ -455,8 +494,8 @@ class ProjectActions:
         df = df.groupby(pd.Grouper(freq='D')).last()
         df = df.reindex(new_index, method='ffill')
         df = df.fillna(method='ffill')
+        df = df.drop(columns='Wdate')
         df['Wtarget_sum'] = df['Wtarget'].cumsum()
-        df['Wdate'] = df['Wdate'].apply(lambda x: x[:10])
         # df['daily_words'] = [
         #     (df[['Wcount']].iloc[i] - df[['Wcount']].iloc[i-1]).clip(0) if i >= 1 
         #     else df[['Wcount']].iloc[i] for i in range(len(df))
@@ -470,6 +509,7 @@ class ProjectActions:
         df['streak'] = pd.Series(d_list, index=new_index)
         
         df = df.groupby(pd.Grouper(freq=freq)).last()
+        df = df.reset_index().rename(columns={'index':'Wdate'})
         records = df.to_dict(orient='records')
         return records
 
@@ -495,9 +535,26 @@ class ProjectActions:
         df['daily_words'] = [df['daily_words'][i][0] for i in range(len(df))]
         df_g = df.groupby(['Wdate']).agg({'daily_words':'mean', 'Wtarget':'last'}).reset_index()
         df_g['Day of week'] = pd.to_datetime(df_g['Wdate']).dt.day_name()
-        df_g = df_g.groupby('Day of week')['daily_words'].mean().sort_values(ascending=False)
-        return df_g
+        df_g = pd.DataFrame(df_g.groupby('Day of week')['daily_words'].mean())
+        df_g['IsMax'] = np.where(df_g >= np.max(df_g), 1, 0)
+        df_g['Day'] = df_g.index.str[:3]
+        df_g ['Wcount'] = df_g['daily_words']
+        df_g = df_g.drop(columns='daily_words')
+        weekmeans = df_g.to_dict(orient='records')
+        maxday = df_g[df_g['IsMax'] == 1].index[0]
+        barData = {'weekmeans': weekmeans, 'maxday': maxday}
+        return barData
 
+
+    def return_wordgoal_and_deadline(self):
+        conn = sqlite3.connect(sqlite3_path)
+        cur = conn.cursor()
+        cur.execute("SELECT deadline, wordcount_goal FROM projects where project_id=?", (self.project_id,))
+        row = cur.fetchone()
+        conn.close()
+        wordgoal_and_deadline = dict({'wordgoal':row[1], 'deadline':row[0]})
+        return wordgoal_and_deadline
+        
 
     def enter_wordcount(self):
         """
