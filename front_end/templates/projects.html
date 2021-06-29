@@ -147,14 +147,16 @@ async function new_name_prompt(p_id) {
 
     if (dailynew) {
       current_daily_target = wordcountgoal;  
+      localStorage.setItem('DAILY current_daily type', `${typeof current_daily_target}`)
     } else {
       let daysBetwenDates = (Date.parse(targetenddate) - Date.parse(targetstartdate)) / (1000 * 3600 * 24)
       current_daily_target = `${Math.round(parseInt(wordcountgoal) / daysBetwenDates)}`;
     }
-    wp_page = 0; // TO DO: Used for later if someone wants to count pages rather than words
+    // ??? Why does wp_page num show up for curr_daily_count in proj? 
+    // ??? Should set to current_daily_target ?
+    wp_page = 42; // TO DO: Used for later if someone wants to count pages rather than words
     projectpath = document.querySelector("#project-path").value;
     //filetype = document.querySelector("#filetype").value;
-
     eel.new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath);
   };
   </script>
@@ -177,7 +179,7 @@ async function new_name_prompt(p_id) {
     function progress_bar(p_id, daily_words, today_goal, svgwidth) {
       var data = {
             'Wtarget_sum': today_goal, 
-            'daily_words': 500 // !!! HARD CODING TO TEST - daily_words !!!
+            'daily_words': daily_words
       };
 
       console.log(data);

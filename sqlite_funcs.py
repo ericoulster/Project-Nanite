@@ -69,12 +69,12 @@ def timestamp():
 def datestamp():
     return str(datetime.now().date())
 
-def samedate(date: str) -> bool():
+def samedate(date: str) -> bool(): # For some reason date is actually a date? Not sure why???
     if date == None:
         return False
     else:
-        day = date
-        today = datetime.strptime(datestamp(), '%Y-%M-%d')
+        day = str(date.date())
+        today = datestamp()
         if day == today:
             return True
         else:
