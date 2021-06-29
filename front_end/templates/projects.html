@@ -147,7 +147,6 @@ async function new_name_prompt(p_id) {
 
     if (dailynew) {
       current_daily_target = wordcountgoal;  
-      localStorage.setItem('DAILY current_daily type', `${typeof current_daily_target}`)
     } else {
       let daysBetwenDates = (Date.parse(targetenddate) - Date.parse(targetstartdate)) / (1000 * 3600 * 24)
       current_daily_target = `${Math.round(parseInt(wordcountgoal) / daysBetwenDates)}`;
