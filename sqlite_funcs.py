@@ -69,12 +69,12 @@ def timestamp():
 def datestamp():
     return str(datetime.now().date())
 
-def samedate(date: str) -> bool():
+def samedate(date: str) -> bool(): # For some reason date is actually a date? Not sure why???
     if date == None:
         return False
     else:
-        day = date
-        today = datetime.strptime(datestamp(), '%Y-%M-%d')
+        day = str(date.date())
+        today = datestamp()
         if day == today:
             return True
         else:
@@ -496,7 +496,6 @@ class ProjectActions:
         df = df.fillna(method='ffill')
         df = df.drop(columns='Wdate')
         df['Wtarget_sum'] = df['Wtarget'].cumsum()
-        df['Wdate'] = df['Wdate'].apply(lambda x: x[:10])
         # df['daily_words'] = [
         #     (df[['Wcount']].iloc[i] - df[['Wcount']].iloc[i-1]).clip(0) if i >= 1 
         #     else df[['Wcount']].iloc[i] for i in range(len(df))
