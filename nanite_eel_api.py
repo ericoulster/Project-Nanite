@@ -58,7 +58,7 @@ def list_projects_html(username):
           <p>Current Streak: {{ project.current_streak }}</p>
         </div>
         <div class="actions panel">
-          <a class="btn">Project Stats</a>
+          <a onclick="showStatsModal({{project.project_id}})" class="btn">Project Stats</a>
           <a onclick="refresh_wordcounts({{project.project_id}})" class="btn">Refresh Project</a>
         </div>
       </div>
@@ -218,3 +218,10 @@ def eel_refresh_wordcounts(project_id):
     pa.set_project(project_id)
     pa.enter_wordcount()
     return 
+
+@eel.expose
+def eel_return_project_stats(project_id):
+    """
+    Given a project id, retrieves all information required for the stats modal
+    """
+    return return_stats_screen(project_id)

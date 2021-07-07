@@ -162,7 +162,19 @@ def return_stats_screen(p_id:int) -> dict():
     max_wc = day_df['daily_words'].max()
     mean_wc = day_df['daily_words'].mean()
     
-    current_wc = day_df['Wcount'].iloc[-1]
+    current_wc = int(day_df['Wcount'].iloc[-1])
+
+    # ====================================================!!
+    # Refactor later -- JS has trouble retrieving Python Timestamp for some reason
+    #    need to figure out why.
+    # ====================================================!!
+
+    for obj in daily:
+        obj["Wdate"] = obj["Wdate"].strftime("%Y-%m-%d")
+    for obj in weekly:
+        obj["Wdate"] = obj["Wdate"].strftime("%Y-%m-%d")
+    for obj in monthly:
+        obj["Wdate"] = obj["Wdate"].strftime("%Y-%m-%d")
 
     stats_screen = {'word_goal_and_deadline': wgad, 'barData': {'daily':daily, 'weekly':weekly, 'monthly':monthly}, 'weekBar': weekBar, 'max_streak':max_streak, 'current_streak': current_streak, 'max_wc': max_wc, 'mean_wc':mean_wc, 'current_wc':current_wc}
     

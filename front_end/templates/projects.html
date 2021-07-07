@@ -15,6 +15,8 @@
   <!-- Modal Triggers -->
   <button data-micromodal-trigger="modal-1" class="new-project">+ New Project</button>
   <button data-micromodal-trigger="modal-0" class="welcome-msg">?</button>
+  <button data-micromodal-trigger="modal-stats" id="stats-toggle" style="display:none"></button>
+ 
  
   <!-- Projects List -->
   <div id="projectslist" class="projectslist">
@@ -72,6 +74,19 @@
     {% include 'modal.html' %}
   {% endwith %}
   <!-- New Project Modal End -->
+  <!-- Project Stats Modal -->
+    {% with %}
+    {% set modal_id = 'modal-stats' %}
+    {% set modal_header_text = 'Project Stats' %}
+    {% set modal_trigger_text = 'Project Stats' %}
+    {% set modal_trigger_classes = 'viewStats' %}
+    {% set close_button_text = 'Cancel' %}
+    {% set modal_contents_html = '<div>
+      <!--Contents will be inserted via JS-->
+    </div>'|safe %}
+    {% include 'modal.html' %}
+  {% endwith %}
+  <!-- Project Stats Modal End -->
 </div>
 <script>
   // Initial 
@@ -284,6 +299,21 @@ async function new_name_prompt(p_id) {
             .style('fill', text_color)
             .raise()
     }
+
+    const showStatsModal = async (selectedId) => {
+      console.log(`Running for ${selectedId}`)
+      let selectedName =  document.querySelector('#project-' + String(selectedId) + '-summary h2').innerHTML;
+      let statsData = await eel.eel_return_project_stats(selectedId)();
+
+      document.getElementById("stats-toggle").click();
+      
+      console.log(statsData);
+
+      document.getElementById("modal-stats-title").innerHTML = `${selectedName} Statistics`
+      statsModal_Populate(statsData);
+
+    }
     
   </script>
+  <script src="../static/js/stats-modal.js"></script>
 {% endblock %}

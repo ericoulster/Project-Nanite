@@ -1,0 +1,107 @@
+/* =====================================================================/
+ * MARK'S WORKING ON THESE
+ * ====================================================================/
+ */ 
+
+ #stats-wordRow {
+    width: 100%;
+  }
+  
+  .wcDiv {
+    display: inline-block;
+    border-radius: 25px;
+    /* border: 4px solid #333A40; */
+    border: 3px solid #22262a;
+    text-align: center;
+    width: 45%;
+    padding: 0 5px !important;
+    font-size: 10px;
+    font-family: 'Archivo';
+  }
+  
+  .wcDiv .emph {
+    font-size: 12;
+    font-weight: bolder;
+  }
+  
+  #stats-body {
+    width: 100%;
+    padding-top: 30px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  #stats-barChart {
+    width: 80%;
+  }
+  
+  #userInputRow {
+      display: flex;
+      margin-top: 0;
+      margin-bottom: .5em;
+      justify-content: space-between;
+    }
+  
+    #numBars {
+      margin: 0 .3em;
+    }
+  
+    .numBarsContainer {
+      color: #fff;
+    }
+  
+    /* For whatever reason, it kept adding this margin to this p tag and I was not about that life*/
+    .numBarsContainer p {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+    }
+  
+    #stats-sideBar {
+      display: flex;
+      flex-direction: column;
+      width: 20%;
+    }
+  
+    #stats-deadline {
+      font-size: 12px;
+      font-family: 'Archivo';
+      text-align: center;
+    }
+  
+    #stats-deadline .emph {
+    font-size: 16px;
+    font-weight: bolder;
+  }
+  
+  #stats-currStreak {
+      font-size: 12px;
+      font-family: 'Archivo';
+      text-align: center;
+    }
+  
+    #stats-currStreak .emph {
+    font-size: 16px;
+    font-weight: bolder;
+  }
+  
+  .grid .tick {
+        stroke: lightgrey;
+        opacity: 0.7;
+        stroke-width: 3;
+      }
+    
+      x.tick line{
+        visibility:hidden;
+      }
+    
+      line {
+        stroke: #333A40;
+        stroke-linecap: round;
+      }
+    
+      /* From daily words, I think. Need to figure out what it's doin'. It's messing with the main stuff
+      
+      body {
+        background-color: #474F56;
+        width: 100%;
+      } */
