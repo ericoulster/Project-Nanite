@@ -152,7 +152,7 @@ const statsModal_ProgressBar = (data) => {
                     .attr('width', 0)
                     .attr('rx', 10)
                     .attr('ry', 10)
-                    .attr('x', bar_x + (bar_x*.55))
+                    .attr('x', bar_x + (bar_x*.65))
                     .attr('y', bar_y + (bar_y*1.40));
 
     progress.transition()
@@ -261,7 +261,7 @@ const statsModal_AddSidebar = (data) => {
 const statsModal_UpdateGraph = (data) => {
     var sel_userInputRow = document.getElementById("userInputRow");
     var sel_numBars = document.getElementById("numBars");
-    var barWidth = parseInt(window.getComputedStyle(document.querySelector("#stats-barChart")).width.slice(0, -2)) * .95;
+    var barWidth = parseInt(window.getComputedStyle(document.querySelector("#stats-barChart")).width.slice(0, -2));
     // d3.selectAll("wcsvg").remove();
     document.getElementById("wordcounter").innerHTML = "";
 
@@ -324,17 +324,17 @@ const statsModal_UpdateGraph = (data) => {
     // Adds the currently selected measurement to the numBars selection input line
     document.getElementById("currMeasurement").innerText = time_name + "s";
 
-    console.log("===============================");
-    console.log(`Current numBars: ${numBars}`);
-    console.log(`Current TypeOf: ${typeof numBars}`);
-    console.log(`Current granularity: ${granularity}`);
+    // console.log("===============================");
+    // console.log(`Current numBars: ${numBars}`);
+    // console.log(`Current TypeOf: ${typeof numBars}`);
+    // console.log(`Current granularity: ${granularity}`);
 
 
     // set the dimensions and margins of the graph
     // var margin = {top: 30, right: 30, bottom: 70, left: 60},
     //     width = barWidth - margin.left - margin.right,
     //     height = (barWidth * .67) - margin.top - margin.bottom;
-    var margin = {top: barWidth * .06, right: barWidth * .05, bottom: barWidth * .13, left: barWidth * .1},
+    var margin = {top: barWidth * .1, right: barWidth * .05, bottom: barWidth * .2, left: barWidth * .15},
         width = barWidth - margin.left - margin.right,
         height = (barWidth * .67) - margin.top - margin.bottom;
     
