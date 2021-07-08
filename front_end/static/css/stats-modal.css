@@ -35,25 +35,48 @@
   #stats-barChart {
     width: 70%;
   }
+
+  #wordcounter {
+    background-color: #22262a;
+    border-radius: 25px;
+    padding: 5px;
+  }
   
-  #selDataset {
-      font-size: 11px;
+  #userInputRow {
+    display: flex;
+    margin-top: 0;
+    margin-bottom: 1em;
+    padding: 0 .5em;
+    justify-content: space-between;
   }
 
-  #userInputRow {
-      display: flex;
-      margin-top: 0;
-      margin-bottom: 1.5em;
-      justify-content: space-between;
-    }
+  #selDataset {
+      font-size: 12px;
+      background-color: #22262a;
+      padding: .3em;
+      color: #fff;
+      border-radius: 7px;
+      border: none;
+  }
   
+  .numBarsContainer {
+      font-size: 12px;
+  }
+
     #numBars {
       margin: 0 .3em;
+      padding: .3em;
+      background-color: #22262a;
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      text-align: center;
     }
   
     .numBarsContainer {
       color: #fff;
     }
+
   
     /* For whatever reason, it kept adding this margin to this p tag and I was not about that life*/
     .numBarsContainer p {

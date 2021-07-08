@@ -5,10 +5,12 @@ const statsModal_Populate = (data) => {
     statsModal_AddSidebar(data);
     statsModal_UpdateGraph(data);
 
-    d3.select("#selDataset").on("change", statsModal_UpdateGraph)
-    d3.select("numBars").on("change", statsModal_UpdateGraph)
+    d3.select("#selDataset").on("change", () => statsModal_UpdateGraph(data))
+    d3.select("#numBars").on("change", () => statsModal_UpdateGraph(data))
 
 }
+
+ /*    */
 
 /* ==============================================================================================/
  *  ADDING INITIAL HTML (BONES)
@@ -259,10 +261,11 @@ const statsModal_AddSidebar = (data) => {
  **/
 
 const statsModal_UpdateGraph = (data) => {
+    console.log("Running update graphs")
     var sel_userInputRow = document.getElementById("userInputRow");
     var sel_numBars = document.getElementById("numBars");
     var barWidth = parseInt(window.getComputedStyle(document.querySelector("#stats-barChart")).width.slice(0, -2));
-    // d3.selectAll("wcsvg").remove();
+    // d3.selectAll("svg").remove();
     document.getElementById("wordcounter").innerHTML = "";
 
     var dropdownMenu = d3.select("#selDataset");
@@ -318,6 +321,7 @@ const statsModal_UpdateGraph = (data) => {
     //   the max amount of data available.
     if ((barData.length * -1) > numBars){
         numBars = (barData.length * -1);
+        sel_numBars.value = barData.length;
     } 
     barData = barData.slice(numBars)
 
@@ -446,14 +450,17 @@ const statsModal_UpdateGraph = (data) => {
         .attr("stroke", "#474F56")
         .attr("r", 4);
 
-    wcsvg.append("text")         // Add the Y Axis
-    .attr("x", (width / 2))             
-    .attr("y", 0 - (margin.top / 2))
-    .attr("text-anchor", "middle")  
-    .style("font-size", "13px") 
-    .attr('font-family', 'Archivo') 
-    .style("fill", "#E3E3E3")
-    .text(`Wordcount Per ${time_name}`);
+    // =================================================/
+    // REMOVING -- Looks a bit better without the title
+    // ================================================/
+    // wcsvg.append("text")         // Add the Y Axis
+    // .attr("x", (width / 2))             
+    // .attr("y", 0 - (margin.top / 2))
+    // .attr("text-anchor", "middle")  
+    // .style("font-size", "13px") 
+    // .attr('font-family', 'Archivo') 
+    // .style("fill", "#E3E3E3")
+    // .text(`Wordcount Per ${time_name}`);
 
     //Erasing previous values when new ones pop up
     wcsvg.selectAll("g").select(".domain").remove();
