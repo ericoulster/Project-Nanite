@@ -10,9 +10,6 @@ const statsModal_Populate = (data) => {
     d3.select(window).on("resize", () => statsModal_Populate(data));
 }
 
-
- /*    */
-
 /* ==============================================================================================/
  *  ADDING INITIAL HTML (BONES)
  * =============================================================================================/
@@ -26,7 +23,6 @@ const statsModal_AddBones = () => {
         <div id="stats-highestWC" class="wcDiv"></div>
         </div>
         <div id="stats-body">
-        <!--STATS BAR CHART START!!-->
         <div id="stats-barChart">
             <div id="userInputRow">
             <select id="selDataset">
@@ -35,7 +31,6 @@ const statsModal_AddBones = () => {
                 <option value="Monthly">Monthly</option>
             </select>
         
-            <!--Have a div here so that justify-content will slap it onto the right side of the screen-->
             <div class="numBarsContainer Archivo">
                 <p>
                 Past 
@@ -44,11 +39,9 @@ const statsModal_AddBones = () => {
                 </p>
             </div>
             </div>
-        
-            <!--Graph's outside the userInputRow-->
             <div id="wordcounter"></div>          
         </div>
-        <!--STATS SIDE BAR START!!! -->
+
         <div id="stats-sideBar">
             <div id="stats-deadline"></div>
             <div id="stats-currStreak"></div>
@@ -293,7 +286,6 @@ const statsModal_CreateWeekData = (weekData) => {
  **/
 
 const statsModal_UpdateGraph = (barData) => {
-    console.log("Running update graphs")
     var sel_userInputRow = document.getElementById("userInputRow");
     var sel_numBars = document.getElementById("numBars");
     var barWidth = parseInt(window.getComputedStyle(document.querySelector("#stats-barChart")).width.slice(0, -2));

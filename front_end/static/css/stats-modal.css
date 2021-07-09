@@ -10,10 +10,11 @@
   .wcDiv {
     display: inline-block;
     border-radius: 15px;
+    margin-right: .5em;
     /* border: 4px solid #333A40; */
     border: 3px solid #22262a;
     text-align: center;
-    width: 45%;
+    width: 32%;
     font-size: 10px;
     font-family: 'Archivo';
   }

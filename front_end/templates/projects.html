@@ -15,7 +15,7 @@
   <!-- Modal Triggers -->
   <button data-micromodal-trigger="modal-1" class="new-project">+ New Project</button>
   <button data-micromodal-trigger="modal-0" class="welcome-msg">?</button>
-  <button data-micromodal-trigger="modal-stats" id="stats-toggle" style="display:none"></button>
+  <button data-micromodal-trigger="modal-stats" id="stats-toggle" style="display:none" aria-hidden="true"></button>
  
  
   <!-- Projects List -->
@@ -185,21 +185,24 @@ async function new_name_prompt(p_id) {
         p_id = pb.dataset.pid;
         daily_words = pb.dataset.todaywords;
         today_goal = pb.dataset.todaygoal;
-
-        console.log(pb.dataset);
-
-        progress_bar(p_id, daily_words, today_goal, 300);
+        
+        progress_bar(p_id, daily_words, today_goal); // , 300 
+        d3.select(window).on("resize", () => {
+          document.querySelectorAll(".progress svg").forEach( elem => elem.parentNode.removeChild(elem))
+          progress_bars(doc)
+        });
       })
     }
 
-    function progress_bar(p_id, daily_words, today_goal, svgwidth) {
+    // Previously also took in svgWidth
+    function progress_bar(p_id, daily_words, today_goal) {
+      var svgwidth = parseInt(window.getComputedStyle(document.querySelector(`div.progress.panel`)).width.slice(0, -2)) * .65;
       
+
       var data = {
             'Wtarget_sum': today_goal, 
             'daily_words': daily_words
       };
-
-      console.log(data);
         
         
       // Sets progress_val to 0 if data.Wtarget_sum is 0 to avoid division by 0
