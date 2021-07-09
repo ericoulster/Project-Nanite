@@ -70,9 +70,7 @@ const statsModal_WordCountStats = (mean_wc, max_wc) => {
 const statsModal_ProgressBar = (current_wc, wordgoal) => {
 
     var barWidth = parseInt(window.getComputedStyle(document.getElementById("stats-container")).width.slice(0, -2));
-    // console.log(window.getComputedStyle(document.getElementById("stats-container")).width)
-    // console.log(data.current_wc)
-    // console.log(barWidth)
+
     wordgoal = wordgoal > 0 ? wordgoal : 0 
     var progress_val = (current_wc / wordgoal)*100;
 
@@ -238,15 +236,15 @@ const statsModal_AddSidebar = (deadline, current_streak, weekBar) => {
     
     );
 
-    // weekSvg.append("text")
-    //     .attr("x", (width / 2))             
-    //     .attr("y", 0 - (margin.top / 2))
-    //     .attr("text-anchor", "middle")  
-    //     .attr('font-family', 'Archivo')
-    //     .attr('font-size', '12px')
-    //     .style('fill', "#E3E3E3")
-    //     // .text("You are most active on:" + maxday)
-    //     .text("Most Active: " + maxday);
+    weekSvg.append("text")
+        .attr("x", (width / 2))             
+        .attr("y", 0 - (margin.top / 2))
+        .attr("text-anchor", "middle")  
+        .attr('font-family', 'Archivo')
+        .attr('font-size', '12px')
+        .style('fill', "#E3E3E3")
+        // .text("You are most active on:" + maxday)
+        .text("Most Active: " + maxday);
 }
 
 const statsModal_CreateWeekData = (weekData) => {
