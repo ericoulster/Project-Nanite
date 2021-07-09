@@ -7,8 +7,9 @@ const statsModal_Populate = (data) => {
 
     d3.select("#selDataset").on("change", () => statsModal_UpdateGraph(data.barData))
     d3.select("#numBars").on("change", () => statsModal_UpdateGraph(data.barData))
-
+    d3.select(window).on("resize", () => statsModal_Populate(data));
 }
+
 
  /*    */
 
@@ -75,7 +76,7 @@ const statsModal_WordCountStats = (mean_wc, max_wc) => {
    **/
 const statsModal_ProgressBar = (current_wc, wordgoal) => {
 
-    var barWidth = parseInt(window.getComputedStyle(document.getElementById("stats-container")).width.slice(0, -2) * 1.5);
+    var barWidth = parseInt(window.getComputedStyle(document.getElementById("stats-container")).width.slice(0, -2));
     // console.log(window.getComputedStyle(document.getElementById("stats-container")).width)
     // console.log(data.current_wc)
     // console.log(barWidth)
@@ -266,6 +267,7 @@ const statsModal_CreateWeekData = (weekData) => {
         {Day: "Sun", Wcount: 1, IsMax:false}   
     ]
 
+    // Temporarily reducing name so it looks nicer on smaller screen
     var translateDay = {"Mon" : "M", "Tues":"T", "Wed":"W", "Thu":"Th", "Fri":"F", "Sat":"S", "Sun":"Su"};
 
     formattedWeek.forEach(dotw => {
@@ -278,11 +280,9 @@ const statsModal_CreateWeekData = (weekData) => {
                 dotw.IsMax = true;
             }
         }
+
+        dotw.Day = translateDay[dotw.Day]
     })
-
-    formattedWeek.forEach(dotw => dotw.Day = translateDay[dotw.Day]);
-
-    console.log(formattedWeek);
 
     return formattedWeek;
 }
