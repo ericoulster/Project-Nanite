@@ -382,9 +382,6 @@ const statsModal_UpdateGraph = (barData) => {
 
   // The data (which will be separated into another file later on)
 
-  // The current number of values
-  var data_length = barData.length;
-
     // if data_range > data_length then data_range = data_length
     // else data_range = input for html element
 
@@ -451,6 +448,8 @@ const statsModal_UpdateGraph = (barData) => {
         .attr("ry", 2)
         .attr("fill", "#F6D55C");
 
+    console.log(`What is barData?`)
+    console.log(barData);
     // Line
     wcsvg.append("path")
         .datum(barData)
@@ -459,7 +458,7 @@ const statsModal_UpdateGraph = (barData) => {
         .attr("stroke-width", 2)
         .attr("d", d3.line()
             .x(function(d) { return x(d.Wdate) + (x.bandwidth()/2)}) //Need a better system for this
-            .y(function(d) { return y(d.Wtarget) })
+            .y(function(d) { return y(d.Wtarget_sum) }) // Prev d.Wtarget
         );
 
 
@@ -470,13 +469,13 @@ const statsModal_UpdateGraph = (barData) => {
         .append("circle")
         .attr("stroke-width", 2)
         .attr("cx", function(d) { return x(d.Wdate) + (x.bandwidth()/2)})
-        .attr("cy", function(d) { return y(d.Wtarget) })
+        .attr("cy", function(d) { return y(d.Wtarget_sum) }) // Prev d.Wtarget
         .attr("fill", "#F6D55C")
         .attr("stroke", "#474F56")
         .attr("r", 4);
 
     // =================================================/
-    // REMOVING -- Looks a bit better without the title
+    // REMOVING -- Will return when styling is fixed
     // ================================================/
     // wcsvg.append("text")         // Add the Y Axis
     // .attr("x", (width / 2))             
