@@ -85,16 +85,16 @@
     }
   
     #stats-sideBar {
-      margin-top: 0 !important;
-      padding-top: 0 !important;
+      margin-top: 0;
+      padding-top: 0;
       display: flex;
       flex-direction: column;
       width: 25%;
     }
   
     #stats-deadline {
-      margin-top: 0 !important;
-      padding-top: 0 !important;
+      margin-top: 0;
+      padding-top: 0;
       font-size: 12px;
       font-family: 'Archivo';
       text-align: center;

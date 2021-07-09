@@ -1,12 +1,12 @@
 const statsModal_Populate = (data) => {
     statsModal_AddBones();
-    statsModal_ProgressBar(data);
-    statsModal_WordCountStats(data);
-    statsModal_AddSidebar(data);
-    statsModal_UpdateGraph(data);
+    statsModal_ProgressBar(data.current_wc, data.word_goal_and_deadline.wordgoal);
+    statsModal_WordCountStats(data.mean_wc, data.max_wc);
+    statsModal_AddSidebar(data.word_goal_and_deadline.deadline, data.current_streak, data.weekBar);
+    statsModal_UpdateGraph(data.barData);
 
-    d3.select("#selDataset").on("change", () => statsModal_UpdateGraph(data))
-    d3.select("#numBars").on("change", () => statsModal_UpdateGraph(data))
+    d3.select("#selDataset").on("change", () => statsModal_UpdateGraph(data.barData))
+    d3.select("#numBars").on("change", () => statsModal_UpdateGraph(data.barData))
 
 }
 
@@ -62,24 +62,25 @@ const statsModal_AddBones = () => {
    *   WORDCOUNT ROW STUFF
    * ===============================================================================================/
    **/
-const statsModal_WordCountStats = (data) => {
-    let toAdd_avgWC = data.mean_wc ? Math.round(data.mean_wc, 1) : "N/A"
-    document.getElementById("stats-avgWC").innerHTML = `<p>Avg daily word count: <span class="emph">${toAdd_avgWC}</span></p>`;
+const statsModal_WordCountStats = (mean_wc, max_wc) => {
+    let toAdd_meanwc = mean_wc ? Math.round(mean_wc, 1) : "N/A"
+    document.getElementById("stats-avgWC").innerHTML = `<p>Avg daily word count: <span class="emph">${toAdd_meanwc}</span></p>`;
 
-    let toAdd_highWC = data.max_wc ? data.max_wc : "N/A"
-    document.getElementById("stats-highestWC").innerHTML = `<p>Highest daily word count: <span class="emph">${toAdd_highWC}</span></p>`;
+    let toAdd_maxwc = max_wc ? max_wc : "N/A"
+    document.getElementById("stats-highestWC").innerHTML = `<p>Highest daily word count: <span class="emph">${toAdd_maxwc}</span></p>`;
 }
 /* ================================================================================================/
    *   PROGRESS BAR STUFF
    * ===============================================================================================/
    **/
-const statsModal_ProgressBar = (data) => {
+const statsModal_ProgressBar = (current_wc, wordgoal) => {
 
     var barWidth = parseInt(window.getComputedStyle(document.getElementById("stats-container")).width.slice(0, -2) * 1.5);
     // console.log(window.getComputedStyle(document.getElementById("stats-container")).width)
     // console.log(data.current_wc)
     // console.log(barWidth)
-    var progress_val = (data.current_wc / data.word_goal_and_deadline.wordgoal)*100;
+    wordgoal = wordgoal > 0 ? wordgoal : 0 
+    var progress_val = (current_wc / wordgoal)*100;
 
     if (progress_val < 25) {
         progress_color = "#D0D0D0"
@@ -144,9 +145,6 @@ const statsModal_ProgressBar = (data) => {
         .attr('x', bar_x)
         .attr('y', bar_y);
 
-
-
-
     var progress = svg.append('rect')
                     .attr('class', 'progress-rect')
                     .attr('fill', progress_color)
@@ -165,7 +163,7 @@ const statsModal_ProgressBar = (data) => {
         });
 
     svg.append("text")
-        .text(`${data.current_wc}/${data.word_goal_and_deadline.wordgoal} words (${Math.floor(progress_val)}%)`)
+        .text(`${current_wc}/${wordgoal} words (${Math.floor(progress_val)}%)`)
         .attr('x', bar_width/2 -50)
         .attr('y', bar_height*1.5)
         .attr('fill', '#333A40')
@@ -180,12 +178,14 @@ const statsModal_ProgressBar = (data) => {
    *   MISC SIDELINE STUFF
    * ===============================================================================================/
    **/
-const statsModal_AddSidebar = (data) => {
-    document.getElementById("stats-deadline").innerHTML = `<p>Current Deadline <br/> <span class="emph">${data.word_goal_and_deadline.deadline}</span></p>`;
-    document.getElementById("stats-currStreak").innerHTML = `<p>Current Streak <br/> <span class="emph">${data.current_streak ? data.current_streak : "none"}</span></p>`;
+const statsModal_AddSidebar = (deadline, current_streak, weekBar) => {
+    document.getElementById("stats-deadline").innerHTML = `<p>Current Deadline <br/> <span class="emph">${deadline}</span></p>`;
+    document.getElementById("stats-currStreak").innerHTML = `<p>Current Streak <br/> <span class="emph">${current_streak ? current_streak : "None"}</span></p>`;
     var sidebarWidth = parseInt(window.getComputedStyle(document.querySelector("#stats-sideBar")).width.slice(0, -2)) * .95;
-    var weekData = data.weekBar.weekmeans
-    var maxday = data.weekBar.maxday
+    var weekData = statsModal_CreateWeekData(weekBar.weekmeans);
+    var maxday = weekBar.maxday
+
+    
 
     // set the dimensions and margins of the graph
     //  var margin = {top: 30, right: 30, bottom: 70, left: 60},
@@ -216,7 +216,7 @@ const statsModal_AddSidebar = (data) => {
     .selectAll("text")
     .attr('font-family', 'Archivo')
             .attr('font-weight', 100)
-            .attr('font-size', '6px')
+            .attr('font-size', '7px')
             .style("text-anchor", "middle")
             .style('fill', "#E3E3E3");
 
@@ -239,20 +239,52 @@ const statsModal_AddSidebar = (data) => {
     .attr("y", function(d) { return y(d.Wcount); })
     .attr("width", x.bandwidth())
     .attr("height", function(d) { return height - y(d.Wcount); })
-    .attr("ry", 8)
+    .attr("ry", 3)
     .attr("fill", function(d) {if (d.IsMax === false) {return "#1F2428"} else {return "#F6D55C"}}
     
     );
 
-    weekSvg.append("text")
-        .attr("x", (width / 2))             
-        .attr("y", 0 - (margin.top / 2))
-        .attr("text-anchor", "middle")  
-        .attr('font-family', 'Archivo')
-        .attr('font-size', '12px')
-        .style('fill', "#E3E3E3")
-        // .text("You are most active on:" + maxday)
-        .text("Most Active: " + maxday);
+    // weekSvg.append("text")
+    //     .attr("x", (width / 2))             
+    //     .attr("y", 0 - (margin.top / 2))
+    //     .attr("text-anchor", "middle")  
+    //     .attr('font-family', 'Archivo')
+    //     .attr('font-size', '12px')
+    //     .style('fill', "#E3E3E3")
+    //     // .text("You are most active on:" + maxday)
+    //     .text("Most Active: " + maxday);
+}
+
+const statsModal_CreateWeekData = (weekData) => {
+    var formattedWeek = [
+        {Day: "Mon", Wcount: 1, IsMax:false},
+        {Day: "Tues", Wcount: 1, IsMax:false},
+        {Day: "Wed", Wcount: 1, IsMax:false},
+        {Day: "Thu", Wcount: 1, IsMax:false},
+        {Day: "Fri", Wcount: 1, IsMax:false},
+        {Day: "Sat", Wcount: 1, IsMax:false},
+        {Day: "Sun", Wcount: 1, IsMax:false}   
+    ]
+
+    var translateDay = {"Mon" : "M", "Tues":"T", "Wed":"W", "Thu":"Th", "Fri":"F", "Sat":"S", "Sun":"Su"};
+
+    formattedWeek.forEach(dotw => {
+        let rawDayEntry = weekData.filter(d => d.Day == dotw.Day)[0];
+
+        if (rawDayEntry) {
+            dotw.Wcount = rawDayEntry.Wcount;
+
+            if (rawDayEntry.IsMax == 1) {
+                dotw.IsMax = true;
+            }
+        }
+    })
+
+    formattedWeek.forEach(dotw => dotw.Day = translateDay[dotw.Day]);
+
+    console.log(formattedWeek);
+
+    return formattedWeek;
 }
 
 /* ================================================================================================/
@@ -260,7 +292,7 @@ const statsModal_AddSidebar = (data) => {
  * ===============================================================================================/
  **/
 
-const statsModal_UpdateGraph = (data) => {
+const statsModal_UpdateGraph = (barData) => {
     console.log("Running update graphs")
     var sel_userInputRow = document.getElementById("userInputRow");
     var sel_numBars = document.getElementById("numBars");
@@ -268,9 +300,10 @@ const statsModal_UpdateGraph = (data) => {
     // d3.selectAll("svg").remove();
     document.getElementById("wordcounter").innerHTML = "";
 
+    // data = buildWordChartData(data.);
     var dropdownMenu = d3.select("#selDataset");
     var granularity = dropdownMenu.property("value");
-    var barData, time_name, numBars;
+    var time_name, numBars;
 
     // Originally takes in numbars value as string
     var rawNumBars = parseInt(sel_numBars.value);
@@ -298,15 +331,15 @@ const statsModal_UpdateGraph = (data) => {
     }
 
     if (granularity === 'Daily') {
-        barData = data.barData.daily;
+        barData = barData.daily;
         time_name = "Day";
     }
     else if (granularity === 'Weekly') {
-        barData = data.barData.weekly;
+        barData = barData.weekly;
         time_name = "Week";
     }
     else if (granularity === 'Monthly') {
-        barData = data.barData.monthly;
+        barData = barData.monthly;
         time_name = "Month";
     }
     else {

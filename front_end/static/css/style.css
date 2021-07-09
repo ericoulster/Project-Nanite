@@ -293,7 +293,7 @@ ul li {
 .modal__container {
   background-color: #333a40;
   padding: 15px;
-  max-width: 500px;
+  max-width: 600px; 
   max-height: 100vh;
   border-radius: 4px;
   overflow-y: auto;
