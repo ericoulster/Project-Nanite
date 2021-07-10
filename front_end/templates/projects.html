@@ -186,18 +186,18 @@ async function new_name_prompt(p_id) {
         daily_words = pb.dataset.todaywords;
         today_goal = pb.dataset.todaygoal;
         
-        progress_bar(p_id, daily_words, today_goal); // , 300 
-        d3.select(window).on("resize", () => {
-          document.querySelectorAll(".progress svg").forEach( elem => elem.parentNode.removeChild(elem))
-          progress_bars(doc)
-        });
+        progress_bar(p_id, daily_words, today_goal, 300);  
+        // d3.select(window).on("resize", () => {
+        //   document.querySelectorAll(".progress svg").forEach( elem => elem.parentNode.removeChild(elem))
+        //   progress_bars(doc)
+        // });
       })
     }
 
     // Previously also took in svgWidth
-    function progress_bar(p_id, daily_words, today_goal) {
-      var svgwidth = parseInt(window.getComputedStyle(document.querySelector(`div.progress.panel`)).width.slice(0, -2)) * .65;
-      
+    function progress_bar(p_id, daily_words, today_goal, svgwidth) {
+      // var svgwidth = parseInt(window.getComputedStyle(document.querySelector(`div.progress.panel`)).width.slice(0, -2)) * .65;
+      // console.log(svgwidth);
 
       var data = {
             'Wtarget_sum': today_goal, 
@@ -304,20 +304,13 @@ async function new_name_prompt(p_id) {
     }
 
     const showStatsModal = async (selectedId) => {
-      console.log(`Running for ${selectedId}`)
       let selectedName =  document.querySelector('#project-' + String(selectedId) + '-summary h2').innerHTML;
       let statsData = await eel.eel_return_project_stats(selectedId)();
 
-      // document.getElementById("modal-stats").setAttribute('aria-hidden', 'false');
       document.getElementById("stats-toggle").click();
-      // console.log(document.querySelector('div#modal-stats[aria-hidden="true"]'))
-
-      
-      console.log(statsData);
 
       document.getElementById("modal-stats-title").innerHTML = `${selectedName} Statistics`
       statsModal_Populate(statsData);
-
     }
     
   </script>

@@ -1,12 +1,21 @@
 const statsModal_Populate = (data) => {
+    // Adds the base html to the modal
     statsModal_AddBones();
+    // Adds the progress bar to the modal
     statsModal_ProgressBar(data.current_wc, data.word_goal_and_deadline.wordgoal);
+    // Adds the avg daily word count && highest daily word count to the modal
     statsModal_WordCountStats(data.mean_wc, data.max_wc);
+    // Adds the current deadline, current steak, and most active chart
     statsModal_AddSidebar(data.word_goal_and_deadline.deadline, data.current_streak, data.weekBar);
+    // Adds the daily / weekly / monthly bar chart
     statsModal_UpdateGraph(data.barData);
 
+
+    // Updates daily / weekly / monthly bar chart when user enters input
     d3.select("#selDataset").on("change", () => statsModal_UpdateGraph(data.barData))
     d3.select("#numBars").on("change", () => statsModal_UpdateGraph(data.barData))
+
+    // Updates all graphs with new size upon resize
     d3.select(window).on("resize", () => statsModal_Populate(data));
 }
 
@@ -68,7 +77,6 @@ const statsModal_WordCountStats = (mean_wc, max_wc) => {
    * ===============================================================================================/
    **/
 const statsModal_ProgressBar = (current_wc, wordgoal) => {
-
     var barWidth = parseInt(window.getComputedStyle(document.getElementById("stats-container")).width.slice(0, -2));
 
     wordgoal = wordgoal > 0 ? wordgoal : 0 
@@ -177,15 +185,22 @@ const statsModal_AddSidebar = (deadline, current_streak, weekBar) => {
     var weekData = statsModal_CreateWeekData(weekBar.weekmeans);
     var maxday = weekBar.maxday
 
-    
+    var fontMultiplier;
+    if (sidebarWidth > 250) {
+        fontMultiplier = 1.5;
+    } else if (sidebarWidth > 150) {
+        fontMultiplier = 1.3;
+    } else {
+        fontMultiplier = 1;
+    }
 
     // set the dimensions and margins of the graph
     //  var margin = {top: 30, right: 30, bottom: 70, left: 60},
     //       width = sidebarWidth - margin.left - margin.right,
     //       height = (sidebarWidth * .5) - margin.top - margin.bottom;
-    var margin = {top: (sidebarWidth * .5), right: (sidebarWidth * .1), bottom: (sidebarWidth * .5), left: (sidebarWidth * .1)},
-        width = sidebarWidth,
-        height = (sidebarWidth * .5)
+    var margin = {top: (sidebarWidth * .5), right: (sidebarWidth * .08), bottom: (sidebarWidth * .5), left: (sidebarWidth * .08)},
+        width = sidebarWidth * .97,
+        height = (sidebarWidth * .38) 
 
     // append the svg object to the body of the page
     var weekSvg = d3.select("#stats-mostActive")
@@ -208,15 +223,13 @@ const statsModal_AddSidebar = (deadline, current_streak, weekBar) => {
     .selectAll("text")
     .attr('font-family', 'Archivo')
             .attr('font-weight', 100)
-            .attr('font-size', '7px')
+            .attr('font-size', `${7 * fontMultiplier}px`)
             .style("text-anchor", "middle")
             .style('fill', "#E3E3E3");
 
 
     // max of Y axis
     var maxY = d3.max(weekData, (d) => {return +d.Wcount})
-
-    //"#F6D55C"
     
     // Y axis
     var y = d3.scaleLinear()
@@ -241,26 +254,26 @@ const statsModal_AddSidebar = (deadline, current_streak, weekBar) => {
         .attr("y", 0 - (margin.top / 2))
         .attr("text-anchor", "middle")  
         .attr('font-family', 'Archivo')
-        .attr('font-size', '12px')
+        .attr('font-size', `${12 * fontMultiplier}px`)
         .style('fill', "#E3E3E3")
         // .text("You are most active on:" + maxday)
         .text("Most Active: " + maxday);
 }
 
 const statsModal_CreateWeekData = (weekData) => {
+    // Mimicing data from mockup
     var formattedWeek = [
-        {Day: "Mon", Wcount: 1, IsMax:false},
-        {Day: "Tues", Wcount: 1, IsMax:false},
-        {Day: "Wed", Wcount: 1, IsMax:false},
-        {Day: "Thu", Wcount: 1, IsMax:false},
-        {Day: "Fri", Wcount: 1, IsMax:false},
-        {Day: "Sat", Wcount: 1, IsMax:false},
-        {Day: "Sun", Wcount: 1, IsMax:false}   
+        {Day: "Mon", Wcount: 0, IsMax:false},
+        {Day: "Tues", Wcount: 0, IsMax:false},
+        {Day: "Wed", Wcount: 0, IsMax:false},
+        {Day: "Thu", Wcount: 0, IsMax:false},
+        {Day: "Fri", Wcount: 0, IsMax:false},
+        {Day: "Sat", Wcount: 0, IsMax:false},
+        {Day: "Sun", Wcount: 0, IsMax:false}   
     ]
 
-    // Temporarily reducing name so it looks nicer on smaller screen
-    var translateDay = {"Mon" : "M", "Tues":"T", "Wed":"W", "Thu":"Th", "Fri":"F", "Sat":"S", "Sun":"Su"};
-
+    // If the data pulled in from api has a value for the day, it'll update formatted Week
+    //    otherwise, it'll keep formatted Week's default values.
     formattedWeek.forEach(dotw => {
         let rawDayEntry = weekData.filter(d => d.Day == dotw.Day)[0];
 
@@ -271,10 +284,9 @@ const statsModal_CreateWeekData = (weekData) => {
                 dotw.IsMax = true;
             }
         }
-
-        dotw.Day = translateDay[dotw.Day]
     })
 
+    // Returns edited formatted week (to be used by daily word count chart)
     return formattedWeek;
 }
 
@@ -289,6 +301,16 @@ const statsModal_UpdateGraph = (barData) => {
     var barWidth = parseInt(window.getComputedStyle(document.querySelector("#stats-barChart")).width.slice(0, -2));
     // d3.selectAll("svg").remove();
     document.getElementById("wordcounter").innerHTML = "";
+
+    console.log(barWidth)
+    var fontMultiplier;
+    if (barWidth > 750) {
+        fontMultiplier = 1.5;
+    } else if (barWidth > 600) {
+        fontMultiplier = 1.3;
+    } else {
+        fontMultiplier = 1;
+    }
 
     // data = buildWordChartData(data.);
     var dropdownMenu = d3.select("#selDataset");
@@ -351,22 +373,16 @@ const statsModal_UpdateGraph = (barData) => {
     // Adds the currently selected measurement to the numBars selection input line
     document.getElementById("currMeasurement").innerText = time_name + "s";
 
-    // console.log("===============================");
-    // console.log(`Current numBars: ${numBars}`);
-    // console.log(`Current TypeOf: ${typeof numBars}`);
-    // console.log(`Current granularity: ${granularity}`);
-
-
     // set the dimensions and margins of the graph
     // var margin = {top: 30, right: 30, bottom: 70, left: 60},
     //     width = barWidth - margin.left - margin.right,
     //     height = (barWidth * .67) - margin.top - margin.bottom;
-    var margin = {top: barWidth * .1, right: barWidth * .05, bottom: barWidth * .2, left: barWidth * .15},
+    var margin = {top: barWidth * .08, right: barWidth * .05, bottom: barWidth * .2, left: barWidth * .12},
         width = barWidth - margin.left - margin.right,
         height = (barWidth * .67) - margin.top - margin.bottom;
     
     // setting the width and padding of the userInputDiv to match the graph
-    sel_userInputRow.style.width = width + margin.left - margin.right; // ㅎㅎㅎ
+    sel_userInputRow.style.width = width + margin.left - margin.right;
     sel_userInputRow.style.paddingLeft = margin.right;
 
     // append the svg object to the body of the page
@@ -398,7 +414,7 @@ const statsModal_UpdateGraph = (barData) => {
       .attr("transform", "translate(-10,0)rotate(-45)")
       .attr('font-family', 'Archivo')
             .attr('font-weight', 100)
-            .attr('font-size', '10px')
+            .attr('font-size', `${10 * fontMultiplier}px`)
             .style("text-anchor", "end")
             .style('fill', "#E3E3E3");
 
@@ -423,7 +439,7 @@ const statsModal_UpdateGraph = (barData) => {
     .call(d3.axisLeft(y).tickSize(0))
     .attr('font-family', 'Archivo')
     .selectAll("text")
-      .style('fill', "#E3E3E3").attr('font-size', '10px');
+      .style('fill', "#E3E3E3").attr('font-size', `${10 * fontMultiplier}px`);
 
   // add the Y gridlines
   wcsvg.append("g")			
@@ -470,16 +486,16 @@ const statsModal_UpdateGraph = (barData) => {
         .attr("cy", function(d) { return y(d.Wtarget_sum) }) // Prev d.Wtarget
         .attr("fill", "#F6D55C")
         .attr("stroke", "#474F56")
-        .attr("r", 4);
+        .attr("r", (4 * fontMultiplier)); // 4
 
     // =================================================/
-    // REMOVING -- Will return when styling is fixed
+    // REMOVING -- Not in Figma
     // ================================================/
     // wcsvg.append("text")         // Add the Y Axis
     // .attr("x", (width / 2))             
     // .attr("y", 0 - (margin.top / 2))
     // .attr("text-anchor", "middle")  
-    // .style("font-size", "13px") 
+    // .style("font-size", `${13 * fontMultiplier}px`) 
     // .attr('font-family', 'Archivo') 
     // .style("fill", "#E3E3E3")
     // .text(`Wordcount Per ${time_name}`);
