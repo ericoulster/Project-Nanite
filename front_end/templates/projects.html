@@ -186,6 +186,7 @@ async function new_name_prompt(p_id) {
         daily_words = pb.dataset.todaywords;
         today_goal = pb.dataset.todaygoal;
         
+        console.log(pb.dataset);
         progress_bar(p_id, daily_words, today_goal, 300);  
         // d3.select(window).on("resize", () => {
         //   document.querySelectorAll(".progress svg").forEach( elem => elem.parentNode.removeChild(elem))
@@ -204,7 +205,7 @@ async function new_name_prompt(p_id) {
             'daily_words': daily_words
       };
         
-        
+      console.log(data)
       // Sets progress_val to 0 if data.Wtarget_sum is 0 to avoid division by 0
         var progress_val = data.Wtarget_sum == 0 ? 0 : (data.daily_words / data.Wtarget_sum) * 100;
 

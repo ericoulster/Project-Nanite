@@ -262,14 +262,15 @@ const statsModal_AddSidebar = (deadline, current_streak, weekBar) => {
 
 const statsModal_CreateWeekData = (weekData) => {
     // Mimicing data from mockup
+    // For some reason, the styling will lump days together if they have no data, so I'm setting default to 1
     var formattedWeek = [
-        {Day: "Mon", Wcount: 0, IsMax:false},
-        {Day: "Tues", Wcount: 0, IsMax:false},
-        {Day: "Wed", Wcount: 0, IsMax:false},
-        {Day: "Thu", Wcount: 0, IsMax:false},
-        {Day: "Fri", Wcount: 0, IsMax:false},
-        {Day: "Sat", Wcount: 0, IsMax:false},
-        {Day: "Sun", Wcount: 0, IsMax:false}   
+        {Day: "Mon", Wcount: 1, IsMax:false},
+        {Day: "Tues", Wcount: 1, IsMax:false},
+        {Day: "Wed", Wcount: 1, IsMax:false},
+        {Day: "Thu", Wcount: 1, IsMax:false},
+        {Day: "Fri", Wcount: 1, IsMax:false},
+        {Day: "Sat", Wcount: 1, IsMax:false},
+        {Day: "Sun", Wcount: 1, IsMax:false}   
     ]
 
     // If the data pulled in from api has a value for the day, it'll update formatted Week

@@ -293,12 +293,14 @@ ul li {
 .modal__container {
   background-color: #333a40;
   padding: 15px;
-  /* max-width: 500px;  */
-  width: 76vw;
+  width: 500px; 
   max-height: 100vh;
   border-radius: 4px;
   overflow-y: auto;
   box-sizing: border-box;
+}
+#modal-stats .modal__container {
+  width: 76vw;
 }
 .modal__header {
   display: flex;
