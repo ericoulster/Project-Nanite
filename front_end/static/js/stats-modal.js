@@ -181,15 +181,15 @@ const statsModal_ProgressBar = (current_wc, wordgoal) => {
 const statsModal_AddSidebar = (deadline, current_streak, weekBar) => {
     document.getElementById("stats-deadline").innerHTML = `<p>Current Deadline <br/> <span class="emph">${deadline}</span></p>`;
     document.getElementById("stats-currStreak").innerHTML = `<p>Current Streak <br/> <span class="emph">${current_streak ? current_streak : "None"}</span></p>`;
-    var sidebarWidth = parseInt(window.getComputedStyle(document.querySelector("#stats-sideBar")).width.slice(0, -2)) * .95;
+    var sidebarWidth = parseInt(window.getComputedStyle(document.querySelector("#stats-sideBar")).width.slice(0, -2)) * .80;
     var weekData = statsModal_CreateWeekData(weekBar.weekmeans);
     var maxday = weekBar.maxday
 
-    var fontMultiplier;
-    if (sidebarWidth > 250) {
-        fontMultiplier = 1.5;
-    } else if (sidebarWidth > 150) {
-        fontMultiplier = 1.3;
+    var fontMultiplier, marginMultiplier;
+    if (sidebarWidth > 150) {
+        fontMultiplier = 1.65;
+    } else if (sidebarWidth > 120) {
+        fontMultiplier = 1.25;
     } else {
         fontMultiplier = 1;
     }
@@ -198,7 +198,7 @@ const statsModal_AddSidebar = (deadline, current_streak, weekBar) => {
     //  var margin = {top: 30, right: 30, bottom: 70, left: 60},
     //       width = sidebarWidth - margin.left - margin.right,
     //       height = (sidebarWidth * .5) - margin.top - margin.bottom;
-    var margin = {top: (sidebarWidth * .5), right: (sidebarWidth * .08), bottom: (sidebarWidth * .5), left: (sidebarWidth * .08)},
+    var margin = {top: (sidebarWidth * .4), right: (sidebarWidth * .08), bottom: (sidebarWidth * .3), left: (sidebarWidth * .07)},
         width = sidebarWidth * .97,
         height = (sidebarWidth * .28) 
 
@@ -254,7 +254,7 @@ const statsModal_AddSidebar = (deadline, current_streak, weekBar) => {
         .attr("y", 0 - (margin.top / 2))
         .attr("text-anchor", "middle")  
         .attr('font-family', 'Archivo')
-        .attr('font-size', `${12 * fontMultiplier}px`)
+        .attr('font-size', `${9 * fontMultiplier}px`)
         .style('fill', "#E3E3E3")
         // .text("You are most active on:" + maxday)
         .text("Most Active: " + maxday);

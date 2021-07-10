@@ -3,6 +3,12 @@
  * ====================================================================/
  */ 
 
+/* For whatever reason, it kept adding this margin to this p tag and I was not about that life*/
+.modal__container p {
+    margin-top: .5rem !important;
+    margin-bottom: .5rem !important;
+}
+
  #stats-wordRow {
     width: 100%;
     display: flex;
@@ -31,7 +37,6 @@
     margin: 0 auto;
     padding-top: 30px;
     display: flex;
-    align-items: center;
     justify-content: space-between;
 }
 
@@ -80,43 +85,47 @@
     color: #fff;
 }
 
-
-/* For whatever reason, it kept adding this margin to this p tag and I was not about that life*/
-.numBarsContainer p {
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-}
-
 #stats-sideBar {
     margin-top: 0;
     padding-top: 0;
     display: flex;
     flex-direction: column;
-    width: 25%;
+    justify-content: space-between;
+    width: 26%;
 }
 
 #stats-deadline {
     margin-top: 0;
     padding-top: 0;
-    font-size: 12px;
+    font-size: 11px;
     font-family: 'Archivo';
     text-align: center;
+    border-radius: .45rem;
+    border: 4px solid #22262a;
 }
 
 #stats-deadline .emph {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: bolder;
 }
 
 #stats-currStreak {
-    font-size: 12px;
+    font-size: 11px;
     font-family: 'Archivo';
     text-align: center;
+    border-radius: .45rem;
+    border: 4px solid #22262a;
 }
 
 #stats-currStreak .emph {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bolder;
+}
+
+#stats-mostActive {
+    border-radius: .45rem;
+    border: 4px solid #22262a;
+    text-align: center;
 }
 
 
@@ -143,12 +152,12 @@ line {
 @media only screen and (min-width: 900px) {
     .wcDiv {
         flex-basis: 35%;
-        /* font-size: 13px; */
+        font-size: 13px;
         transition-duration: 2s;
     }   
-    /* .wcDiv .emph {
+    .wcDiv .emph {
         font-size: 15px;
-    } */
+    }
     #selDataset {
         font-size: 14px;
     }
