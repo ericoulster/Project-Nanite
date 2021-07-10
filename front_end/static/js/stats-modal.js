@@ -492,14 +492,14 @@ const statsModal_UpdateGraph = (barData) => {
     // =================================================/
     // REMOVING -- Not in Figma
     // ================================================/
-    // wcsvg.append("text")         // Add the Y Axis
-    // .attr("x", (width / 2))             
-    // .attr("y", 0 - (margin.top / 2))
-    // .attr("text-anchor", "middle")  
-    // .style("font-size", `${13 * fontMultiplier}px`) 
-    // .attr('font-family', 'Archivo') 
-    // .style("fill", "#E3E3E3")
-    // .text(`Wordcount Per ${time_name}`);
+    wcsvg.append("text")         // Add the Y Axis
+    .attr("x", (width / 2))             
+    .attr("y", 0 - (margin.top / 2))
+    .attr("text-anchor", "middle")  
+    .style("font-size", `${13 * fontMultiplier}px`) 
+    .attr('font-family', 'Archivo') 
+    .style("fill", "#E3E3E3")
+    .text(`Wordcount Per ${time_name}`);
 
     //Erasing previous values when new ones pop up
     wcsvg.selectAll("g").select(".domain").remove();
