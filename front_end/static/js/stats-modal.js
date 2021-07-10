@@ -200,7 +200,7 @@ const statsModal_AddSidebar = (deadline, current_streak, weekBar) => {
     //       height = (sidebarWidth * .5) - margin.top - margin.bottom;
     var margin = {top: (sidebarWidth * .5), right: (sidebarWidth * .08), bottom: (sidebarWidth * .5), left: (sidebarWidth * .08)},
         width = sidebarWidth * .97,
-        height = (sidebarWidth * .38) 
+        height = (sidebarWidth * .28) 
 
     // append the svg object to the body of the page
     var weekSvg = d3.select("#stats-mostActive")
@@ -377,9 +377,9 @@ const statsModal_UpdateGraph = (barData) => {
     // var margin = {top: 30, right: 30, bottom: 70, left: 60},
     //     width = barWidth - margin.left - margin.right,
     //     height = (barWidth * .67) - margin.top - margin.bottom;
-    var margin = {top: barWidth * .08, right: barWidth * .05, bottom: barWidth * .2, left: barWidth * .12},
+    var margin = {top: barWidth * .08, right: barWidth * .05, bottom: barWidth * .15, left: barWidth * .12},
         width = barWidth - margin.left - margin.right,
-        height = (barWidth * .67) - margin.top - margin.bottom;
+        height = (barWidth * .55) - margin.top - margin.bottom; // .67
     
     // setting the width and padding of the userInputDiv to match the graph
     sel_userInputRow.style.width = width + margin.left - margin.right;
@@ -414,7 +414,7 @@ const statsModal_UpdateGraph = (barData) => {
       .attr("transform", "translate(-10,0)rotate(-45)")
       .attr('font-family', 'Archivo')
             .attr('font-weight', 100)
-            .attr('font-size', `${10 * fontMultiplier}px`)
+            .attr('font-size', `${9 * fontMultiplier}px`)
             .style("text-anchor", "end")
             .style('fill', "#E3E3E3");
 
