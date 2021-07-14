@@ -5,8 +5,8 @@
 
 /* For whatever reason, it kept adding this margin to this p tag and I was not about that life*/
 .modal__container p {
-    margin-top: .5rem !important;
-    margin-bottom: .5rem !important;
+    margin-top: .25rem !important;
+    margin-bottom: .25rem !important;
 }
 
  #stats-wordRow {
@@ -21,7 +21,7 @@
     margin-right: .5em;
     text-align: center;
     border-radius: .45rem;
-    border: 4px solid #22262a;
+    border: 3px solid #22262a;
     font-family: 'Archivo';
     font-size: 11px;
     color:#aaaaaa;
@@ -35,7 +35,7 @@
 #stats-body {
     width: 98%;
     margin: 0 auto;
-    padding-top: 30px;
+    padding-top: 20px;
     display: flex;
     justify-content: space-between;
 }
@@ -93,38 +93,47 @@
     justify-content: space-between;
     width: 26%;
 }
-
+#stats-cal-link {
+    text-align: center;
+}
+#stats-cal-link a.btn {
+    margin-bottom: 5px;
+    text-align: center;
+    font-size: 10px;
+    font-weight: bolder;
+}
 #stats-deadline {
-    margin-top: 0;
-    padding-top: 0;
-    font-size: 11px;
+    margin: 2px 0;
+    font-size: 10px;
     font-family: 'Archivo';
     text-align: center;
     border-radius: .45rem;
-    border: 4px solid #22262a;
+    border: 3px solid #22262a;
 }
 
 #stats-deadline .emph {
-    font-size: 13px;
-    font-weight: bolder;
-}
-
-#stats-currStreak {
-    font-size: 11px;
-    font-family: 'Archivo';
-    text-align: center;
-    border-radius: .45rem;
-    border: 4px solid #22262a;
-}
-
-#stats-currStreak .emph {
     font-size: 12px;
     font-weight: bolder;
 }
 
-#stats-mostActive {
+#stats-currStreak {
+    margin: 2px 0;
+    font-size: 10px;
+    font-family: 'Archivo';
+    text-align: center;
     border-radius: .45rem;
-    border: 4px solid #22262a;
+    border: 3px solid #22262a;
+}
+
+#stats-currStreak .emph {
+    font-size: 11px;
+    font-weight: bolder;
+}
+
+#stats-mostActive {
+    margin: 2px 0;
+    border-radius: .45rem;
+    border: 3px solid #22262a;
     text-align: center;
 }
 
