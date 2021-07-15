@@ -423,11 +423,11 @@ const statsModal_UpdateGraph = (barData) => {
 
   // max of Y axis
   var maxY = d3.max(barData, (wordplot) => {
-      if (wordplot.Wcount > wordplot.Wtarget) {
+      if (wordplot.Wcount > wordplot.Wtarget_sum) {
           return wordplot.Wcount;
       }
       else {
-          return wordplot.Wtarget;
+          return wordplot.Wtarget_sum;
       }
     });
 
@@ -455,14 +455,29 @@ const statsModal_UpdateGraph = (barData) => {
   // Bars
     var bar = wcsvg.selectAll("bar")
         .data(barData)
-        .enter()
-        .append("rect")
+        .enter();
+        
+        bar.append("rect")
         .attr("x", function(d) { return x(d.Wdate); })
         .attr("y", function(d) { return y(d.Wcount); })
         .attr("width", x.bandwidth())
         .attr("height", function(d) { return height - y(d.Wcount); })
         .attr("ry", 2)
         .attr("fill", "#F6D55C");
+
+    // bar.append("text")
+    //     .text((d) => {
+    //         return d.Wcount;
+    //     })
+    //     .attr("text-anchor", "middle")
+    //     .attr("dx", (d, i) => {
+    //         return i + x(d.Wdate) + (x.bandwidth() * .5);
+    //     })
+    //     .attr("dy", (d) => {
+    //         return (height - y(d.Wcount)) + .75
+    //     })
+    //     .attr("font-size", 15)
+    //     .attr("fill", "#FFFFFF")
 
     console.log(`What is barData?`)
     console.log(barData);
@@ -488,11 +503,9 @@ const statsModal_UpdateGraph = (barData) => {
         .attr("cy", function(d) { return y(d.Wtarget_sum) }) // Prev d.Wtarget
         .attr("fill", "#F6D55C")
         .attr("stroke", "#474F56")
-        .attr("r", (4 * fontMultiplier)); // 4
+        .attr("r", (4 * fontMultiplier));
 
-    // =================================================/
-    // REMOVING -- Not in Figma
-    // ================================================/
+        
     wcsvg.append("text")         // Add the Y Axis
     .attr("x", (width / 2))             
     .attr("y", 0 - (margin.top / 2))

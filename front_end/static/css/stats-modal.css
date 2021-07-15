@@ -97,6 +97,7 @@
     text-align: center;
 }
 #stats-cal-link a.btn {
+    width: 90%;
     margin-bottom: 5px;
     text-align: center;
     font-size: 10px;
@@ -173,29 +174,34 @@ line {
     .numBarsContainer {
         font-size: 14px;
     }
+    #stats-cal-link a.btn {
+        font-size: 15px;
+        font-weight: bolder;
+    }
     #stats-deadline {
         margin-top: 0;
         padding-top: 0;
-        font-size: 16px;
+        font-size: 15px;
         font-family: 'Archivo';
         text-align: center;
+        border: 4px solid #22262a;
     }
-    
     #stats-deadline .emph {
-        font-size: 18px;
+        font-size: 17px;
         font-weight: bolder;
     }
     #userInputRow {
         padding: 0;
     }
     #stats-currStreak {
-        font-size: 16px;
+        font-size: 15px;
         font-family: 'Archivo';
         text-align: center;
+        border: 4px solid #22262a;
     }
     
     #stats-currStreak .emph {
-        font-size: 18px;
+        font-size: 17px;
         font-weight: bolder;
     }
     #stats-barChart {
@@ -206,5 +212,11 @@ line {
     }
     #stats-body {
         padding-top: 10px;
+    }
+    #stats-mostActive {
+        margin: 2px 0;
+        border-radius: .45rem;
+        border: 4px solid #22262a;
+        text-align: center;
     }
 }
