@@ -1,8 +1,4 @@
-var data;
-
 const statsModal_Populate = (data) => {
-    console.log(data);
-    data = data
     // Adds the base html to the modal
     statsModal_AddBones();
     // Adds the progress bar to the modal
@@ -73,10 +69,10 @@ const statsModal_AddBones = () => {
    **/
 const statsModal_WordCountStats = (mean_wc, max_wc) => {
     let toAdd_meanwc = mean_wc ? Math.round(mean_wc, 1) : "N/A"
-    document.getElementById("stats-avgWC").innerHTML = `<p>Avg daily word count: <span class="emph">${toAdd_meanwc}</span></p>`;
+    document.getElementById("stats-avgWC").innerHTML = `<p>Avg daily word count: <span class="emph">${commaSeperateThis(toAdd_meanwc)}</span></p>`;
 
     let toAdd_maxwc = max_wc ? max_wc : "N/A"
-    document.getElementById("stats-highestWC").innerHTML = `<p>Highest daily word count: <span class="emph">${toAdd_maxwc}</span></p>`;
+    document.getElementById("stats-highestWC").innerHTML = `<p>Highest daily word count: <span class="emph">${commaSeperateThis(toAdd_maxwc)}</span></p>`;
 }
 /* ================================================================================================/
    *   PROGRESS BAR STUFF
@@ -508,4 +504,9 @@ const statsModal_UpdateGraph = (fullData) => {
 
     //Erasing previous values when new ones pop up
     wcsvg.selectAll("g").select(".domain").remove();
+}
+
+// Currently assumes num to be non-string
+const commaSeperateThis = (num) => {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }
