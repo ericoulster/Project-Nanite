@@ -1,5 +1,8 @@
+var data;
+
 const statsModal_Populate = (data) => {
     console.log(data);
+    data = data
     // Adds the base html to the modal
     statsModal_AddBones();
     // Adds the progress bar to the modal
@@ -182,7 +185,12 @@ const statsModal_ProgressBar = (current_wc, wordgoal) => {
    * ===============================================================================================/
    **/
 const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar) => {
-    document.getElementById("stats-deadline").innerHTML = `<p>Current Deadline <br/> <span class="emph">${deadline}</span></p>`;
+    var deadline_full_date = new Date(Date.parse(deadline));
+    var deadline_date = deadline_full_date.getDate();
+    var deadline_year = deadline_full_date.getYear(); 
+    var deadline_month = deadline_full_date.toLocaleString('default', { month: 'long' })
+    var rearranged_date = `${deadline_month} ${deadline_date}, ${deadline_year}`
+    document.getElementById("stats-deadline").innerHTML = `<p>Current Deadline <br/> <span class="emph">${rearranged_date}</span></p>`;
     document.getElementById("stats-currStreak").innerHTML = `<p>Current Streak: <span class="emph">${current_streak ? current_streak : "None"}</span></p>`;
     document.getElementById("stats-longestStreak").innerHTML = `<p>Longest Streak: <span class="emph">${longest_streak ? longest_streak : "None"}</span></p>`;
     
