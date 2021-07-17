@@ -131,6 +131,20 @@
     font-weight: bolder;
 }
 
+#stats-longestStreak {
+    margin: 2px 0;
+    font-size: 10px;
+    font-family: 'Archivo';
+    text-align: center;
+    border-radius: .45rem;
+    border: 3px solid #22262a;
+}
+
+#stats-longestStreak .emph {
+    font-size: 11px;
+    font-weight: bolder;
+}
+
 #stats-mostActive {
     margin: 2px 0;
     border-radius: .45rem;
@@ -157,6 +171,16 @@ line {
     stroke: #333A40;
     stroke-linecap: round;
 }
+
+.tooltip {
+    background-color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 15px;
+    min-width: 400px;
+    text-align: left;
+    color: white;
+  }
 
 
 @media only screen and (min-width: 900px) {

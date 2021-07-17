@@ -1,4 +1,5 @@
 const statsModal_Populate = (data) => {
+    console.log(data);
     // Adds the base html to the modal
     statsModal_AddBones();
     // Adds the progress bar to the modal
@@ -6,7 +7,7 @@ const statsModal_Populate = (data) => {
     // Adds the avg daily word count && highest daily word count to the modal
     statsModal_WordCountStats(data.mean_wc, data.max_wc);
     // Adds the current deadline, current steak, and most active chart
-    statsModal_AddSidebar(data.word_goal_and_deadline.deadline, data.current_streak, data.weekBar);
+    statsModal_AddSidebar(data.word_goal_and_deadline.deadline, data.current_streak, data.max_streak, data.weekBar);
     // Adds the daily / weekly / monthly bar chart
     statsModal_UpdateGraph(data.barData);
 
@@ -55,6 +56,7 @@ const statsModal_AddBones = () => {
             <div id="stats-cal-link"><a class="btn">Calendar View</a></div>
             <div id="stats-deadline"></div>
             <div id="stats-currStreak"></div>
+            <div id="stats-longestStreak"></div>
             <div id="stats-mostActive"></div>
         </div>
         </div>
@@ -179,9 +181,11 @@ const statsModal_ProgressBar = (current_wc, wordgoal) => {
    *   MISC SIDELINE STUFF
    * ===============================================================================================/
    **/
-const statsModal_AddSidebar = (deadline, current_streak, weekBar) => {
+const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar) => {
     document.getElementById("stats-deadline").innerHTML = `<p>Current Deadline <br/> <span class="emph">${deadline}</span></p>`;
-    document.getElementById("stats-currStreak").innerHTML = `<p>Current Streak <br/> <span class="emph">${current_streak ? current_streak : "None"}</span></p>`;
+    document.getElementById("stats-currStreak").innerHTML = `<p>Current Streak: <span class="emph">${current_streak ? current_streak : "None"}</span></p>`;
+    document.getElementById("stats-longestStreak").innerHTML = `<p>Longest Streak: <span class="emph">${longest_streak ? longest_streak : "None"}</span></p>`;
+    
     var sidebarWidth = parseInt(window.getComputedStyle(document.querySelector("#stats-sideBar")).width.slice(0, -2)) * .80;
     var weekData = statsModal_CreateWeekData(weekBar.weekmeans);
     var maxday = weekBar.maxday
@@ -297,14 +301,16 @@ const statsModal_CreateWeekData = (weekData) => {
  * ===============================================================================================/
  **/
 
-const statsModal_UpdateGraph = (barData) => {
+const statsModal_UpdateGraph = (fullData) => {
     var sel_userInputRow = document.getElementById("userInputRow");
     var sel_numBars = document.getElementById("numBars");
     var barWidth = parseInt(window.getComputedStyle(document.querySelector("#stats-barChart")).width.slice(0, -2));
     // d3.selectAll("svg").remove();
     document.getElementById("wordcounter").innerHTML = "";
 
-    console.log(barWidth)
+    console.log(barWidth);
+    console.log(fullData);
+    
     var fontMultiplier;
     if (barWidth > 750) {
         fontMultiplier = 1.5;
@@ -317,11 +323,10 @@ const statsModal_UpdateGraph = (barData) => {
     // data = buildWordChartData(data.);
     var dropdownMenu = d3.select("#selDataset");
     var granularity = dropdownMenu.property("value");
-    var time_name, numBars;
+    var time_name, numBars, barData;
 
     // Originally takes in numbars value as string
     var rawNumBars = parseInt(sel_numBars.value);
-    var numBars; 
     // Making sure user actually did type in a uint
     // Numbars is negative so that (later) the slice will nab the most recent
     if (!isNaN(rawNumBars) && rawNumBars > 0){
@@ -332,34 +337,25 @@ const statsModal_UpdateGraph = (barData) => {
         switch (granularity) {
         case "Daily":
             numBars = -7;
+            barData = fullData.daily;
+            time_name = "Day";
             break;
         case "Weekly":
             numBars = -3;
+            barData = fullData.weekly;
+            time_name = "Week";
             break;
-        case "Daily":
-            numBars = -3;
+        case "Monthly":
+            numBars = -3;    
+            barData = fullData.monthly;
+            time_name = "Month";
             break;
         default:
             numBars = -7;
+            barData = fullData.daily;
+            time_name = "Day;"
         } 
     }
-
-    if (granularity === 'Daily') {
-        barData = barData.daily;
-        time_name = "Day";
-    }
-    else if (granularity === 'Weekly') {
-        barData = barData.weekly;
-        time_name = "Week";
-    }
-    else if (granularity === 'Monthly') {
-        barData = barData.monthly;
-        time_name = "Month";
-    }
-    else {
-        barData = data.barData.daily;
-        time_name = "Day;"
-    };
 
     // Actually slicing the data based on user's numBar input
     // First ensuring that the user doesn't break things by inputting a higher numBars
@@ -464,21 +460,7 @@ const statsModal_UpdateGraph = (barData) => {
         .attr("height", function(d) { return height - y(d.Wcount); })
         .attr("ry", 2)
         .attr("fill", "#F6D55C");
-
-    // bar.append("text")
-    //     .text((d) => {
-    //         return d.Wcount;
-    //     })
-    //     .attr("text-anchor", "middle")
-    //     .attr("dx", (d, i) => {
-    //         return i + x(d.Wdate) + (x.bandwidth() * .5);
-    //     })
-    //     .attr("dy", (d) => {
-    //         return (height - y(d.Wcount)) + .75
-    //     })
-    //     .attr("font-size", 15)
-    //     .attr("fill", "#FFFFFF")
-
+    
     console.log(`What is barData?`)
     console.log(barData);
     // Line
