@@ -332,49 +332,39 @@ const statsModal_UpdateGraph = (fullData) => {
     // data = buildWordChartData(data.);
     var dropdownMenu = d3.select("#selDataset");
     var granularity = dropdownMenu.property("value");
-    var time_name, numBars;
-    var barData = fullData;
+    var time_name, numBars, barData;
 
     // Originally takes in numbars value as string
     var rawNumBars = parseInt(sel_numBars.value);
 
-
-    console.log(granularity)
-
     // Making sure user actually did type in a uint
     // Numbars is negative so that (later) the slice will nab the most recent
-    if (!isNaN(rawNumBars) && rawNumBars < 0){
+    if (!isNaN(rawNumBars) && rawNumBars > 0){
         console.log(`Did not run switch because rnb = ${rawNumBars}`);
         numBars = rawNumBars * -1;
     } else{
         // Sets the default based on what the granularity is
-        // Once again, we're using negatives so the slice will nab the most recent
-        switch (granularity) {
+        numBars = granularity == "Daily" ? -7 :
+                  granularity == "Weekly" ? -3 : -1;
+    }
+
+    switch (granularity) {
         case "Daily":
-            numBars = -7;
-            barData = barData.daily;
+            barData = fullData.daily;
             time_name = "Day";
             break;
         case "Weekly":
-            numBars = -3;
-            barData = barData.weekly;
+            barData = fullData.weekly;
             time_name = "Week";
             break;
-        case "Monthly":
-            numBars = -3;    
-            barData = barData.monthly;
+        case "Monthly":    
+            barData = fullData.monthly;
             time_name = "Month";
             break;
         default:
-            numBars = -7;
-            barData = barData.daily;
+            barData = fullData.daily;
             time_name = "Day;"
         } 
-    }
-
-    console.log("v BarData");
-    console.log(barData);
-    console.log(barData.length);
 
     // Actually slicing the data based on user's numBar input
     // First ensuring that the user doesn't break things by inputting a higher numBars
@@ -394,9 +384,9 @@ const statsModal_UpdateGraph = (fullData) => {
     // var margin = {top: 30, right: 30, bottom: 70, left: 60},
     //     width = barWidth - margin.left - margin.right,
     //     height = (barWidth * .67) - margin.top - margin.bottom;
-    var margin = {top: barWidth * .08, right: barWidth * .05, bottom: barWidth * .15, left: barWidth * .12},
+    var margin = {top: barWidth * .15, right: barWidth * .05, bottom: barWidth * .15, left: barWidth * .12},
         width = barWidth - margin.left - margin.right,
-        height = (barWidth * .55) - margin.top - margin.bottom; // .67
+        height = (barWidth * .65) - margin.top - margin.bottom; // .67
     
     // setting the width and padding of the userInputDiv to match the graph
     sel_userInputRow.style.width = width + margin.left - margin.right;
