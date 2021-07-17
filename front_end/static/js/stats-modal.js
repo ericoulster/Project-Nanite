@@ -209,28 +209,28 @@ const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar
 
     // append the svg object to the body of the page
     var weekSvg = d3.select("#stats-mostActive")
-    .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
 
     var x = d3.scaleBand()
-    .range([ 0, width ])
-    .domain(weekData.map(function(d) { return d.Day; }))
-    .padding(0.44);
+        .range([ 0, width ])
+        .domain(weekData.map(function(d) { return d.Day; }))
+        .padding(0.44); 
 
     weekSvg.append("g")
-    .attr("transform", "translate(0," + (height+10) + ")")
-    .call(d3.axisBottom(x).tickSize(0))
-    .call(g => g.select(".domain").remove())
-    .selectAll("text")
-    .attr('font-family', 'Archivo')
-            .attr('font-weight', 100)
-            .attr('font-size', `${7 * fontMultiplier}px`)
-            .style("text-anchor", "middle")
-            .style('fill', "#E3E3E3");
+        .attr("transform", "translate(0," + (height+10) + ")")
+        .call(d3.axisBottom(x).tickSize(0))
+        .call(g => g.select(".domain").remove())
+        .selectAll("text")
+        .attr('font-family', 'Archivo')
+                .attr('font-weight', 100)
+                .attr('font-size', `${7 * fontMultiplier}px`)
+                .style("text-anchor", "middle")
+                .style('fill', "#E3E3E3");
 
 
     // max of Y axis
@@ -238,8 +238,8 @@ const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar
     
     // Y axis
     var y = d3.scaleLinear()
-    .domain([0, maxY])
-    .range([ height, 0]);
+        .domain([0, maxY])
+        .range([ height, 0]);
 
     var bar = weekSvg.selectAll("bar")
     .data(weekData)
@@ -250,9 +250,7 @@ const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar
     .attr("width", x.bandwidth())
     .attr("height", function(d) { return height - y(d.Wcount); })
     .attr("ry", 3)
-    .attr("fill", function(d) {if (d.IsMax === false) {return "#1F2428"} else {return "#F6D55C"}}
-    
-    );
+    .attr("fill", function(d) {if (d.IsMax === false) {return "#1F2428"} else {return "#F6D55C"}});
 
     weekSvg.append("text")
         .attr("x", (width / 2))             
@@ -400,52 +398,52 @@ const statsModal_UpdateGraph = (fullData) => {
     //var data_range = 
 
     // X axis
-  var x = d3.scaleBand()
-    .range([ 0, width ])
-    .domain(barData.map(function(d) { return d.Wdate; }))
-    .padding(0.3);
+    var x = d3.scaleBand()
+        .range([ 0, width ])
+        .domain(barData.map(function(d) { return d.Wdate; }))
+        .padding(0.3);
   
     wcsvg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x).tickSize(0))
-    .selectAll("text")
-      .attr("transform", "translate(-10,0)rotate(-45)")
-      .attr('font-family', 'Archivo')
-            .attr('font-weight', 100)
-            .attr('font-size', `${9 * fontMultiplier}px`)
-            .style("text-anchor", "end")
-            .style('fill', "#E3E3E3");
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x).tickSize(0))
+        .selectAll("text")
+        .attr("transform", "translate(-10,0)rotate(-45)")
+        .attr('font-family', 'Archivo')
+                .attr('font-weight', 100)
+                .attr('font-size', `${9 * fontMultiplier}px`)
+                .style("text-anchor", "end")
+                .style('fill', "#E3E3E3");
 
 
   // max of Y axis
-  var maxY = d3.max(barData, (wordplot) => {
-      if (wordplot.Wcount > wordplot.Wtarget_sum) {
-          return wordplot.Wcount;
-      }
-      else {
-          return wordplot.Wtarget_sum;
-      }
-    });
+    var maxY = d3.max(barData, (wordplot) => {
+        if (wordplot.Wcount > wordplot.Wtarget_sum) {
+            return wordplot.Wcount;
+        }
+        else {
+            return wordplot.Wtarget_sum;
+        }
+        });
 
     
   // Y axis
-  var y = d3.scaleLinear()
-    .domain([0, maxY])
-    .range([ height, 0]);
+    var y = d3.scaleLinear()
+        .domain([0, maxY])
+        .range([ height, 0]);
   
     wcsvg.append("g")
-    .call(d3.axisLeft(y).tickSize(0))
-    .attr('font-family', 'Archivo')
-    .selectAll("text")
-      .style('fill', "#E3E3E3").attr('font-size', `${10 * fontMultiplier}px`);
+        .call(d3.axisLeft(y).tickSize(0))
+        .attr('font-family', 'Archivo')
+        .selectAll("text")
+        .style('fill', "#E3E3E3").attr('font-size', `${10 * fontMultiplier}px`);
 
   // add the Y gridlines
-  wcsvg.append("g")			
+    wcsvg.append("g")			
       .attr("class", "grid")
       .call(d3.axisLeft(y)
           .tickSize(-width)
           .tickFormat("")
-          .ticks(6)
+          .ticks(10) //6
       );
       
   // Bars
@@ -489,13 +487,13 @@ const statsModal_UpdateGraph = (fullData) => {
 
         
     wcsvg.append("text")         // Add the Y Axis
-    .attr("x", (width / 2))             
-    .attr("y", 0 - (margin.top / 2))
-    .attr("text-anchor", "middle")  
-    .style("font-size", `${13 * fontMultiplier}px`) 
-    .attr('font-family', 'Archivo') 
-    .style("fill", "#E3E3E3")
-    .text(`Wordcount Per ${time_name}`);
+        .attr("x", (width / 2))             
+        .attr("y", 0 - (margin.top / 2))
+        .attr("text-anchor", "middle")  
+        .style("font-size", `${13 * fontMultiplier}px`) 
+        .attr('font-family', 'Archivo') 
+        .style("fill", "#E3E3E3")
+        .text(`Wordcount Per ${time_name}`);
 
     //Erasing previous values when new ones pop up
     wcsvg.selectAll("g").select(".domain").remove();
