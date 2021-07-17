@@ -185,9 +185,10 @@ const statsModal_ProgressBar = (current_wc, wordgoal) => {
    * ===============================================================================================/
    **/
 const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar) => {
-    var deadline_full_date = new Date(Date.parse(deadline));
+    var split_deadline = deadline.split("-")
+    var deadline_full_date = new Date(split_deadline[0], split_deadline[1] - 1, split_deadline[2])
     var deadline_date = deadline_full_date.getDate();
-    var deadline_year = deadline_full_date.getYear(); 
+    var deadline_year = deadline_full_date.getFullYear(); 
     var deadline_month = deadline_full_date.toLocaleString('default', { month: 'long' })
     var rearranged_date = `${deadline_month} ${deadline_date}, ${deadline_year}`
     document.getElementById("stats-deadline").innerHTML = `<p>Current Deadline <br/> <span class="emph">${rearranged_date}</span></p>`;
