@@ -74,6 +74,7 @@ const statsModal_WordCountStats = (mean_wc, max_wc) => {
     let toAdd_maxwc = max_wc ? max_wc : "N/A"
     document.getElementById("stats-highestWC").innerHTML = `<p>Highest daily word count: <span class="emph">${commaSeperateThis(toAdd_maxwc)}</span></p>`;
 }
+
 /* ================================================================================================/
    *   PROGRESS BAR STUFF
    * ===============================================================================================/
@@ -189,8 +190,8 @@ const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar
     var rearranged_date = `${deadline_month} ${deadline_date}, ${deadline_year}`
 
     document.getElementById("stats-deadline").innerHTML = `<p>Current Deadline <br/> <span class="emph">${rearranged_date}</span></p>`;
-    document.getElementById("stats-currStreak").innerHTML = `<p>Current Streak: <span class="emph">${current_streak ? current_streak : "None"}</span></p>`;
-    document.getElementById("stats-longestStreak").innerHTML = `<p>Longest Streak: <span class="emph">${longest_streak ? longest_streak : "None"}</span></p>`;
+    document.getElementById("stats-currStreak").innerHTML = `<p>Current Streak: <span class="emph">${current_streak ? current_streak : 0}</span></p>`;
+    document.getElementById("stats-longestStreak").innerHTML = `<p>Longest Streak: <span class="emph">${longest_streak ? longest_streak : 0}</span></p>`;
     
     var sidebarWidth = parseInt(window.getComputedStyle(document.querySelector("#stats-sideBar")).width.slice(0, -2)) * .80;
     var weekData = statsModal_CreateWeekData(weekBar.weekmeans);
@@ -311,10 +312,6 @@ const statsModal_UpdateGraph = (fullData) => {
     var barWidth = parseInt(window.getComputedStyle(document.querySelector("#stats-barChart")).width.slice(0, -2));
     // d3.selectAll("svg").remove();
     document.getElementById("wordcounter").innerHTML = "";
-
-    console.log(barWidth);
-    console.log("v Full Data");
-    console.log(fullData);
     
     var fontMultiplier;
     if (barWidth > 750) {
@@ -336,7 +333,6 @@ const statsModal_UpdateGraph = (fullData) => {
     // Making sure user actually did type in a uint
     // Numbars is negative so that (later) the slice will nab the most recent
     if (!isNaN(rawNumBars) && rawNumBars > 0){
-        console.log(`Did not run switch because rnb = ${rawNumBars}`);
         numBars = rawNumBars * -1;
     } else{
         // Sets the default based on what the granularity is
@@ -466,8 +462,6 @@ const statsModal_UpdateGraph = (fullData) => {
         .attr("ry", 2)
         .attr("fill", "#F6D55C");
     
-    console.log(`What is barData?`)
-    console.log(barData);
     // Line
     wcsvg.append("path")
         .datum(barData)
