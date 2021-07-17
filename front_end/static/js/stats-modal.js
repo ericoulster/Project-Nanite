@@ -191,6 +191,7 @@ const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar
     var deadline_year = deadline_full_date.getFullYear(); 
     var deadline_month = deadline_full_date.toLocaleString('default', { month: 'long' })
     var rearranged_date = `${deadline_month} ${deadline_date}, ${deadline_year}`
+
     document.getElementById("stats-deadline").innerHTML = `<p>Current Deadline <br/> <span class="emph">${rearranged_date}</span></p>`;
     document.getElementById("stats-currStreak").innerHTML = `<p>Current Streak: <span class="emph">${current_streak ? current_streak : "None"}</span></p>`;
     document.getElementById("stats-longestStreak").innerHTML = `<p>Longest Streak: <span class="emph">${longest_streak ? longest_streak : "None"}</span></p>`;
@@ -199,7 +200,7 @@ const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar
     var weekData = statsModal_CreateWeekData(weekBar.weekmeans);
     var maxday = weekBar.maxday
 
-    var fontMultiplier, marginMultiplier;
+    var fontMultiplier;
     if (sidebarWidth > 150) {
         fontMultiplier = 1.65;
     } else if (sidebarWidth > 120) {
@@ -316,6 +317,7 @@ const statsModal_UpdateGraph = (fullData) => {
     document.getElementById("wordcounter").innerHTML = "";
 
     console.log(barWidth);
+    console.log("v Full Data");
     console.log(fullData);
     
     var fontMultiplier;
@@ -330,13 +332,19 @@ const statsModal_UpdateGraph = (fullData) => {
     // data = buildWordChartData(data.);
     var dropdownMenu = d3.select("#selDataset");
     var granularity = dropdownMenu.property("value");
-    var time_name, numBars, barData;
+    var time_name, numBars;
+    var barData = fullData;
 
     // Originally takes in numbars value as string
     var rawNumBars = parseInt(sel_numBars.value);
+
+
+    console.log(granularity)
+
     // Making sure user actually did type in a uint
     // Numbars is negative so that (later) the slice will nab the most recent
-    if (!isNaN(rawNumBars) && rawNumBars > 0){
+    if (!isNaN(rawNumBars) && rawNumBars < 0){
+        console.log(`Did not run switch because rnb = ${rawNumBars}`);
         numBars = rawNumBars * -1;
     } else{
         // Sets the default based on what the granularity is
@@ -344,25 +352,29 @@ const statsModal_UpdateGraph = (fullData) => {
         switch (granularity) {
         case "Daily":
             numBars = -7;
-            barData = fullData.daily;
+            barData = barData.daily;
             time_name = "Day";
             break;
         case "Weekly":
             numBars = -3;
-            barData = fullData.weekly;
+            barData = barData.weekly;
             time_name = "Week";
             break;
         case "Monthly":
             numBars = -3;    
-            barData = fullData.monthly;
+            barData = barData.monthly;
             time_name = "Month";
             break;
         default:
             numBars = -7;
-            barData = fullData.daily;
+            barData = barData.daily;
             time_name = "Day;"
         } 
     }
+
+    console.log("v BarData");
+    console.log(barData);
+    console.log(barData.length);
 
     // Actually slicing the data based on user's numBar input
     // First ensuring that the user doesn't break things by inputting a higher numBars
