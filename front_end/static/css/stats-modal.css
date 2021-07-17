@@ -228,6 +228,19 @@ line {
         font-size: 17px;
         font-weight: bolder;
     }
+
+    #stats-longestStreak {
+        font-size: 15px;
+        font-family: 'Archivo';
+        text-align: center;
+        border: 4px solid #22262a;
+    }
+    
+    #stats-longestStreak .emph {
+        font-size: 17px;
+        font-weight: bolder;
+    }
+
     #stats-barChart {
         width: 67%;
     }
