@@ -155,9 +155,13 @@ def return_stats_screen(p_id:int) -> dict():
     weekly = p.return_wordcounts('W')
     monthly = p.return_wordcounts('M')
     
+    #  ===========================================/
+    #  Refactor Later - Changed max_streak and current_streak to string since js 
+    #     has trouble reading numpy.int64.
+    # ==========================================/
     day_df = pd.DataFrame(daily)
-    max_streak = day_df['streak'].max()
-    current_streak = day_df['streak'].iloc[-1]
+    max_streak = int(day_df['streak'].max())
+    current_streak = int(day_df['streak'].iloc[-1])
 
     max_wc = day_df['daily_words'].max()
     mean_wc = day_df['daily_words'].mean()
@@ -177,7 +181,7 @@ def return_stats_screen(p_id:int) -> dict():
         obj["Wdate"] = obj["Wdate"].strftime("%m/%d/%y")
 
     stats_screen = {'word_goal_and_deadline': wgad, 'barData': {'daily':daily, 'weekly':weekly, 'monthly':monthly}, 'weekBar': weekBar, 'max_streak':max_streak, 'current_streak': current_streak, 'max_wc': max_wc, 'mean_wc':mean_wc, 'current_wc':current_wc}
-    
+
     return stats_screen
 
 

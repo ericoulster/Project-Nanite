@@ -1,4 +1,5 @@
 const statsModal_Populate = (data) => {
+    console.log(data);
     // Adds the base html to the modal
     statsModal_AddBones();
     // Adds the progress bar to the modal
