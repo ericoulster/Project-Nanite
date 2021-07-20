@@ -1,5 +1,4 @@
 const statsModal_Populate = (data) => {
-    console.log(data);
     // Adds the base html to the modal
     statsModal_AddBones();
     // Adds the progress bar to the modal
@@ -65,7 +64,7 @@ const statsModal_AddBones = () => {
 }
 
   /* ================================================================================================/
-   *   WORDCOUNT ROW STUFF
+   *   WORDCOUNT ROW STUFF: Average / Max Word count row render
    * ===============================================================================================/
    **/
 const statsModal_WordCountStats = (mean_wc, max_wc) => {
@@ -77,7 +76,7 @@ const statsModal_WordCountStats = (mean_wc, max_wc) => {
 }
 
 /* ================================================================================================/
-   *   PROGRESS BAR STUFF
+   *   PROGRESS BAR: Renders top progress bar
    * ===============================================================================================/
    **/
 const statsModal_ProgressBar = (current_wc, wordgoal) => {
@@ -179,7 +178,7 @@ const statsModal_ProgressBar = (current_wc, wordgoal) => {
 }
 
 /* ================================================================================================/
-   *   MISC SIDELINE STUFF
+   *   SIDEBAR STATS : Renders the deadline, streak information, and daily word count
    * ===============================================================================================/
    **/
 const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar) => {
@@ -254,7 +253,7 @@ const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar
     .enter()
     .append("rect")
     .attr("x", function(d) { return x(d.Day); })
-    .attr("y", function(d) { return y(d.Wcount); })
+    .attr("y", function(d) { return y(d.Wcount) > 0 ? y(d.Wcount) : 1; })
     .attr("width", x.bandwidth())
     .attr("height", function(d) { return height - y(d.Wcount); })
     .attr("ry", 3)
@@ -271,20 +270,25 @@ const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar
         .text("Most Active: " + maxday);
 }
 
+/* ================================================================================================/
+   *   CREATE WEEK DATE : Used by statsModal_AddSidebar to format incoming weekdata for render
+   *   
+   *   To Do: Change formattedWeek.day's value depending on render size 
+   * ===============================================================================================/
+   **/
 const statsModal_CreateWeekData = (weekData) => {
-    // Mimicing data from mockup
-    // For some reason, the styling will lump days together if they have no data, so I'm setting default to 1
+    // Creating format to ensure full week rendered in order
     var formattedWeek = [
-        {Day: "Mon", Wcount: 1, IsMax:false},
-        {Day: "Tues", Wcount: 1, IsMax:false},
-        {Day: "Wed", Wcount: 1, IsMax:false},
-        {Day: "Thu", Wcount: 1, IsMax:false},
-        {Day: "Fri", Wcount: 1, IsMax:false},
-        {Day: "Sat", Wcount: 1, IsMax:false},
-        {Day: "Sun", Wcount: 1, IsMax:false}   
+        {Day: "Mon", Wcount: 0, IsMax:false},
+        {Day: "Tues", Wcount: 0, IsMax:false},
+        {Day: "Wed", Wcount: 0, IsMax:false},
+        {Day: "Thu", Wcount: 0, IsMax:false},
+        {Day: "Fri", Wcount: 0, IsMax:false},
+        {Day: "Sat", Wcount: 0, IsMax:false},
+        {Day: "Sun", Wcount: 0, IsMax:false}   
     ]
 
-    // If the data pulled in from api has a value for the day, it'll update formatted Week
+    // If the data has a value for the day, it'll update formatted Week
     //    otherwise, it'll keep formatted Week's default values.
     formattedWeek.forEach(dotw => {
         let rawDayEntry = weekData.filter(d => d.Day == dotw.Day)[0];
@@ -303,7 +307,7 @@ const statsModal_CreateWeekData = (weekData) => {
 }
 
 /* ================================================================================================/
- *   WORD COUNT BAR CHART STUFF
+ *   WORD COUNT BAR CHART : Renders the word count bar chart  
  * ===============================================================================================/
  **/
 
@@ -314,6 +318,7 @@ const statsModal_UpdateGraph = (fullData) => {
     // d3.selectAll("svg").remove();
     document.getElementById("wordcounter").innerHTML = "";
     
+    // Increases the font size based on render size
     var fontMultiplier;
     if (barWidth > 750) {
         fontMultiplier = 1.5;
@@ -394,13 +399,7 @@ const statsModal_UpdateGraph = (fullData) => {
         .attr("transform",
                 "translate(" + margin.left + "," + margin.top + ")");
 
-  // The data (which will be separated into another file later on)
-
-    // if data_range > data_length then data_range = data_length
-    // else data_range = input for html element
-
-    //var data_range = 
-
+ 
     // X axis
     var x = d3.scaleBand()
         .range([ 0, width ])
@@ -447,7 +446,7 @@ const statsModal_UpdateGraph = (fullData) => {
       .call(d3.axisLeft(y)
           .tickSize(-width)
           .tickFormat("")
-          .ticks(10) //6
+          .ticks(10) // previously 6
       );
       
   // Bars
@@ -501,6 +500,12 @@ const statsModal_UpdateGraph = (fullData) => {
     wcsvg.selectAll("g").select(".domain").remove();
 }
 
+/* ================================================================================================/
+ *   MISC.
+ * ===============================================================================================/
+ **/
+
+// Takes in number and adds comma seperator
 // Currently assumes num to be non-string
 const commaSeperateThis = (num) => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")

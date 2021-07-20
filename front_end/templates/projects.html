@@ -158,7 +158,9 @@ async function new_name_prompt(p_id) {
     wordcountgoal = document.querySelector("#wordcountgoal").value;
 
     /*------------------------------------------------------------!!!
-     * TO DO: Double triple make sure wordcountgoal is an int
+     * TO DO: 
+     *    - Double triple make sure wordcountgoal is an int
+     *    - Allow user to hook onto individual files
      *------------------------------------------------------------!!!
      */
 
@@ -197,7 +199,6 @@ async function new_name_prompt(p_id) {
       })
     }
 
-    // Previously also took in svgWidth
     function progress_bar(p_id, daily_words, today_goal) { // previously , svgwidth
       var svgwidth = parseInt(window.getComputedStyle(document.querySelector(`div.progress.panel`)).width.slice(0, -2)) * .65;
 
@@ -308,11 +309,13 @@ async function new_name_prompt(p_id) {
       let selectedName =  document.querySelector('#project-' + String(selectedId) + '-summary h2').innerHTML;
       let statsData = await eel.eel_return_project_stats(selectedId)();
 
+      // NEED TO FIND A BETTER WAY OF DOING THIS BUT FOR NOW HERE WE GO
       document.getElementById("stats-toggle").click();
       document.getElementById("modal-stats-title").innerHTML = `${selectedName} Statistics`
       statsModal_Populate(statsData);
     }
 
+    // Used to delete and load progress bars upon resize
     const reinitProgressBars = () =>{
       d3.select(projectWindow).on("resize", () => {
           projectPage.querySelectorAll(".progress svg").forEach( elem => elem.parentNode.removeChild(elem))
