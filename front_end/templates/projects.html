@@ -30,6 +30,7 @@
   {% set modal_trigger_text = '?' %}
   {% set modal_trigger_classes = 'welcome-msg' %}
   {% set close_button_text = 'Continue' %}
+  {% set close_btn_fn = "" %}
   {% set modal_contents_html = '<p>Nanite is designed to help you keep track of your writing habits and increase your productivity the more you use it.</p>
   <p>To get started, click the "New Project" button an link your text file to Nanite. Nanite will then traack your progress and give you useful insights.</p>'|safe %}
     {% include 'modal.html' %}
@@ -42,6 +43,7 @@
     {% set modal_trigger_text = '+ New Project' %}
     {% set modal_trigger_classes = 'new-project' %}
     {% set close_button_text = 'Cancel' %}
+    {% set close_btn_fn = "" %}
     {% set modal_contents_html = '<div id="new-project" class="new-project-form-container {% if hasprojects %}hidden{% endif %}">
       <form class="project-form new-project" onsubmit="add_new_project()">
         <fieldset> 
@@ -81,6 +83,7 @@
     {% set modal_trigger_text = 'Project Stats' %}
     {% set modal_trigger_classes = 'viewStats' %}
     {% set close_button_text = 'Cancel' %}
+    {% set close_btn_fn = 'onclick=reinitProgressBars()' %}
     {% set modal_contents_html = '<div>
       <!--Contents will be inserted via JS-->
     </div>'|safe %}
@@ -89,7 +92,10 @@
   <!-- Project Stats Modal End -->
 </div>
 <script>
-  // Initial 
+  // Initial
+  var projectPage = document;
+  var projectWindow = window;
+
   (async function () {
     let doc = await eel_list_projects_html_current_user();
     progress_bars(doc);
@@ -179,7 +185,7 @@ async function new_name_prompt(p_id) {
       // Progress bar functions
     function progress_bars(doc) {
       waiting = doc; // this function should only run once doc has been awaited (from the previous function)
-      let projectslist_items = document.querySelectorAll('#projectslist > .projects-item');
+      let projectslist_items = projectPage.querySelectorAll('#projectslist > .projects-item');
       projectslist_items.forEach(x => {
         pb = x.querySelector('div[class^="progress-"]');
         p_id = pb.dataset.pid;
@@ -189,24 +195,23 @@ async function new_name_prompt(p_id) {
         progress_bar(p_id, daily_words, today_goal); // previously , 300  
 
         // Removes progress bars and creates new ones upon window resize
-        d3.select(window).on("resize", () => {
-          document.querySelectorAll(".progress svg").forEach( elem => elem.parentNode.removeChild(elem))
-          progress_bars(doc)
-        });
+        reinitProgressBars();
+        // d3.select(projectWindow).on("resize", () => {
+        //   projectPage.querySelectorAll(".progress svg").forEach( elem => elem.parentNode.removeChild(elem))
+        //   progress_bars(doc)
+        // });
       })
     }
 
     // Previously also took in svgWidth
     function progress_bar(p_id, daily_words, today_goal) { // previously , svgwidth
       var svgwidth = parseInt(window.getComputedStyle(document.querySelector(`div.progress.panel`)).width.slice(0, -2)) * .65;
-      console.log(svgwidth);
 
       var data = {
             'Wtarget_sum': today_goal, 
             'daily_words': daily_words
       };
         
-      console.log(data)
       // Sets progress_val to 0 if data.Wtarget_sum is 0 to avoid division by 0
         var progress_val = data.Wtarget_sum == 0 ? 0 : (data.daily_words / data.Wtarget_sum) * 100;
 
@@ -308,11 +313,17 @@ async function new_name_prompt(p_id) {
     const showStatsModal = async (selectedId) => {
       let selectedName =  document.querySelector('#project-' + String(selectedId) + '-summary h2').innerHTML;
       let statsData = await eel.eel_return_project_stats(selectedId)();
-      console.log(statsData);
 
       document.getElementById("stats-toggle").click();
       document.getElementById("modal-stats-title").innerHTML = `${selectedName} Statistics`
       statsModal_Populate(statsData);
+    }
+
+    const reinitProgressBars = () =>{
+      d3.select(projectWindow).on("resize", () => {
+          projectPage.querySelectorAll(".progress svg").forEach( elem => elem.parentNode.removeChild(elem))
+          progress_bars("reloading")
+        });  
     }
   </script>
   <script src="../static/js/stats-modal.js"></script>
