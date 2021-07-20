@@ -75,6 +75,7 @@ def samedate(date: str) -> bool(): # For some reason date is actually a date? No
     else:
         day = str(date.date())
         today = datestamp()
+
         if day == today:
             return True
         else:
@@ -111,6 +112,7 @@ def return_project_screen(author_id:int) -> list(dict()):
     for i in project_ids:
         p = ProjectActions(i)
         p.set_project()
+
         try:
             row = p.return_wordcounts()[-1]
         except:
@@ -127,6 +129,7 @@ def return_project_screen(author_id:int) -> list(dict()):
             'today_goal': row['Wtarget'], 'total_progress': row['Wcount'], 'current_streak':row['streak']
             }            
         projects_list.append(p_dict)
+        
     return projects_list
 
 

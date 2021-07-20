@@ -5,7 +5,7 @@
           <h2 class="modal__title" id="{{modal_id}}-title">
             {{modal_header_text}}
           </h2>
-          <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
+          <button class="modal__close" {{close_btn_fn}} aria-label="Close modal" data-micromodal-close></button>
         </header>
         <main class="modal__content" id="{{modal_id}}-content">
           {{modal_contents_html}}

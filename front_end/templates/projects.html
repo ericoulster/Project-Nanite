@@ -172,8 +172,6 @@ async function new_name_prompt(p_id) {
       let daysBetwenDates = (Date.parse(targetenddate) - Date.parse(targetstartdate)) / (1000 * 3600 * 24)
       current_daily_target = `${Math.round(parseInt(wordcountgoal) / daysBetwenDates)}`;
     }
-    // ??? Why does wp_page num show up for curr_daily_count in proj? 
-    // ??? Should set to current_daily_target ?
     wp_page = 42; // TO DO: Used for later if someone wants to count pages rather than words
     projectpath = document.querySelector("#project-path").value;
     //filetype = document.querySelector("#filetype").value;
@@ -189,17 +187,13 @@ async function new_name_prompt(p_id) {
       projectslist_items.forEach(x => {
         pb = x.querySelector('div[class^="progress-"]');
         p_id = pb.dataset.pid;
-        daily_words = pb.dataset.todaywords;
-        today_goal = pb.dataset.todaygoal;
+        daily_words = pb.dataset.todaywords; // currently Showing up as 0 despite all? <- due to lack of cascade drop
+        today_goal = pb.dataset.todaygoal; 
         
-        progress_bar(p_id, daily_words, today_goal); // previously , 300  
+        progress_bar(p_id, daily_words, today_goal); // previously 300  
 
         // Removes progress bars and creates new ones upon window resize
         reinitProgressBars();
-        // d3.select(projectWindow).on("resize", () => {
-        //   projectPage.querySelectorAll(".progress svg").forEach( elem => elem.parentNode.removeChild(elem))
-        //   progress_bars(doc)
-        // });
       })
     }
 
