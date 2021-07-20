@@ -253,7 +253,7 @@ const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar
     .enter()
     .append("rect")
     .attr("x", function(d) { return x(d.Day); })
-    .attr("y", function(d) { return y(d.Wcount) > 0 ? y(d.Wcount) : 1; })
+    .attr("y", function(d) { return y(d.Wcount); })
     .attr("width", x.bandwidth())
     .attr("height", function(d) { return height - y(d.Wcount); })
     .attr("ry", 3)
@@ -278,9 +278,10 @@ const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar
    **/
 const statsModal_CreateWeekData = (weekData) => {
     // Creating format to ensure full week rendered in order
+    // Temporarily set to 1 for formatting reasons
     var formattedWeek = [
         {Day: "Mon", Wcount: 0, IsMax:false},
-        {Day: "Tues", Wcount: 0, IsMax:false},
+        {Day: "Tue", Wcount: 0, IsMax:false},
         {Day: "Wed", Wcount: 0, IsMax:false},
         {Day: "Thu", Wcount: 0, IsMax:false},
         {Day: "Fri", Wcount: 0, IsMax:false},
