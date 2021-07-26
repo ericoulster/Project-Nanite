@@ -200,7 +200,7 @@ async function new_name_prompt(p_id) {
     }
 
     function progress_bar(p_id, daily_words, today_goal) { // previously , svgwidth
-      var svgwidth = parseInt(window.getComputedStyle(document.querySelector(`div.progress.panel`)).width.slice(0, -2)) * .65;
+      var svgwidth = parseInt(window.getComputedStyle(document.querySelector(`div.project-summary.panels`)).width.slice(0, -2)) * .65;
 
       var data = {
             'Wtarget_sum': today_goal, 
@@ -241,8 +241,7 @@ async function new_name_prompt(p_id) {
         var svg = d3.select(`.progress-${String(p_id)}`)
             .append('svg')
             .attr('height', 100)
-            .attr('width', svgwidth); // svgwidth previously set to 800
-        
+            .attr('width', svgwidth * 2); // svgwidth previously set to 800
 
         var bar_width = svgwidth * 0.9; // previously 600 (or 0.75 * svg width)
         var bar_height = 20;
