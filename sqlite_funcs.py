@@ -301,7 +301,7 @@ class AuthorActions:
             query = '''INSERT INTO projects values (
                 ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) '''
             params = [None, self.author_id, project_name, now, project_start_date, deadline, 
-            wordcount_goal, current_daily_target, wp_page, project_path]
+            wordcount_goal, wp_page, current_daily_target, project_path]
             #try:
             cur.execute(query, params)
             conn.commit()
