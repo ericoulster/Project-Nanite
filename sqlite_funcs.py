@@ -431,8 +431,8 @@ class ProjectActions:
         self.project_start_date = data[4]
         self.deadline = data[5]
         self.wordcount_goal = data[6]
-        self.current_daily_target = data[7]
-        self.wp_page = data[8]
+        self.wp_page = data[7]
+        self.current_daily_target = data[8]
         self.project_path = data[9]
         self.author_set = True
         self.daily_target_set = True
@@ -538,7 +538,6 @@ class ProjectActions:
     def return_weekly_avg(self):
         """
         return days of writing
-        YOU NEED TO CALCULATE DIFFERENCE BASED ON LAST ROW (THAT EXISTS ELSEWHERE)
         """
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
