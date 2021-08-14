@@ -216,6 +216,33 @@ def create_author(author_name, password=''):
         return print("This row already exists!")
 
 
+def delete_author(author_id):
+    """
+    Deletes an author, their projects, and their word records.
+    """
+    conn = sqlite3.connect(sqlite3_path)
+    cur = conn.cursor()
+    
+    cur.execute("SELECT author_id FROM authors WHERE author_id=?", (author_id,))
+    entry = cur.fetchone()
+    if entry is not None:
+        cur.execute('''DELETE FROM authors WHERE author_id=?''',  (author_id,))
+        conn.commit()
+
+    cur.execute("SELECT author_id FROM projects WHERE author_id=?", (author_id,))
+    entry = cur.fetchone()
+    if entry is not None:
+        cur.execute('''DELETE FROM projects WHERE author_id=?''',  (author_id,))
+        conn.commit()
+    
+    cur.execute("SELECT author_id FROM words WHERE author_id=?", (author_id,))
+    entry = cur.fetchone()
+    if entry is not None:
+        cur.execute('''DELETE FROM words WHERE author_id=?''',  (author_id,))
+        conn.commit()
+    conn.close()
+
+
 def return_author_list():
     """
     Prints all authors as a list of dicts
