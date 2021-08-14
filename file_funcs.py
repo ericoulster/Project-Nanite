@@ -142,6 +142,10 @@ def wp_page_convert(words, wp_page):
     return pages
 
 
+def savepath(project_name, save_path: str) -> str:
+    p = Path(save_path).joinpath("wordcounts - " + str(project_name) + "-" + str(datetime.now()))
+    return p
+
 ## Time Intelligence Funcs ##
 
 def daily_words_calculate(word_goal, goal_start_date, goal_finish_date):
