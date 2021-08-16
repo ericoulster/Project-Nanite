@@ -194,7 +194,7 @@ const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar
     document.getElementById("stats-longestStreak").innerHTML = `<p>Longest Streak: <span class="emph">${longest_streak ? longest_streak : 0}</span></p>`;
     
     var sidebarWidth = parseInt(window.getComputedStyle(document.querySelector("#stats-sideBar")).width.slice(0, -2)) * .80;
-    var weekData = statsModal_CreateWeekData(weekBar.weekmeans);
+    var weekData = statsModal_CreateWeekData(weekBar.weekmeans,sidebarWidth);
     var maxday = weekBar.maxday
 
     var fontMultiplier;
@@ -257,7 +257,7 @@ const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar
     .attr("width", x.bandwidth())
     .attr("height", function(d) { return height - y(d.Wcount); })
     .attr("ry", 3)
-    .attr("fill", function(d) {if (d.IsMax === false) {return "#1F2428"} else {return "#F6D55C"}});
+    .attr("fill", function(d) {if (d.IsMax === false) {return "#1F2428"} else {return "#F6D55C"}})
 
     weekSvg.append("text")
         .attr("x", (width / 2))             
@@ -276,18 +276,15 @@ const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar
    *   To Do: Change formattedWeek.day's value depending on render size 
    * ===============================================================================================/
    **/
-const statsModal_CreateWeekData = (weekData) => {
+const statsModal_CreateWeekData = (weekData, sidebarWidth) => {
+    console.log(sidebarWidth)
+    var threeLetterWeek = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+    var oneLetterWeek = {"Mon":'M', "Tue":'Tu', "Wed":'W', "Thu":"Th","Fri":"F","Sat":"Sa","Sun":"Su"};
     // Creating format to ensure full week rendered in order
-    // Temporarily set to 1 for formatting reasons
-    var formattedWeek = [
-        {Day: "Mon", Wcount: 0, IsMax:false},
-        {Day: "Tue", Wcount: 0, IsMax:false},
-        {Day: "Wed", Wcount: 0, IsMax:false},
-        {Day: "Thu", Wcount: 0, IsMax:false},
-        {Day: "Fri", Wcount: 0, IsMax:false},
-        {Day: "Sat", Wcount: 0, IsMax:false},
-        {Day: "Sun", Wcount: 0, IsMax:false}   
-    ]
+    var formattedWeek = []
+    threeLetterWeek.forEach(d => {
+        formattedWeek.push({Day: d, Wcount: 0, IsMax:false})
+    })
 
     // If the data has a value for the day, it'll update formatted Week
     //    otherwise, it'll keep formatted Week's default values.
@@ -300,6 +297,9 @@ const statsModal_CreateWeekData = (weekData) => {
             if (rawDayEntry.IsMax == 1) {
                 dotw.IsMax = true;
             }
+        }
+        if (sidebarWidth < 125){
+            dotw.Day = oneLetterWeek[dotw.Day]
         }
     })
 
