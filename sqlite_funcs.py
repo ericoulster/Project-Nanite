@@ -562,6 +562,24 @@ class ProjectActions:
         return records
 
 
+    def render_wordcounts(self, save_path: str):
+        """
+        Renders wordcounts to a given file location (save_path)
+        TODO: TEST
+        """
+        conn = sqlite3.connect(sqlite3_path)
+        cur = conn.cursor()
+        cur.execute("SELECT Wdate, Wcount, Wtarget FROM words where project_id=?", (self.project_id,))
+        row = cur.fetchall()
+        data = [dict(WordVals(*row[i])._asdict()) for i in range(len(row))]
+        conn.close()
+        save_df = pd.DataFrame(data, header=['date', 'count', 'target'])
+        if self.project_name is not None:
+            save_df.to_csv(savepath(project_name=self.project_name, save_path=save_path))
+        else:
+            save_df.to_csv(savepath(project_name='word-records', save_path=save_path))
+
+
     def return_weekly_avg(self):
         """
         return days of writing
