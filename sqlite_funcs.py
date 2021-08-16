@@ -1,4 +1,4 @@
-### Dependendies ###
+### Dependencies ###
 from datetime import datetime
 from collections import namedtuple
 import time
