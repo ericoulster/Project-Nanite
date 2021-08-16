@@ -54,7 +54,7 @@ def path_parser(path: str) -> str:
     elif docx != -1:
         return '.docx'   
     else:
-        return None
+        return 'none'
 
 
 
@@ -95,7 +95,7 @@ def filepull(path: Path()) -> str:
 
     else:
         print(f'{path} is an unrecognized filetype')
-
+        return ''
 
 def file_pipe(path: str) -> str:
     """
@@ -142,8 +142,11 @@ def wp_page_convert(words, wp_page):
     return pages
 
 
-def savepath(project_name, save_path: str) -> str:
-    p = Path(save_path).joinpath("wordcounts - " + str(project_name) + "-" + str(datetime.now()))
+def savepath(project_name: str, save_path: str) -> str:
+    """
+    Creates path object to save .csv out to - used for ProjectActions.render_wordcounts()
+    """
+    p = Path(save_path).joinpath("wordcounts-" + str(project_name) + "-" + datetime.today().strftime('%Y-%m-%d'))
     return p
 
 ## Time Intelligence Funcs ##
