@@ -52,7 +52,7 @@ const statsModal_AddBones = () => {
         </div>
 
         <div id="stats-sideBar">
-            <div id="stats-cal-link"><a class="btn">Calendar View</a></div>
+            <!--<div id="stats-cal-link"><a class="btn">Calendar View</a></div>-->
             <div id="stats-deadline"></div>
             <div id="stats-currStreak"></div>
             <div id="stats-longestStreak"></div>
