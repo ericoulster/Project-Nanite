@@ -9,7 +9,9 @@ import pandas as pd
 
 import sqlite3
 
-from file_funcs import file_pipe, is_streak, streak_length, change_goal, daily_words_calculate, word_goal_calculate
+from file_funcs import file_pipe, is_streak, streak_length, change_goal, daily_words_calculate, word_goal_calculate, savepath
+
+
 ### Variables ###
 
 sqlite3_path = './database/nanite_storage.sqlite3'
@@ -569,11 +571,15 @@ class ProjectActions:
         """
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT Wdate, Wcount, Wtarget FROM words where project_id=?", (self.project_id,))
+        cur.execute("SELECT * FROM words where project_id=?", (self.project_id,))
         row = cur.fetchall()
         data = [dict(WordVals(*row[i])._asdict()) for i in range(len(row))]
         conn.close()
-        save_df = pd.DataFrame(data, header=['date', 'count', 'target'])
+        print(data)
+        save_df = pd.DataFrame(data, columns=['record_id', 'project_id', 'author_id', 'Wdate', 'Wcount', 'Wtarget'])
+        print(save_df)
+        save_df = save_df.drop(columns=['record_id', 'project_id', 'author_id'])
+        print(save_df)
         if self.project_name is not None:
             save_df.to_csv(savepath(project_name=self.project_name, save_path=save_path))
         else:

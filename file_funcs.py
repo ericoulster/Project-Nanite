@@ -146,7 +146,7 @@ def savepath(project_name: str, save_path: str) -> str:
     """
     Creates path object to save .csv out to - used for ProjectActions.render_wordcounts()
     """
-    p = Path(save_path).joinpath("wordcounts-" + str(project_name) + "-" + datetime.today().strftime('%Y-%m-%d'))
+    p = Path(save_path).joinpath("wordcounts-" + str(project_name) + "-" + datetime.today().strftime('%Y-%m-%d') + ".csv")
     return p
 
 ## Time Intelligence Funcs ##
