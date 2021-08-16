@@ -446,9 +446,27 @@ ul li {
   display: inline-block;
   font-weight: 100;
 }
+.home .welcome-subtitle {
+  width: 80%;
+  margin: .5rem auto;
+  font-size:.85rem;
+  letter-spacing: .05rem;
+  color: lightgrey;
+}
 .home .nanite-user-select {
   width: 21rem;
   margin-top: 1rem;
+}
+.home .welcome-checkin-btn {
+  background-color: #474f56;
+  border-radius: 10px;
+  padding: 0.25rem;
+  text-align: center;
+  text-decoration: none;
+  width: 100%;
+}
+.home .welcome-checkin-link {
+  text-decoration: none;
 }
 .home .nanite-user-select .user {
   background-color: #474f56;
