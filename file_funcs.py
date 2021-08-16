@@ -8,6 +8,7 @@ from pathlib import Path
 from striprtf.striprtf import rtf_to_text
 import docx2txt
 
+import numpy as np
 
 
 # Note for etl: .stat().st_mtime in pathlib gives the time of last modification of a file
@@ -167,6 +168,27 @@ def word_goal_calculate(daily_target, goal_start_date, goal_finish_date):
     days_left = abs((datetime.strptime(goal_finish_date,"%Y-%m-%d") - datetime.strptime(goal_start_date,"%Y-%m-%d")).days)
     word_goal = int(daily_target)*days_left
     return word_goal
+
+
+def weekly_word_goal_calculate(weekly_words, goal_start_date, goal_finish_date):
+    """
+    word_goal_calculate, but for weekly wordcounts being true
+    """
+    start = datetime.strptime(goal_finish_date,"%Y-%m-%d")
+    end =  datetime.strptime(goal_start_date,"%Y-%m-%d")
+    mondays = np.busday_count(start, end, weekmask='Mon')
+    tuesdays = np.busday_count(start, end, weekmask='Tue')
+    wednesdays = np.busday_count(start, end, weekmask='Wed')
+    thursdays = np.busday_count(start, end, weekmask='Thu')
+    fridays = np.busday_count(start, end, weekmask='Fri')
+    saturdays = np.busday_count(start, end, weekmask='Sat')
+    sundays = np.busday_count(start, end, weekmask='Sun')
+    
+    word_array = weekly_words.split(',')
+
+    result = ((mondays * word_array[0]) + (tuesdays * word_array[1]) + (wednesdays * word_array[2]) + (thursdays * word_array[3])
+            + (fridays * word_array[4]) + (saturdays * word_array[5]) + (sundays * word_array[6]))
+    return result
 
 
 def change_goal(goal_start_date, goal_end_date, word_goal=None, daily_target=None):
