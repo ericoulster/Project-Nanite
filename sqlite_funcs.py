@@ -45,6 +45,14 @@ CREATE TABLE IF NOT EXISTS projects (
     current_daily_target int,
     wp_page int,
     project_path text,
+    is_weekly_wordcount int,
+    monday_words int,
+    tuesday_words int,
+    wednesday_words int,
+    thursday_words int,
+    friday_words int,
+    saturday_words int,
+    sunday_words int,
     FOREIGN KEY (author_id) REFERENCES authors (author_id)
 )
 """
