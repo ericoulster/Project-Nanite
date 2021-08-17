@@ -161,16 +161,17 @@ def daily_words_calculate(word_goal, goal_start_date, goal_finish_date):
     return daily_target
 
 
-def word_goal_calculate(daily_target, goal_start_date, goal_finish_date):
+def word_goal_calculate(daily_target, goal_start_date, goal_finish_date, is_weekly_wordcount=0):
     # We currently assume you are starting at zero words, or are factoring your already existant words into your decision.
     # This assumption may be worth revisiting later
     #NOTE: changed incoming date format #days_left = abs((datetime.strptime(goal_finish_date,"%d/%m/%Y") - datetime.strptime(goal_start_date,"%d/%m/%Y")).days)
     days_left = abs((datetime.strptime(goal_finish_date,"%Y-%m-%d") - datetime.strptime(goal_start_date,"%Y-%m-%d")).days)
-    word_goal = int(daily_target)*days_left
-    return word_goal
+    if (is_weekly_wordcount == 0):
+        word_goal = int(daily_target)*days_left
+        return word_goal
 
 
-def weekly_word_goal_calculate(weekly_words, goal_start_date, goal_finish_date):
+def weekly_words_calculate(weekly_words, goal_start_date, goal_finish_date):
     """
     word_goal_calculate, but for weekly wordcounts being true
     """
