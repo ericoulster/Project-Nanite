@@ -651,7 +651,12 @@ class ProjectActions:
             now = timestamp()
             query = '''INSERT INTO words values (
                 ?, ?, ?, ?, ?, ?) '''
-            params = [None, self.project_id, self.author_id, now, wc, self.current_daily_target]
+            if (self.is_weekly_wordcount == 1):
+                weekday_words = self.weekly_words.split(',')[datetime.today().weekday()]
+                params = [None, self.project_id, self.author_id, now, wc, weekday_words]
+            else:    
+                params = [None, self.project_id, self.author_id, now, wc, self.current_daily_target]
+            
             try:
                 conn = sqlite3.connect(sqlite3_path)
                 cur = conn.cursor()
@@ -683,7 +688,7 @@ class ProjectActions:
 
     def change_word_goal(self, word_goal):
         """
-        changes daily_words value.
+        changes wordcount_goal value.
         Also changes daily words to re-calibrate.
         Requires project_start_date, deadline, and project_id to work
         """
