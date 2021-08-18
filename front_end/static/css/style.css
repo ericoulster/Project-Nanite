@@ -434,8 +434,8 @@ ul li {
 }
 .home .nanite-welcome-image {
   width: 350px;
-  margin-top: 10vh;
-  margin-bottom: 10vh;
+  margin-top: 20vh; /* prev - 10vh */
+  margin-bottom: 8vh; /* prev - 10vh */
   text-align: center;
 }
 .home .nanite-welcome-image .icon-in-logo {
@@ -463,6 +463,8 @@ ul li {
   padding: 0.25rem;
   text-align: center;
   text-decoration: none;
+  font-size: .85rem;
+  letter-spacing: .05rem;
   width: 100%;
 }
 .home .welcome-checkin-link {
