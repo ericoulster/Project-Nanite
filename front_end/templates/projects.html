@@ -181,8 +181,8 @@ async function new_name_prompt(p_id) {
 
 const editProjectDetails = async(p_id) => {
   document.getElementById("edit-proj-toggle").click();
-
-
+  let a = await eel_return_projects_by_name(get_username());
+  console.log(a.filter(x => x[0] == p_id));
 }
 
   //////////////////////////////////////
