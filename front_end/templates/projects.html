@@ -89,8 +89,8 @@
       <form class="project-form new-project" onsubmit="editProjectDetails()">
         <fieldset> 
             <!-- <legend class="hidden">Add a new project here:</legend> -->
-              <label>What\'s the name of your project?</label><input id="project-name" type="text" name="name" required>
-              <label>File/folder Path:</label><input id="project-path" type="text" name="filepath" placeholder="C:/filepath/filename.txt" required>
+              <label>What\'s the name of your project?</label><input id="edit-project-name" type="text" name="name" required>
+              <label>File/folder Path:</label><input id="edit-project-path" type="text" name="filepath" placeholder="C:/filepath/filename.txt" required>
               <button onclick="dir_select_tk_input()">Select Directory</button>
               <!-- <label>Files of type:</label> -->
               <!-- <select id="filetype" name="filetype" required>
@@ -181,8 +181,11 @@ async function new_name_prompt(p_id) {
 
 const editProjectDetails = async(p_id) => {
   document.getElementById("edit-proj-toggle").click();
-  let a = await eel_return_projects_by_name(get_username());
-  console.log(a.filter(x => x[0] == p_id));
+  let userProj = await eel_return_projects_by_name(get_username());
+  let currProj = userProj.filter(proj => proj[0] == p_id)[0]
+  console.log(currProj);
+  document.getElementById("edit-project-name").value =  currProj[2];
+  document.getElementById("edit-project-path").value =  currProj[9];
 }
 
   //////////////////////////////////////
