@@ -100,16 +100,16 @@
               </select> -->
               <label>What\'s your writing goal?</label>
               <div class="writing-goal">
-                <input id="wordcountgoal" type="text" name="wordcountgoal" required> words            
+                <input id="edit-wordcountgoal" type="text" name="wordcountgoal" required> words            
                 <div class="radio-buttons">
-                  <input type="radio" id="daily-new" name="wordcountreg" value="daily" required checked>
+                  <input type="radio" id="daily-edit" name="wordcountreg" value="daily" required checked>
                   <label for="daily-new">Daily</label>
-                  <input type="radio" id="total-new" name="wordcountreg" value="total" required>
+                  <input type="radio" id="total-edit" name="wordcountreg" value="total" required>
                   <label for="total-new">Total</label>
                 </div>
               </div>
               <!-- <div class="start-date-in"><label>Start Date:</label><input id="targetstartdate" type="date" name="targetstartdate" required></div> -->
-              <div class="end-date-in"><label>Target End Date:</label><input id="targetenddate" type="date" name="targetenddate" required></div>
+              <div class="end-date-in"><label>Target End Date:</label><input id="edit-targetenddate" type="date" name="targetenddate" required></div>
               <input type="submit" value="Add New Project">
         </fieldset> 
       </form>
@@ -183,9 +183,21 @@ const editProjectDetails = async(p_id) => {
   document.getElementById("edit-proj-toggle").click();
   let userProj = await eel_return_projects_by_name(get_username());
   let currProj = userProj.filter(proj => proj[0] == p_id)[0]
+  let dailyWords = currProj[8];
+  let totalWords = currProj[6];
+  if (totalWords == dailyWords) {
+    document.getElementById("daily-edit").checked = true;
+    document.getElementById("total-edit").checked = false;
+    document.getElementById("edit-wordcountgoal").value = dailyWords;
+  } else {
+    document.getElementById("daily-edit").checked = false;
+    document.getElementById("total-edit").checked = true;
+    document.getElementById("edit-wordcountgoal").value = totalWords;
+  }
   console.log(currProj);
   document.getElementById("edit-project-name").value =  currProj[2];
   document.getElementById("edit-project-path").value =  currProj[9];
+  document.getElementById("edit-targetenddate").value = currProj[5];
 }
 
   //////////////////////////////////////
