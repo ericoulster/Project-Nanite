@@ -16,6 +16,7 @@
   <button data-micromodal-trigger="modal-1" class="new-project">+ New Project</button>
   <button data-micromodal-trigger="modal-0" class="welcome-msg">?</button>
   <button data-micromodal-trigger="modal-stats" id="stats-toggle" style="display:none" aria-hidden="true"></button>
+  <button data-micromodal-trigger="modal-edit-proj" id="edit-proj-toggle" style="display:none" aria-hidden="true"></button>
  
  
   <!-- Projects List -->
@@ -76,6 +77,46 @@
     {% include 'modal.html' %}
   {% endwith %}
   <!-- New Project Modal End -->
+    <!-- Edit Project Modal -->
+    {% with %}
+    {% set modal_id = 'modal-edit-proj' %}
+    {% set modal_header_text = 'Edit Existing Project' %}
+    {% set modal_trigger_text = '+ New Project' %}
+    {% set modal_trigger_classes = 'new-project' %}
+    {% set close_button_text = 'Cancel' %}
+    {% set close_btn_fn = "" %}
+    {% set modal_contents_html = '<div id="new-project" class="new-project-form-container {% if hasprojects %}hidden{% endif %}">
+      <form class="project-form new-project" onsubmit="editProjectDetails()">
+        <fieldset> 
+            <!-- <legend class="hidden">Add a new project here:</legend> -->
+              <label>What\'s the name of your project?</label><input id="project-name" type="text" name="name" required>
+              <label>File/folder Path:</label><input id="project-path" type="text" name="filepath" placeholder="C:/filepath/filename.txt" required>
+              <button onclick="dir_select_tk_input()">Select Directory</button>
+              <!-- <label>Files of type:</label> -->
+              <!-- <select id="filetype" name="filetype" required>
+                <option value="txt">txt</option>
+                <option value="rtf">rtf</option>
+                <option value="docx">docx</option>
+              </select> -->
+              <label>What\'s your writing goal?</label>
+              <div class="writing-goal">
+                <input id="wordcountgoal" type="text" name="wordcountgoal" required> words            
+                <div class="radio-buttons">
+                  <input type="radio" id="daily-new" name="wordcountreg" value="daily" required checked>
+                  <label for="daily-new">Daily</label>
+                  <input type="radio" id="total-new" name="wordcountreg" value="total" required>
+                  <label for="total-new">Total</label>
+                </div>
+              </div>
+              <!-- <div class="start-date-in"><label>Start Date:</label><input id="targetstartdate" type="date" name="targetstartdate" required></div> -->
+              <div class="end-date-in"><label>Target End Date:</label><input id="targetenddate" type="date" name="targetenddate" required></div>
+              <input type="submit" value="Add New Project">
+        </fieldset> 
+      </form>
+    </div>'|safe %}
+    {% include 'modal.html' %}
+  {% endwith %}
+  <!-- Edit Project Modal End -->
   <!-- Project Stats Modal -->
     {% with %}
     {% set modal_id = 'modal-stats' %}
@@ -132,6 +173,16 @@ async function new_name_prompt(p_id) {
   // Set edit button to be OK button
   editbuttonimg.src = '../static/imgs/icons/green-tick.svg';
   editbuttonimg.parentElement.onclick = function(){rename_project(p_id,projectname.textContent);}; // When tick is clicked, change name
+}
+
+// ==============================================/
+//  EDIT PROJECT 
+// ============================================/
+
+const editProjectDetails = async(p_id) => {
+  document.getElementById("edit-proj-toggle").click();
+
+
 }
 
   //////////////////////////////////////
