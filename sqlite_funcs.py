@@ -19,7 +19,12 @@ sqlite3_path = './database/nanite_storage.sqlite3'
 # Using namedtuple to define dict-like structure for retrieved data (using ._asdict() method on them)
 
 AuthorVals = namedtuple('Author', 'author_id username password acct_created_on')
-ProjectVals = namedtuple('Project', 'project_id author_id project_name project_created_on project_start_date deadline wordcount_goal current_daily_target wp_page project_path')
+ProjectVals = namedtuple(
+    'Project', 
+    'project_id author_id project_name project_created_on project_start_date \
+    deadline wordcount_goal current_daily_target wp_page project_path is_weekly_wordcount \
+    weekly_words'
+    )
 WordVals = namedtuple('Wordcounts', 'record_id project_id author_id Wdate Wcount Wtarget')
 
 ## DDL init Queries ##
@@ -46,13 +51,7 @@ CREATE TABLE IF NOT EXISTS projects (
     wp_page int,
     project_path text,
     is_weekly_wordcount int,
-    monday_words int,
-    tuesday_words int,
-    wednesday_words int,
-    thursday_words int,
-    friday_words int,
-    saturday_words int,
-    sunday_words int,
+    weekly_words text,
     FOREIGN KEY (author_id) REFERENCES authors (author_id)
 )
 """
@@ -108,6 +107,12 @@ def db_init():
     else:
         print("db already exists")
 
+def db_and_auth_initialize():
+    """
+    db_init(), with a default author created as well.
+    """
+    db_init()
+    create_author('Author')
 
 
 def return_project_screen(author_id:int) -> list(dict()):
@@ -714,20 +719,20 @@ class ProjectActions:
             self.is_weekly_wordcount = 1
 
 
-    def change_weekly_words(self, daily_words):
+    def change_weekly_words(self, weekly_words):
         """
         changes daily_words value.
         Re-calibrates word goal accordingly (based on deadline)
         Requires project_start_date, deadline, and project_id to work
         """
         if (self.project_start_date is not None) & (self.deadline is not None):
-            word_goal = word_goal_calculate(daily_words, self.project_start_date, self.deadline)
+            word_goal = word_goal_calculate(weekly_words, self.project_start_date, self.deadline)
             conn = sqlite3.connect(sqlite3_path)
             cur = conn.cursor()
-            cur.execute("UPDATE projects SET wordcount_goal=?, current_daily_target=? WHERE project_id=?", (word_goal, [NEWSHIT], self.project_id))
+            cur.execute("UPDATE projects SET wordcount_goal=?, weekly_words=? WHERE project_id=?", (word_goal, self.weekly_words, self.project_id))
             conn.commit()
             conn.close()
-            self.current_daily_target = daily_words
+            self.weekly_words = weekly_words
             self.wordcount_goal = word_goal
         else:
             raise Exception("Error: Submission requires project_start_date & deadline")
