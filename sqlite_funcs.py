@@ -706,9 +706,11 @@ class ProjectActions:
     def change_weekly_words(self, weekly_wordcount):
         """
         Changes weekly words value similarly to weekly words value
+        Re-calibrates word goal accordingly (based on deadline)
+        Requires project_start_date, deadline, and project_id to work
         """
         if (self.project_start_date is not None) & (self.deadline is not None):
-            word_goal = weekly_words_calculate(weekly_wordcount)
+            word_goal = weekly_words_calculate(weekly_wordcount, self.project_start_date, self.deadline)
             conn = sqlite3.connect(sqlite3_path)
             cur = conn.cursor()
             cur.execute("UPDATE projects SET wordcount_goal=?, weekly_words=?, is_weekly_wordcount=1 WHERE project_id=?", (word_goal, weekly_wordcount, self.project_id))
@@ -717,23 +719,6 @@ class ProjectActions:
             self.weekly_words = weekly_wordcount
             self.wordcount_goal = word_goal
             self.is_weekly_wordcount = 1
-
-
-    def change_weekly_words(self, weekly_words):
-        """
-        changes daily_words value.
-        Re-calibrates word goal accordingly (based on deadline)
-        Requires project_start_date, deadline, and project_id to work
-        """
-        if (self.project_start_date is not None) & (self.deadline is not None):
-            word_goal = word_goal_calculate(weekly_words, self.project_start_date, self.deadline)
-            conn = sqlite3.connect(sqlite3_path)
-            cur = conn.cursor()
-            cur.execute("UPDATE projects SET wordcount_goal=?, weekly_words=? WHERE project_id=?", (word_goal, self.weekly_words, self.project_id))
-            conn.commit()
-            conn.close()
-            self.weekly_words = weekly_words
-            self.wordcount_goal = word_goal
         else:
             raise Exception("Error: Submission requires project_start_date & deadline")
 
