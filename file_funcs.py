@@ -187,8 +187,8 @@ def weekly_words_calculate(weekly_words, goal_start_date, goal_finish_date):
     
     word_array = weekly_words.split(',')
 
-    result = ((mondays * word_array[0]) + (tuesdays * word_array[1]) + (wednesdays * word_array[2]) + (thursdays * word_array[3])
-            + (fridays * word_array[4]) + (saturdays * word_array[5]) + (sundays * word_array[6]))
+    result = ((mondays * int(word_array[0])) + (tuesdays * int(word_array[1])) + (wednesdays * int(word_array[2])) + (thursdays * int(word_array[3]))
+            + (fridays * int(word_array[4])) + (saturdays * int(word_array[5])) + (sundays * int(word_array[6])))
     return result
 
 
