@@ -219,12 +219,12 @@ const editProjectDetails = async(p_id) => {
     //////////////////////////////////////
 
   function add_new_project() {
-    authorname = get_username();
-    projectname = document.querySelector("#project-name").value;
-    targetstartdate = document.querySelector("#targetstartdate").value;
-    targetenddate = document.querySelector("#targetenddate").value;
-    wordcountgoal = document.querySelector("#wordcountgoal").value;
-
+    let authorname = get_username();
+    let projectname = document.querySelector("#project-name").value;
+    let targetstartdate = document.querySelector("#targetstartdate").value;
+    let targetenddate = document.querySelector("#targetenddate").value;
+    let wordcountgoal = document.querySelector("#wordcountgoal").value;
+    
     /*------------------------------------------------------------!!!
      * TO DO: 
      *    - Double triple make sure wordcountgoal is an int
@@ -233,22 +233,28 @@ const editProjectDetails = async(p_id) => {
      */
 
     // work out current_daily_target
-    dailynew = document.querySelector("#daily-new").checked;
-    totalnew = document.querySelector("#total-new").checked;
+    var dailynew = document.querySelector("#daily-new").checked;
+    var totalnew = document.querySelector("#total-new").checked;
+    var weeklynew = document.querySelector("#weekly-new").checked ? 1 : 0;
+
+    let daysBetwenDates = (Date.parse(targetenddate) - Date.parse(targetstartdate)) / (1000 * 3600 * 24)
 
     if (dailynew) {
       current_daily_target = wordcountgoal;  
-    } else {
-      let daysBetwenDates = (Date.parse(targetenddate) - Date.parse(targetstartdate)) / (1000 * 3600 * 24)
+    } else if (totalnew) {
       current_daily_target = `${Math.round(parseInt(wordcountgoal) / daysBetwenDates)}`;
+    } else {
+      current_daily_target = `${Math.round(wordcountgoal / 7)}`
+      //wordcountgoal = 
     }
+
     wp_page = 42; // TO DO: Used for later if someone wants to count pages rather than words
     projectpath = document.querySelector("#project-path").value;
     //filetype = document.querySelector("#filetype").value;
     
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // Still need to go and add the weekly count stuff 
-    eel.new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, 0, 0);
+    eel.new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, weeklynew, 0);
   };
   </script>
   <script>
