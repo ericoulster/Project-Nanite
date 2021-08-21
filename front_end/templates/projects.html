@@ -65,6 +65,8 @@
                   <input type="radio" id="daily-new" name="wordcountreg" value="daily" required checked>
                   <label for="daily-new">Daily</label>
                   <input type="radio" id="total-new" name="wordcountreg" value="total" required>
+                  <label for="weekly-new">Weekly</label>
+                  <input type="radio" id="total-new" name="wordcountreg" value="total" required>
                   <label for="total-new">Total</label>
                 </div>
               </div>
@@ -243,7 +245,10 @@ const editProjectDetails = async(p_id) => {
     wp_page = 42; // TO DO: Used for later if someone wants to count pages rather than words
     projectpath = document.querySelector("#project-path").value;
     //filetype = document.querySelector("#filetype").value;
-    eel.new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath);
+    
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // Still need to go and add the weekly count stuff 
+    eel.new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, 0, 0);
   };
   </script>
   <script>

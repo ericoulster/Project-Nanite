@@ -155,12 +155,12 @@ def new_author(authorname):
     create_author(authorname)
 
 @eel.expose
-def new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath):
+def new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, is_weekly_word_count, weekly_words):
     #print(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath)
     
     a = AuthorActions()
     a.id_by_name(authorname)
-    a.create_project(projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath)
+    a.create_project(projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, is_weekly_word_count, weekly_words)
 
     # Samples
     # a.id_by_name('Johnny')

@@ -316,20 +316,13 @@ class AuthorActions:
         wordcount_goal=None, 
         current_daily_target=None,
         wp_page=None,
-        project_path=None):
+        project_path=None,
+        is_weekly_wordcount=0,
+        weekly_words=None
+        ):
         """
         Takes in a project info, then creates a new project for a given author.
         """
-        
-        # This just fills in other variables that are missing when creating a project
-
-        if (wordcount_goal is None) & (current_daily_target is not None) & (project_start_date is not None) & (deadline is not None):
-            wordcount_goal = word_goal_calculate(current_daily_target, project_start_date, deadline)
-        elif (wordcount_goal is not None) & (current_daily_target is None) & (project_start_date is not None) & (deadline is not None):
-            current_daily_target = daily_words_calculate(wordcount_goal, project_start_date, deadline)
-        else:
-            pass        
-
         now = timestamp()
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
@@ -341,16 +334,17 @@ class AuthorActions:
             conn = sqlite3.connect(sqlite3_path)
             cur = conn.cursor()
             query = '''INSERT INTO projects values (
-                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) '''
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) '''
             params = [None, self.author_id, project_name, now, project_start_date, deadline, 
-            wordcount_goal, wp_page, current_daily_target, project_path]
-            #try:
-            cur.execute(query, params)
-            conn.commit()
-            #except:
-                #print("Query failed")
-            #finally:
-            conn.close()
+            wordcount_goal, wp_page, current_daily_target, project_path, 
+            is_weekly_wordcount, weekly_words]
+            try:
+                cur.execute(query, params)
+                conn.commit()
+            except:
+                print("Query failed")
+            finally:
+                conn.close()
         else:
             print("project with this name already exists")
             conn.close()
