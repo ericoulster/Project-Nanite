@@ -64,7 +64,7 @@
                 <div class="radio-buttons">
                   <input type="radio" id="daily-new" name="wordcountreg" value="daily" required checked>
                   <label for="daily-new">Daily</label>
-                  <input type="radio" id="total-new" name="wordcountreg" value="total" required>
+                  <input type="radio" id="weekly-new" name="wordcountreg" value="total" required>
                   <label for="weekly-new">Weekly</label>
                   <input type="radio" id="total-new" name="wordcountreg" value="total" required>
                   <label for="total-new">Total</label>
@@ -223,7 +223,7 @@ const editProjectDetails = async(p_id) => {
     let projectname = document.querySelector("#project-name").value;
     let targetstartdate = document.querySelector("#targetstartdate").value;
     let targetenddate = document.querySelector("#targetenddate").value;
-    let wordcountgoal = document.querySelector("#wordcountgoal").value;
+    let submittedWordount = document.querySelector("#wordcountgoal").value;
     
     /*------------------------------------------------------------!!!
      * TO DO: 
@@ -235,17 +235,21 @@ const editProjectDetails = async(p_id) => {
     // work out current_daily_target
     var dailynew = document.querySelector("#daily-new").checked;
     var totalnew = document.querySelector("#total-new").checked;
-    var weeklynew = document.querySelector("#weekly-new").checked ? 1 : 0;
-
-    let daysBetwenDates = (Date.parse(targetenddate) - Date.parse(targetstartdate)) / (1000 * 3600 * 24)
+    var isWeekly = document.querySelector("#weekly-new").checked ? 1 : 0;
+    var weeklyCount = isWeekly == 1 ? submittedWordount : 0;
+  
+    let daysBetwenDates = Math.round((Date.parse(targetenddate) - Date.parse(targetstartdate)) / (1000 * 3600 * 24))
+    let weeksBetweenDates = Math.round((Date.parse(targetenddate) - Date.parse(targetstartdate)) / (7 * 24 * 60 * 60 * 1000)); 
 
     if (dailynew) {
-      current_daily_target = wordcountgoal;  
+      current_daily_target = submittedWordount;
+      wordcountgoal = `${Math.round(parseInt(submittedWordount) * daysBetwenDates)}`;  
     } else if (totalnew) {
-      current_daily_target = `${Math.round(parseInt(wordcountgoal) / daysBetwenDates)}`;
+      current_daily_target = `${Math.round(parseInt(submittedWordount) / daysBetwenDates)}`;
+      wordcountgoal = submittedWordount;
     } else {
-      current_daily_target = `${Math.round(wordcountgoal / 7)}`
-      //wordcountgoal = 
+      current_daily_target = `${Math.round(submittedWordount / 7)}`
+      wordcountgoal = `${Math.round(parseInt(submittedWordount) * weeksBetweenDates)}`; 
     }
 
     wp_page = 42; // TO DO: Used for later if someone wants to count pages rather than words
@@ -254,7 +258,28 @@ const editProjectDetails = async(p_id) => {
     
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // Still need to go and add the weekly count stuff 
-    eel.new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, weeklynew, 0);
+    localStorage.setItem('authorname', `${authorname}`);
+    localStorage.setItem('type_authorname', `${typeof authorname}`);
+    localStorage.setItem('projectname', `${projectname}`);
+    localStorage.setItem('type_projectname', `${typeof projectname}`);
+    localStorage.setItem('targetstartdate', `${targetstartdate}`);
+    localStorage.setItem('type_targetstartdate', `${typeof targetstartdate}`);
+    localStorage.setItem('targetenddate', `${targetenddate}`);
+    localStorage.setItem('type_targetenddate', `${typeof targetenddate}`);
+    localStorage.setItem('wordcountgoal', `${wordcountgoal}`);
+    localStorage.setItem('type_wordcountgoal', `${typeof wordcountgoal}`);
+    localStorage.setItem('current_daily_target', `${current_daily_target}`);
+    localStorage.setItem('type_current_daily_target', `${typeof current_daily_target}`);
+    localStorage.setItem('wp_page', `${wp_page}`);
+    localStorage.setItem('type_wp_page', `${typeof wp_page}`);
+    localStorage.setItem('projectpath', `${projectpath}`);
+    localStorage.setItem('type_projectpath', `${typeof projectpath}`);
+    localStorage.setItem('isWeekly', `${isWeekly}`);
+    localStorage.setItem('type_isWeekly', `${typeof isWeekly}`);
+    localStorage.setItem('weeklyCount', `${weeklyCount}`);
+    localStorage.setItem('type_weeklyCount', `${typeof weeklyCount}`);
+
+    eel.new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, isWeekly, weeklyCount);
   };
   </script>
   <script>
