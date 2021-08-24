@@ -49,8 +49,8 @@
       <form class="project-form new-project" onsubmit="add_new_project()">
         <fieldset> 
             <!-- <legend class="hidden">Add a new project here:</legend> -->
-              <label>What\'s the name of your project?</label><input id="project-name" type="text" name="name" required>
-              <label>File/folder Path:</label><input id="project-path" type="text" name="filepath" placeholder="C:/filepath/filename.txt" required>
+              <label>What\'s the name of your project?</label><input id="new_project-name" type="text" name="name" required>
+              <label>File/folder Path:</label><input id="new_project-path" type="text" name="filepath" placeholder="C:/filepath/filename.txt" required>
               <button onclick="dir_select_tk_input()">Select Directory</button>
               <!-- <label>Files of type:</label> -->
               <!-- <select id="filetype" name="filetype" required>
@@ -60,22 +60,21 @@
               </select> -->
               <label>What\'s your writing goal?</label>
               <div class="writing-goal">
-                <input id="wordcountgoal" type="text" name="wordcountgoal" required> words            
+                <input id="new_wordcountgoal" type="text" name="wordcountgoal" required> words            
                 <div class="radio-buttons">
-                  <input type="radio" id="daily-new" name="wordcountreg" value="daily" required checked>
-                  <label for="daily-new">Daily</label>
-                  <input type="radio" id="weekly-new" name="wordcountreg" value="total" required>
-                  <label for="weekly-new">Weekly</label>
-                  <input type="radio" id="total-new" name="wordcountreg" value="total" required>
-                  <label for="total-new">Total</label>
+                  <input type="radio" id="new_daily" name="wordcountreg" value="daily" required checked>
+                  <label for="new_daily">Daily</label>
+                  <input type="radio" id="new_weekly" name="wordcountreg" value="weekly" required>
+                  <label for="new_weekly">Weekly</label>
+                  <input type="radio" id="new_total" name="wordcountreg" value="total" required>
+                  <label for="new_total">Total</label>
                 </div>
               </div>
-              <div class="start-date-in"><label>Start Date:</label><input id="targetstartdate" type="date" name="targetstartdate" required></div>
-              <div class="end-date-in"><label>Target End Date:</label><input id="targetenddate" type="date" name="targetenddate" required></div>
+              <div class="start-date-in"><label>Start Date:</label><input id="new_targetstartdate" type="date" name="targetstartdate" required></div>
+              <div class="end-date-in"><label>Target End Date:</label><input id="new_targetenddate" type="date" name="targetenddate" required></div>
               <input type="submit" value="Add New Project">
         </fieldset> 
       </form>
-      <button onclick="add_new_project()">CHECK THIS STUFF</button>
     </div>'|safe %}
     {% include 'modal.html' %}
   {% endwith %}
@@ -196,22 +195,15 @@ async function new_name_prompt(p_id) {
 
   function add_new_project() {
     let authorname = get_username();
-    let projectname = document.querySelector("#project-name").value;
-    let targetstartdate = document.querySelector("#targetstartdate").value;
-    let targetenddate = document.querySelector("#targetenddate").value;
-    let submittedWordount = parseInt(document.querySelector("#wordcountgoal").value);
+    let projectname = document.querySelector("#new_project-name").value;
+    let targetstartdate = document.querySelector("#new_targetstartdate").value;
+    let targetenddate = document.querySelector("#new_targetenddate").value;
+    let submittedWordount = parseInt(document.querySelector("#new_wordcountgoal").value);
     
-    /*------------------------------------------------------------!!!
-     * TO DO: 
-     *    - Double triple make sure wordcountgoal is an int
-     *    - Allow user to hook onto individual files
-     *------------------------------------------------------------!!!
-     */
-
     // work out current_daily_target
-    var dailynew = document.querySelector("#daily-new").checked;
-    var totalnew = document.querySelector("#total-new").checked;
-    var isWeekly = document.querySelector("#weekly-new").checked ? 1 : 0;
+    var dailynew = document.querySelector("#new_daily").checked;
+    var totalnew = document.querySelector("#new_total").checked;
+    var isWeekly = document.querySelector("#new_weekly").checked ? 1 : 0;
     var rawWeeklyCount = ["0","0","0","0","0","0","0"];
 
     let daysBetwenDates = Math.round((Date.parse(targetenddate) - Date.parse(targetstartdate)) / (1000 * 3600 * 24))
@@ -231,7 +223,7 @@ async function new_name_prompt(p_id) {
 
     weeklyCount = rawWeeklyCount.join(',')
     wp_page = 42; // TO DO: Used for later if someone wants to count pages rather than words
-    projectpath = document.querySelector("#project-path").value;
+    projectpath = document.querySelector("#new_project-path").value;
     //filetype = document.querySelector("#filetype").value;
     
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
