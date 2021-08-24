@@ -87,12 +87,12 @@
     {% set modal_trigger_classes = 'new-project' %}
     {% set close_button_text = 'Cancel' %}
     {% set close_btn_fn = "" %}
-    {% set modal_contents_html = '<div id="new-project" class="new-project-form-container {% if hasprojects %}hidden{% endif %}">
-      <form class="project-form new-project" onsubmit="editProjectDetails()">
+    {% set modal_contents_html = '<div id="edit-project" class="new-project-form-container {% if hasprojects %}hidden{% endif %}">
+      <form class="project-form new-project">
         <fieldset> 
             <!-- <legend class="hidden">Add a new project here:</legend> -->
-              <label>What\'s the name of your project?</label><input id="edit-project-name" type="text" name="name" required>
-              <label>File/folder Path:</label><input id="edit-project-path" type="text" name="filepath" placeholder="C:/filepath/filename.txt" required>
+              <label>What\'s the name of your project?</label><input id="edit_project-name" type="text" name="name" required>
+              <label>File/folder Path:</label><input id="edit_project-path" type="text" name="filepath" placeholder="C:/filepath/filename.txt" required>
               <button onclick="dir_select_tk_input()">Select Directory</button>
               <!-- <label>Files of type:</label> -->
               <!-- <select id="filetype" name="filetype" required>
@@ -102,17 +102,19 @@
               </select> -->
               <label>What\'s your writing goal?</label>
               <div class="writing-goal">
-                <input id="edit-wordcountgoal" type="text" name="wordcountgoal" required> words            
+                <input id="edit_wordcountgoal" type="text" name="wordcountgoal" required> words            
                 <div class="radio-buttons">
-                  <input type="radio" id="daily-edit" name="wordcountreg" value="daily" required checked>
-                  <label for="daily-new">Daily</label>
-                  <input type="radio" id="total-edit" name="wordcountreg" value="total" required>
-                  <label for="total-new">Total</label>
+                  <input type="radio" id="edit_daily" name="wordcountreg" value="daily" required checked>
+                  <label for="edit_daily">Daily</label>
+                  <input type="radio" id="edit_weekly" name="wordcountreg" value="weekly" required>
+                  <label for="edit_weekly">Weekly</label>
+                  <input type="radio" id="edit_total" name="wordcountreg" value="total" required>
+                  <label for="edit_total">Total</label>
                 </div>
               </div>
-              <!-- <div class="start-date-in"><label>Start Date:</label><input id="targetstartdate" type="date" name="targetstartdate" required></div> -->
-              <div class="end-date-in"><label>Target End Date:</label><input id="edit-targetenddate" type="date" name="targetenddate" required></div>
-              <input type="submit" value="Add New Project">
+              <div class="start-date-in"><label>Start Date:</label><input id="edit_targetstartdate" type="date" name="targetstartdate" required disabled></div>
+              <div class="end-date-in"><label>Target End Date:</label><input id="edit_targetenddate" type="date" name="targetenddate" required></div>
+              <input type="submit" value="Edit Project">
         </fieldset> 
       </form>
     </div>'|safe %}
@@ -191,9 +193,76 @@ async function new_name_prompt(p_id) {
     let a = await eel.return_projects_by_name(username)();
     return a;
   }
-    //////////////////////////////////////
+
+
+
+  // ======================================================/
+  // "DYNAMICALLY OPEN / FILL OUT MODALS" FUNCTIONS
+  // ===================================================/
+
+  const showStatsModal = async (selectedId) => {
+    let selectedName =  document.querySelector('#project-' + String(selectedId) + '-summary h2').innerHTML;
+    let statsData = await eel.eel_return_project_stats(selectedId)();
+
+    // NEED TO FIND A BETTER WAY OF DOING THIS BUT FOR NOW HERE WE GO
+    document.getElementById("stats-toggle").click();
+    document.getElementById("modal-stats-title").innerHTML = `${selectedName} Statistics`
+    statsModal_Populate(statsData);
+  }
+
+    // Used to open and populate the edit modal with the values of whatever project is
+    // currently selected
+  const fillEditProjectModal = async(p_id) => {
+    document.getElementById("edit-proj-toggle").click();
+    document.querySelector("#edit-project form").onsubmit = () => submitEditedProject(p_id);
+    let userProj = await eel_return_projects_by_name(get_username());
+    
+    let currProj = userProj.filter(proj => proj[0] == p_id)[0]
+    console.log(currProj)
+    let dailyWords = currProj[7];
+    let totalWords = currProj[6];
+
+    let wordCountElem = document.getElementById("edit_wordcountgoal");
+    let dailyCheckElem = document.getElementById("edit_daily");
+    let weeklyCheckElem = document.getElementById("edit_weekly");
+    let totalCheckElem = document.getElementById("edit_total");
+
+    // Checks to see if isWeekly is true
+    // Displays either weekly or daily by default
+    if (currProj[10]==1) {
+      dailyCheckElem.disabled = true;
+      dailyCheckElem.checked = false;
+
+      weeklyCheckElem.disabled = false;
+      weeklyCheckElem.checked = true;
+      
+      totalCheckElem.checked = false;
+      wordCountElem.value = dailyWords * 7;
+    } else {
+      dailyCheckElem.disabled = false;
+      dailyCheckElem.checked = true;
+
+      weeklyCheckElem.disabled = true;
+      weeklyCheckElem.checked = false;
+      
+      totalCheckElem.checked = false;
+      wordCountElem.value = dailyWords;
+    }
+
+    document.getElementById("edit_project-name").value =  currProj[2];
+    document.getElementById("edit_project-path").value =  currProj[9];
+    document.getElementById("edit_targetenddate").value = currProj[5];
+    document.getElementById("edit_targetstartdate").value = currProj[4];
+  } 
+
+
+
+  // ======================================================/
+  // ADD - EDIT PROJECT FUNCTIONS
+  // ===================================================/
 
     const extractValuesFromForum = (formType) => {
+      let authorname = get_username();
       let projectname = document.querySelector(`#${formType}_project-name`).value;
       let targetstartdate = document.querySelector(`#${formType}_targetstartdate`).value;
       let targetenddate = document.querySelector(`#${formType}_targetenddate`).value;
@@ -236,49 +305,15 @@ async function new_name_prompt(p_id) {
     localStorage.setItem('extr_weeklyCount', `${weeklyCount}`);
 
 
-    return {projectname: projectname, projectpath: projectpath, targetstartdate: targetstartdate, 
+    return {authorname:authorname, projectname: projectname, projectpath: projectpath, targetstartdate: targetstartdate, 
       targetenddate: targetenddate, wp_page:wp_page, current_daily_target: current_daily_target, 
       wordcountgoal: wordcountgoal, isWeekly:isWeekly, weeklyCount:weeklyCount}
   }
 
-
-  function add_new_project() {
-    let authorname = get_username();
-    let {projectname, projectpath, targetstartdate, targetenddate, wp_page, 
-      current_daily_target, wordcountgoal, isWeekly, weeklyCount} = extractValuesFromForum("new");
-    // let projectname = document.querySelector("#new_project-name").value;
-    // let targetstartdate = document.querySelector("#new_targetstartdate").value;
-    // let targetenddate = document.querySelector("#new_targetenddate").value;
-    // let submittedWordount = parseInt(document.querySelector("#new_wordcountgoal").value);
+  const add_new_project = () => {
+    let {authorname, projectname, projectpath, targetstartdate, targetenddate, 
+      wp_page, current_daily_target, wordcountgoal, isWeekly, weeklyCount} = extractValuesFromForum("new");
     
-    // // work out current_daily_target
-    // var dailynew = document.querySelector("#new_daily").checked;
-    // var totalnew = document.querySelector("#new_total").checked;
-    // var isWeekly = document.querySelector("#new_weekly").checked ? 1 : 0;
-    // var rawWeeklyCount = ["0","0","0","0","0","0","0"];
-
-    // let daysBetwenDates = Math.round((Date.parse(targetenddate) - Date.parse(targetstartdate)) / (1000 * 3600 * 24))
-    // let weeksBetweenDates = Math.round((Date.parse(targetenddate) - Date.parse(targetstartdate)) / (7 * 24 * 60 * 60 * 1000)); 
-
-    // if (dailynew) {
-    //   current_daily_target = submittedWordount.toString();
-    //   wordcountgoal = Math.round(submittedWordount * daysBetwenDates).toString();  
-    // } else if (totalnew) {
-    //   current_daily_target = Math.round(submittedWordount / daysBetwenDates).toString();
-    //   wordcountgoal = submittedWordount.toString();
-    // } else {
-    //   current_daily_target = Math.round(submittedWordount / 7).toString()
-    //   wordcountgoal = Math.round(submittedWordount * weeksBetweenDates).toString();
-    //   rawWeeklyCount = rawWeeklyCount.map(day => current_daily_target.toString())
-    // }
-
-    // weeklyCount = rawWeeklyCount.join(',')
-    // wp_page = 42; // TO DO: Used for later if someone wants to count pages rather than words
-    // projectpath = document.querySelector("#new_project-path").value;
-    //filetype = document.querySelector("#filetype").value;
-
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // Still need to go and add the weekly count stuff 
     localStorage.setItem('authorname', `${authorname}`);
     localStorage.setItem('type_authorname', `${typeof authorname}`);
     localStorage.setItem('projectname', `${projectname}`);
@@ -302,10 +337,40 @@ async function new_name_prompt(p_id) {
 
     eel.new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, isWeekly, weeklyCount);
   };
-  </script>
-  <script>
 
-      // Progress bar functions
+  const submitEditedProject = (project_id) => {
+    let {authorname, projectname, projectpath, targetstartdate, targetenddate, 
+      wp_page, current_daily_target, wordcountgoal, isWeekly, weeklyCount} = extractValuesFromForum("edit");
+    
+    localStorage.setItem('authorname', `${authorname}`);
+    localStorage.setItem('type_authorname', `${typeof authorname}`);
+    localStorage.setItem('projectname', `${projectname}`);
+    localStorage.setItem('type_projectname', `${typeof projectname}`);
+    localStorage.setItem('targetstartdate', `${targetstartdate}`);
+    localStorage.setItem('type_targetstartdate', `${typeof targetstartdate}`);
+    localStorage.setItem('targetenddate', `${targetenddate}`);
+    localStorage.setItem('type_targetenddate', `${typeof targetenddate}`);
+    localStorage.setItem('wordcountgoal', `${wordcountgoal}`);
+    localStorage.setItem('type_wordcountgoal', `${typeof wordcountgoal}`);
+    localStorage.setItem('current_daily_target', `${current_daily_target}`);
+    localStorage.setItem('type_current_daily_target', `${typeof current_daily_target}`);
+    localStorage.setItem('wp_page', `${wp_page}`);
+    localStorage.setItem('type_wp_page', `${typeof wp_page}`);
+    localStorage.setItem('projectpath', `${projectpath}`);
+    localStorage.setItem('type_projectpath', `${typeof projectpath}`);
+    localStorage.setItem('isWeekly', `${isWeekly}`);
+    localStorage.setItem('type_isWeekly', `${typeof isWeekly}`);
+    localStorage.setItem('weeklyCount', `${weeklyCount}`);
+    localStorage.setItem('type_weeklyCount', `${typeof weeklyCount}`);
+
+    eel.eel_update_project(authorname, project_id, projectname, projectpath, 
+      targetstartdate, targetenddate, current_daily_target, wordcountgoal, isWeekly, weeklyCount)
+  }
+
+
+  // ======================================================/
+  // PROJECT PAGE PROGRESS BAR FUNCTIONS
+  // ===================================================/
     function progress_bars(doc) {
       waiting = doc; // this function should only run once doc has been awaited (from the previous function)
       let projectslist_items = projectPage.querySelectorAll('#projectslist > .projects-item');
@@ -427,17 +492,7 @@ async function new_name_prompt(p_id) {
             .raise()
     }
 
-    const showStatsModal = async (selectedId) => {
-      let selectedName =  document.querySelector('#project-' + String(selectedId) + '-summary h2').innerHTML;
-      let statsData = await eel.eel_return_project_stats(selectedId)();
-
-      // NEED TO FIND A BETTER WAY OF DOING THIS BUT FOR NOW HERE WE GO
-      document.getElementById("stats-toggle").click();
-      document.getElementById("modal-stats-title").innerHTML = `${selectedName} Statistics`
-      statsModal_Populate(statsData);
-    }
-
-    // Used to delete and load progress bars upon resize
+        // Used to delete and load progress bars upon resize
     const reinitProgressBars = () =>{
       d3.select(projectWindow).on("resize", () => {
           projectPage.querySelectorAll(".progress svg").forEach( elem => elem.parentNode.removeChild(elem))
@@ -445,37 +500,6 @@ async function new_name_prompt(p_id) {
         });  
     }
 
-    
-    const fillEditProjectModal = async(p_id) => {
-      document.getElementById("edit-proj-toggle").click();
-      document.querySelector("#edit-project form").onsubmit = () => submitEditedProject(p_id);
-      let userProj = await eel_return_projects_by_name(get_username());
-      
-      let currProj = userProj.filter(proj => proj[0] == p_id)[0]
-      console.log(currProj)
-      let dailyWords = currProj[8];
-      let totalWords = currProj[6];
-      let weeklyWords = currProj[11];
-
-      // Checks to see if isWeekly is true
-      // Displays either weekly or daily by default
-      if (currProj[10]==0) {
-        document.getElementById("edit_daily").checked = true;
-        document.getElementById("edit_weekly").checked = true;
-        document.getElementById("edit_total").checked = false;
-        document.getElementById("edit_wordcountgoal").value = dailyWords;
-      } else {
-        document.getElementById("edit_daily").checked = false;
-        document.getElementById("edit_weekly").checked = true;
-        document.getElementById("edit_total").checked = false;
-        document.getElementById("edit_wordcountgoal").value = totalWords;
-      }
-
-      document.getElementById("edit_project-name").value =  currProj[2];
-      document.getElementById("edit_project-path").value =  currProj[9];
-      document.getElementById("edit_targetenddate").value = currProj[5];
-      document.getElementById("edit_targetstartdate").value = currProj[4];
-    } 
   </script>
   <script src="../static/js/stats-modal.js"></script>
 {% endblock %}

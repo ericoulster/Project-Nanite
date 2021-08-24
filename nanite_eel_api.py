@@ -37,6 +37,9 @@ def list_projects_html(username):
             if type(v)==float:
                 p[k]=int(v)
 
+    print("==========================================")
+    print("THIS IS THE INPUT YOU'RE LOOKING FOR")
+    print("==========================================")
     print([p for p in projects])
     project_ids = [int(p['project_id']) for p in projects] # list project ids
     projects_zip = zip(project_ids, projects) # zip for looping
@@ -228,7 +231,7 @@ def eel_return_project_stats(project_id):
     return return_stats_screen(project_id)
 
 @eel.expose
-def eel_update_project(project_id, proj_name, proj_path, proj_startdate, proj_enddate, proj_daily, proj_total, proj_isWeekly, proj_weekly):
+def eel_update_project(authorname, project_id, proj_name, proj_path, proj_startdate, proj_enddate, proj_daily, proj_total, proj_isWeekly, proj_weekly):
     """
     """
-    print(project_id, proj_name, proj_path, proj_startdate, proj_enddate, proj_daily, proj_total, proj_isWeekly, proj_weekly)
+    print(authorname, project_id, proj_name, proj_path, proj_startdate, proj_enddate, proj_daily, proj_total, proj_isWeekly, proj_weekly)
