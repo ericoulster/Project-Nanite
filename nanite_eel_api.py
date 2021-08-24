@@ -37,6 +37,7 @@ def list_projects_html(username):
             if type(v)==float:
                 p[k]=int(v)
 
+    print([p for p in projects])
     project_ids = [int(p['project_id']) for p in projects] # list project ids
     projects_zip = zip(project_ids, projects) # zip for looping
 
@@ -46,7 +47,7 @@ def list_projects_html(username):
         <div class="header panel">
             <h2>{{ project.project_name }}</h2>
             <div class="project-header-buttons">
-                <a class="edit-project icon" href="#" onclick="new_name_prompt({{idx}})"><img src="../static/imgs/icons/pencil.svg"></a>
+                <a class="edit-project icon" href="#" onclick="fillEditProjectModal({{idx}})"><img src="../static/imgs/icons/pencil.svg"></a>
                 <a class="del-project icon" href="#" onclick="delete_project(get_username(),'{{ project.project_name }}')"><img src="../static/imgs/icons/trash.svg"></a>
             </div>
         </div>
@@ -225,3 +226,9 @@ def eel_return_project_stats(project_id):
     Given a project id, retrieves all information required for the stats modal
     """
     return return_stats_screen(project_id)
+
+@eel.expose
+def eel_update_project(project_id, proj_name, proj_path, proj_startdate, proj_enddate, proj_daily, proj_total, proj_isWeekly, proj_weekly):
+    """
+    """
+    print(project_id, proj_name, proj_path, proj_startdate, proj_enddate, proj_daily, proj_total, proj_isWeekly, proj_weekly)

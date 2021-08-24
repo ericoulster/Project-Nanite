@@ -16,7 +16,7 @@
           <li class="nav-item">
             <a class="nav-link" href="home.html"><img class="icon" src="../static/imgs/icons/home.svg"></a> 
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link" href="home.html"><img class="icon" src="../static/imgs/icons/bell.svg"></a> 
           </li>
           <li class="nav-item">
@@ -24,8 +24,17 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="home.html"><img class="icon" src="../static/imgs/icons/settings.svg"></a> 
+          </li> -->
+          <li class="nav-item">
+            <!-- Modal Triggers -->
+            <button data-micromodal-trigger="modal-1" class="new-project">+ New Project</button>
+          </li>
+          <li class="nav-item">
+            <button data-micromodal-trigger="modal-0" class="welcome-msg">?</button>
           </li>
         </ul>
       </nav>
+      <button data-micromodal-trigger="modal-stats" id="stats-toggle" style="display:none" aria-hidden="true"></button>
+      <button data-micromodal-trigger="modal-edit-proj" id="edit-proj-toggle" style="display:none" aria-hidden="true"></button>
     </div>
   </div>  

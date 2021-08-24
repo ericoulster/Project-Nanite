@@ -13,11 +13,11 @@
   {% endif %} -->
 
   <!-- Modal Triggers -->
-  <button data-micromodal-trigger="modal-1" class="new-project">+ New Project</button>
+  <!-- <button data-micromodal-trigger="modal-1" class="new-project">+ New Project</button>
   <button data-micromodal-trigger="modal-0" class="welcome-msg">?</button>
   <button data-micromodal-trigger="modal-stats" id="stats-toggle" style="display:none" aria-hidden="true"></button>
   <button data-micromodal-trigger="modal-edit-proj" id="edit-proj-toggle" style="display:none" aria-hidden="true"></button>
- 
+  -->
  
   <!-- Projects List -->
   <div id="projectslist" class="projectslist">
@@ -75,6 +75,7 @@
               <input type="submit" value="Add New Project">
         </fieldset> 
       </form>
+      <button onclick="add_new_project()">CHECK THIS STUFF</button>
     </div>'|safe %}
     {% include 'modal.html' %}
   {% endwith %}
@@ -177,31 +178,6 @@ async function new_name_prompt(p_id) {
   editbuttonimg.parentElement.onclick = function(){rename_project(p_id,projectname.textContent);}; // When tick is clicked, change name
 }
 
-// ==============================================/
-//  EDIT PROJECT 
-// ============================================/
-
-const editProjectDetails = async(p_id) => {
-  document.getElementById("edit-proj-toggle").click();
-  let userProj = await eel_return_projects_by_name(get_username());
-  let currProj = userProj.filter(proj => proj[0] == p_id)[0]
-  let dailyWords = currProj[8];
-  let totalWords = currProj[6];
-  if (totalWords == dailyWords) {
-    document.getElementById("daily-edit").checked = true;
-    document.getElementById("total-edit").checked = false;
-    document.getElementById("edit-wordcountgoal").value = dailyWords;
-  } else {
-    document.getElementById("daily-edit").checked = false;
-    document.getElementById("total-edit").checked = true;
-    document.getElementById("edit-wordcountgoal").value = totalWords;
-  }
-  console.log(currProj);
-  document.getElementById("edit-project-name").value =  currProj[2];
-  document.getElementById("edit-project-path").value =  currProj[9];
-  document.getElementById("edit-targetenddate").value = currProj[5];
-}
-
   //////////////////////////////////////
 // DEBUGGER Function
   async function debug_p() {
@@ -223,7 +199,7 @@ const editProjectDetails = async(p_id) => {
     let projectname = document.querySelector("#project-name").value;
     let targetstartdate = document.querySelector("#targetstartdate").value;
     let targetenddate = document.querySelector("#targetenddate").value;
-    let submittedWordount = document.querySelector("#wordcountgoal").value;
+    let submittedWordount = parseInt(document.querySelector("#wordcountgoal").value);
     
     /*------------------------------------------------------------!!!
      * TO DO: 
@@ -236,22 +212,24 @@ const editProjectDetails = async(p_id) => {
     var dailynew = document.querySelector("#daily-new").checked;
     var totalnew = document.querySelector("#total-new").checked;
     var isWeekly = document.querySelector("#weekly-new").checked ? 1 : 0;
-    var weeklyCount = isWeekly == 1 ? submittedWordount : 0;
-  
+    var rawWeeklyCount = ["0","0","0","0","0","0","0"];
+
     let daysBetwenDates = Math.round((Date.parse(targetenddate) - Date.parse(targetstartdate)) / (1000 * 3600 * 24))
     let weeksBetweenDates = Math.round((Date.parse(targetenddate) - Date.parse(targetstartdate)) / (7 * 24 * 60 * 60 * 1000)); 
 
     if (dailynew) {
-      current_daily_target = submittedWordount;
-      wordcountgoal = `${Math.round(parseInt(submittedWordount) * daysBetwenDates)}`;  
+      current_daily_target = submittedWordount.toString();
+      wordcountgoal = Math.round(submittedWordount * daysBetwenDates).toString();  
     } else if (totalnew) {
-      current_daily_target = `${Math.round(parseInt(submittedWordount) / daysBetwenDates)}`;
-      wordcountgoal = submittedWordount;
+      current_daily_target = Math.round(submittedWordount / daysBetwenDates).toString();
+      wordcountgoal = submittedWordount.toString();
     } else {
-      current_daily_target = `${Math.round(submittedWordount / 7)}`
-      wordcountgoal = `${Math.round(parseInt(submittedWordount) * weeksBetweenDates)}`; 
+      current_daily_target = Math.round(submittedWordount / 7).toString()
+      wordcountgoal = Math.round(submittedWordount * weeksBetweenDates).toString();
+      rawWeeklyCount = rawWeeklyCount.map(day => current_daily_target.toString())
     }
 
+    weeklyCount = rawWeeklyCount.join(',')
     wp_page = 42; // TO DO: Used for later if someone wants to count pages rather than words
     projectpath = document.querySelector("#project-path").value;
     //filetype = document.querySelector("#filetype").value;
@@ -423,6 +401,38 @@ const editProjectDetails = async(p_id) => {
           progress_bars("reloading")
         });  
     }
+
+    
+    const fillEditProjectModal = async(p_id) => {
+      document.getElementById("edit-proj-toggle").click();
+      document.querySelector("#edit-project form").onsubmit = () => submitEditedProject(p_id);
+      let userProj = await eel_return_projects_by_name(get_username());
+      
+      let currProj = userProj.filter(proj => proj[0] == p_id)[0]
+      console.log(currProj)
+      let dailyWords = currProj[8];
+      let totalWords = currProj[6];
+      let weeklyWords = currProj[11];
+
+      // Checks to see if isWeekly is true
+      // Displays either weekly or daily by default
+      if (currProj[10]==0) {
+        document.getElementById("edit_daily").checked = true;
+        document.getElementById("edit_weekly").checked = true;
+        document.getElementById("edit_total").checked = false;
+        document.getElementById("edit_wordcountgoal").value = dailyWords;
+      } else {
+        document.getElementById("edit_daily").checked = false;
+        document.getElementById("edit_weekly").checked = true;
+        document.getElementById("edit_total").checked = false;
+        document.getElementById("edit_wordcountgoal").value = totalWords;
+      }
+
+      document.getElementById("edit_project-name").value =  currProj[2];
+      document.getElementById("edit_project-path").value =  currProj[9];
+      document.getElementById("edit_targetenddate").value = currProj[5];
+      document.getElementById("edit_targetstartdate").value = currProj[4];
+    } 
   </script>
   <script src="../static/js/stats-modal.js"></script>
 {% endblock %}
