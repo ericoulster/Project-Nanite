@@ -193,39 +193,90 @@ async function new_name_prompt(p_id) {
   }
     //////////////////////////////////////
 
+    const extractValuesFromForum = (formType) => {
+      let projectname = document.querySelector(`#${formType}_project-name`).value;
+      let targetstartdate = document.querySelector(`#${formType}_targetstartdate`).value;
+      let targetenddate = document.querySelector(`#${formType}_targetenddate`).value;
+      let submittedWordount = parseInt(document.querySelector(`#${formType}_wordcountgoal`).value);
+      
+      // work out current_daily_target
+      var dailynew = document.querySelector(`#${formType}_daily`).checked;
+      var totalnew = document.querySelector(`#${formType}_total`).checked;
+      var isWeekly = document.querySelector(`#${formType}_weekly`).checked ? 1 : 0;
+      var rawWeeklyCount = ["0","0","0","0","0","0","0"];
+
+      let daysBetwenDates = Math.round((Date.parse(targetenddate) - Date.parse(targetstartdate)) / (1000 * 3600 * 24))
+      let weeksBetweenDates = Math.round((Date.parse(targetenddate) - Date.parse(targetstartdate)) / (7 * 24 * 60 * 60 * 1000)); 
+
+      if (dailynew) {
+        current_daily_target = submittedWordount.toString();
+        wordcountgoal = Math.round(submittedWordount * daysBetwenDates).toString();  
+      } else if (totalnew) {
+        current_daily_target = Math.round(submittedWordount / daysBetwenDates).toString();
+        wordcountgoal = submittedWordount.toString();
+      } else {
+        current_daily_target = Math.round(submittedWordount / 7).toString()
+        wordcountgoal = Math.round(submittedWordount * weeksBetweenDates).toString();
+        rawWeeklyCount = rawWeeklyCount.map(day => current_daily_target.toString())
+      }
+
+      weeklyCount = rawWeeklyCount.join(',')
+      let wp_page = 42; // TO DO: Used for later if someone wants to count pages rather than words
+      projectpath = document.querySelector(`#${formType}_project-path`).value;
+
+        // Used for seeing values set by add project
+    localStorage.setItem('extr_projectname', `${projectname}`);
+    localStorage.setItem('extr_targetstartdate', `${targetstartdate}`);
+    localStorage.setItem('extr_targetenddate', `${targetenddate}`);
+    localStorage.setItem('extr_wordcountgoal', `${wordcountgoal}`);
+    localStorage.setItem('extr_current_daily_target', `${current_daily_target}`);
+    localStorage.setItem('extr_wp_page', `${wp_page}`);
+    localStorage.setItem('extr_projectpath', `${projectpath}`);
+    localStorage.setItem('extr_isWeekly', `${isWeekly}`);
+    localStorage.setItem('extr_weeklyCount', `${weeklyCount}`);
+
+
+    return {projectname: projectname, projectpath: projectpath, targetstartdate: targetstartdate, 
+      targetenddate: targetenddate, wp_page:wp_page, current_daily_target: current_daily_target, 
+      wordcountgoal: wordcountgoal, isWeekly:isWeekly, weeklyCount:weeklyCount}
+  }
+
+
   function add_new_project() {
     let authorname = get_username();
-    let projectname = document.querySelector("#new_project-name").value;
-    let targetstartdate = document.querySelector("#new_targetstartdate").value;
-    let targetenddate = document.querySelector("#new_targetenddate").value;
-    let submittedWordount = parseInt(document.querySelector("#new_wordcountgoal").value);
+    let {projectname, projectpath, targetstartdate, targetenddate, wp_page, 
+      current_daily_target, wordcountgoal, isWeekly, weeklyCount} = extractValuesFromForum("new");
+    // let projectname = document.querySelector("#new_project-name").value;
+    // let targetstartdate = document.querySelector("#new_targetstartdate").value;
+    // let targetenddate = document.querySelector("#new_targetenddate").value;
+    // let submittedWordount = parseInt(document.querySelector("#new_wordcountgoal").value);
     
-    // work out current_daily_target
-    var dailynew = document.querySelector("#new_daily").checked;
-    var totalnew = document.querySelector("#new_total").checked;
-    var isWeekly = document.querySelector("#new_weekly").checked ? 1 : 0;
-    var rawWeeklyCount = ["0","0","0","0","0","0","0"];
+    // // work out current_daily_target
+    // var dailynew = document.querySelector("#new_daily").checked;
+    // var totalnew = document.querySelector("#new_total").checked;
+    // var isWeekly = document.querySelector("#new_weekly").checked ? 1 : 0;
+    // var rawWeeklyCount = ["0","0","0","0","0","0","0"];
 
-    let daysBetwenDates = Math.round((Date.parse(targetenddate) - Date.parse(targetstartdate)) / (1000 * 3600 * 24))
-    let weeksBetweenDates = Math.round((Date.parse(targetenddate) - Date.parse(targetstartdate)) / (7 * 24 * 60 * 60 * 1000)); 
+    // let daysBetwenDates = Math.round((Date.parse(targetenddate) - Date.parse(targetstartdate)) / (1000 * 3600 * 24))
+    // let weeksBetweenDates = Math.round((Date.parse(targetenddate) - Date.parse(targetstartdate)) / (7 * 24 * 60 * 60 * 1000)); 
 
-    if (dailynew) {
-      current_daily_target = submittedWordount.toString();
-      wordcountgoal = Math.round(submittedWordount * daysBetwenDates).toString();  
-    } else if (totalnew) {
-      current_daily_target = Math.round(submittedWordount / daysBetwenDates).toString();
-      wordcountgoal = submittedWordount.toString();
-    } else {
-      current_daily_target = Math.round(submittedWordount / 7).toString()
-      wordcountgoal = Math.round(submittedWordount * weeksBetweenDates).toString();
-      rawWeeklyCount = rawWeeklyCount.map(day => current_daily_target.toString())
-    }
+    // if (dailynew) {
+    //   current_daily_target = submittedWordount.toString();
+    //   wordcountgoal = Math.round(submittedWordount * daysBetwenDates).toString();  
+    // } else if (totalnew) {
+    //   current_daily_target = Math.round(submittedWordount / daysBetwenDates).toString();
+    //   wordcountgoal = submittedWordount.toString();
+    // } else {
+    //   current_daily_target = Math.round(submittedWordount / 7).toString()
+    //   wordcountgoal = Math.round(submittedWordount * weeksBetweenDates).toString();
+    //   rawWeeklyCount = rawWeeklyCount.map(day => current_daily_target.toString())
+    // }
 
-    weeklyCount = rawWeeklyCount.join(',')
-    wp_page = 42; // TO DO: Used for later if someone wants to count pages rather than words
-    projectpath = document.querySelector("#new_project-path").value;
+    // weeklyCount = rawWeeklyCount.join(',')
+    // wp_page = 42; // TO DO: Used for later if someone wants to count pages rather than words
+    // projectpath = document.querySelector("#new_project-path").value;
     //filetype = document.querySelector("#filetype").value;
-    
+
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // Still need to go and add the weekly count stuff 
     localStorage.setItem('authorname', `${authorname}`);
