@@ -551,8 +551,9 @@ ul li {
 .projects#main-content > * {
   /* width: 30rem; */
 }
-#projectslist { 
-  height: 83vh;
+#projectslist {
+  margin-top: 3vh; 
+  height: 85vh;
   overflow-y:scroll;
 }
 .projectslist .projects-item {
