@@ -127,10 +127,14 @@
       {% set close_btn_fn = "" %}
       {% set modal_contents_html = '<div id="csv-export" class="new-project-form-container {% if hasprojects %}hidden{% endif %}">
         <div id="csv-export-main" class="project-form new-project">
-          <label>Folder Path:</label><input id="export-directory" type="text" name="filepath" placeholder="C:/filepath/filename.txt" required>
-          <button onclick="dir_select_tk_input()">Select Directory</button>
-          <label>Name of CSV</label><input id="export-name" type="text" name="name" required>
-          <button id="csv-export-request-btn">Extract CSV</button>
+          <div>
+            <label>Folder Path: </label><input id="export-directory" type="text" name="filepath" placeholder="C:/filepath" required>
+            <button onclick="dir_select_tk_input()">Select Directory</button>
+          </div>
+          <div>
+            <label>File: </label><input id="export-name" type="text" name="name" required>
+            <button id="csv-export-request-btn">Extract CSV</button>
+          </div>
         </div>
       </div>'|safe %}
       {% include 'modal.html' %}
@@ -230,7 +234,9 @@ async function new_name_prompt(p_id) {
   const showCSVExportModal = async(p_id) => {
     document.getElementById("csv-exp-toggle").click();
     document.getElementById("csv-export-request-btn").onclick = () => submitCSVExportRequest(p_id);
-    let projName = await eel.eel_get_proj_info(p_id)()
+    let projName = await eel.eel_get_proj_info(p_id)();
+    projName = projName.project_name;
+    document.getElementById("modal-csv-title").innerHTML = `Exporting ${projName}`
     console.log(projName);
 
   }
