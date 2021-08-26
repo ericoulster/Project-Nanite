@@ -24,7 +24,7 @@ a.icon {
 
 li.nav-item {
     position: relative;
-    transition: opacity .5s;
+    transition: opacity .65s transform .2s ease-in-out;
 }
 
 .nav-item .optionExplanation {
@@ -40,7 +40,7 @@ li.nav-item {
     width: 120px;
     bottom: 100%;
     left: 50%;
-    transition: opacity .75s;
+    transition: opacity .65s;
 }
 
 .nav-item .optionExplanation::after {
