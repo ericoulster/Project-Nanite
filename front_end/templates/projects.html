@@ -146,6 +146,26 @@
     {% include 'modal.html' %}
   {% endwith %}
   <!-- Project Stats Modal End -->
+
+
+  <!-- Project Stats Modal -->
+{% with %}
+{% set modal_id = 'modal-about' %}
+{% set modal_header_text = 'Nanite' %}
+{% set modal_trigger_classes = 'about-nanite' %}
+{% set close_button_text = 'Cancel' %}
+{% set close_btn_fn = '' %}
+{% set modal_contents_html = '<div>
+    <div>
+        <p>Version [version number]</p>
+    </div>
+    <div>
+        <p>Created By: [people who created it and their roles]</p>
+    </div>
+</div>'|safe %}
+{% include 'modal.html' %}
+{% endwith %}
+<!-- Project Stats Modal End -->
 </div>
 <script>
   // Initial
