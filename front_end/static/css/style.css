@@ -616,6 +616,10 @@ ul li {
   text-align: center;
 }
 
+.export-response-message{
+  text-align: center;
+}
+
 /* SCROLLBAR STUFF */
 ::-webkit-scrollbar {
   width: 7px;

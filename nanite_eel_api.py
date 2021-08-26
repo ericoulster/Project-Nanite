@@ -266,3 +266,14 @@ def eel_update_project(authorname, project_id, proj_name, proj_path, proj_startd
     print(authorname, project_id, proj_name, proj_path, proj_startdate, proj_enddate, proj_daily, proj_total, proj_isWeekly, proj_weekly)
     print("=======================================")
 
+@eel.expose
+def eel_export_proj_to_csv(proj_id, csv_path):
+    pa = ProjectActions()
+    pa.set_project(proj_id)
+    try:
+        pa.render_wordcounts(csv_path)
+        print("We should be good!")
+        return 0
+    except:
+        print("WHOOPS THAT DIDN'T WORK")
+        return 1

@@ -594,10 +594,13 @@ class ProjectActions:
         print(save_df)
         save_df = save_df.drop(columns=['record_id', 'project_id', 'author_id'])
         print(save_df)
-        if self.project_name is not None:
-            save_df.to_csv(savepath(project_name=self.project_name, save_path=save_path))
-        else:
-            save_df.to_csv(savepath(project_name='word-records', save_path=save_path))
+        try:
+            if self.project_name is not None:
+                save_df.to_csv(savepath(project_name=self.project_name, save_path=save_path))
+            else:
+                save_df.to_csv(savepath(project_name='word-records', save_path=save_path))
+        except:
+            raise Exception
 
 
     def return_weekly_avg(self):
