@@ -46,16 +46,18 @@ def list_projects_html(username):
         <div class="header panel">
             <h2>{{ project.project_name }}</h2>
             <div class="project-header-buttons">
-                <div>
+                <div class="proj-nav-icon">
                     <a class="edit-project icon" href="#" onclick="showEditProjectModal({{idx}})"><img src="../static/imgs/icons/pencil.svg"></a>
                     <span class="optionExplanation">Edit Project</span>
                 </div>
-                <div>
+                <div class="proj-nav-icon">
+                    <a class="download-project icon" href="#" onclick="showCSVExportModal({{idx}})"><img src="../static/imgs/icons/download.svg"></a>
+                    <span class="optionExplanation">Export to CSV</span>
                 </div>
-                <div>
+                <div class="proj-nav-icon">
+                    <a class="del-project icon" href="#" onclick="delete_project(get_username(),'{{ project.project_name }}')"><img src="../static/imgs/icons/trash.svg"></a>
+                    <span class="optionExplanation">Delete Project</span>
                 </div>
-                <a class="download-project icon" href="#" onclick="showCSVExportModal({{idx}})"><img src="../static/imgs/icons/download.svg"><span class="optionExplanation">Export to CSV</span></a>
-                <a class="del-project icon" href="#" onclick="delete_project(get_username(),'{{ project.project_name }}')"><img src="../static/imgs/icons/trash.svg"><span class="optionExplanation">Delete Project</span></a>
             </div>
         </div>
         <div class="progress panel"><label for="project-progress">Today's Progress:</label>

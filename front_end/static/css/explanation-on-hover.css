@@ -1,27 +1,3 @@
-a.icon {
-    position: relative;
-}
-
-.icon .optionExplanation {
-    opacity: 0;
-    background-color: black;
-    color: white;
-    text-align: center;
-    padding: 5px;
-    border-radius: 6px;
-    font-size: .8rem;
-    position: absolute;
-    z-index: 3;
-    width: 120px;
-    bottom: 100%;
-    right: 10%;
-    transition: opacity 1s;
-}
-
-.icon:hover .optionExplanation {
-    opacity: .5;
-}
-
 li.nav-item {
     position: relative;
     transition: opacity .65s transform .2s ease-in-out;
@@ -46,7 +22,7 @@ li.nav-item {
 .nav-item .optionExplanation::after {
     content: " ";
     position: absolute;
-    top: 95%; /* At the bottom of the tooltip */
+    top: 95%; 
     right: 80%;
     margin-left: -5px;
     border-width: 5px;
@@ -59,5 +35,46 @@ li.nav-item {
 }
 
 .nav-item:hover .optionExplanation {
+    opacity: .75;
+}
+
+div.proj-nav-icon {
+    display: inline-block;
+    position: relative;
+    transition: opacity .65s transform .2s ease-in-out;
+}
+
+.proj-nav-icon .optionExplanation {
+    opacity: 0;
+    background-color: black;
+    color: white;
+    text-align: center;
+    padding: 5px;
+    border-radius: 6px;
+    font-size: .8rem;
+    position: absolute;
+    z-index: 3;
+    width: 120px;
+    bottom: 100%;
+    right: 20%;
+    transition: opacity .65s;
+}
+
+.proj-nav-icon .optionExplanation::after {
+    content: " ";
+    position: absolute;
+    top: 95%; 
+    left: 90%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+  }
+
+.proj-nav-icon:hover {
+    transform: scale(1.1);
+}
+
+.proj-nav-icon:hover .optionExplanation {
     opacity: .75;
 }
