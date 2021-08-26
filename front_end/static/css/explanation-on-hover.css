@@ -1,0 +1,63 @@
+a.icon {
+    position: relative;
+}
+
+.icon .optionExplanation {
+    opacity: 0;
+    background-color: black;
+    color: white;
+    text-align: center;
+    padding: 5px;
+    border-radius: 6px;
+    font-size: .8rem;
+    position: absolute;
+    z-index: 3;
+    width: 120px;
+    bottom: 100%;
+    right: 10%;
+    transition: opacity 1s;
+}
+
+.icon:hover .optionExplanation {
+    opacity: .5;
+}
+
+li.nav-item {
+    position: relative;
+    transition: opacity .5s;
+}
+
+.nav-item .optionExplanation {
+    opacity: 0;
+    background-color: black;
+    color: white;
+    text-align: center;
+    padding: 5px;
+    border-radius: 6px;
+    font-size: .8rem;
+    position: absolute;
+    z-index: 3;
+    width: 120px;
+    bottom: 100%;
+    left: 50%;
+    transition: opacity .75s;
+}
+
+.nav-item .optionExplanation::after {
+    content: " ";
+    position: absolute;
+    top: 95%; /* At the bottom of the tooltip */
+    right: 80%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+  }
+
+.nav-item:hover {
+    transform: scale(1.1);
+}
+
+.nav-item:hover .optionExplanation {
+    opacity: .75;
+}
