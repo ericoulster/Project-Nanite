@@ -90,8 +90,9 @@
         <fieldset> 
             <!-- <legend class="hidden">Add a new project here:</legend> -->
               <label>What\'s the name of your project?</label><input id="edit_project-name" type="text" name="name" required>
-              <label>File/folder Path:</label><input id="edit_project-path" type="text" name="filepath" placeholder="C:/filepath/filename.txt" required>
-              <button onclick="dir_select_tk_input()">Select Directory</button>
+              <label>File/folder Path:</label><input id="edit_project-path" type="text" name="filepath" placeholder="C:/filepath/filename.txt" disabled>
+              <!-- <label>File/folder Path:</label><input id="edit_project-path" type="text" name="filepath" placeholder="C:/filepath/filename.txt" required>
+              <button onclick="dir_select_tk_input()">Select Directory</button> -->
               <!-- <label>Files of type:</label> -->
               <!-- <select id="filetype" name="filetype" required>
                 <option value="txt">txt</option>
@@ -125,11 +126,11 @@
       {% set modal_header_text = 'Export to CSV' %}
       {% set close_button_text = 'Cancel' %}
       {% set close_btn_fn = "" %}
-      {% set modal_contents_html = '<div id="csv-export" class="new-project-form-container {% if hasprojects %}hidden{% endif %}">
+      {% set modal_contents_html = '<div id="csv-export-input" class="new-project-form-container {% if hasprojects %}hidden{% endif %}">
         <div id="csv-export-main" class="project-form new-project">
           <div>
-            <label>Folder Path: </label><input id="export-directory" type="text" name="filepath" placeholder="C:/filepath" required>
-            <button onclick="dir_select_tk_input()">Select Directory</button>
+            <label>Folder Path: </label><input id="export-directory-path" type="text" name="filepath" placeholder="C:/filepath" required>
+            <button onclick="dir_select_tk_input(`csv`)">Select Directory</button>
           </div>
           <div>
             <button id="csv-export-request-btn">Extract CSV</button>
@@ -233,11 +234,12 @@ async function new_name_prompt(p_id) {
   const showCSVExportModal = async(p_id) => {
     document.getElementById("csv-exp-toggle").click();
     document.getElementById("csv-export-request-btn").onclick = () => submitCSVExportRequest(p_id);
-    let projName = await eel.eel_get_proj_info(p_id)();
-    projName = projName.project_name;
+    let projInfo = await eel.eel_get_proj_info(p_id)();
+    let projName = projInfo.project_name;
+    
+
     document.getElementById("modal-csv-title").innerHTML = `Exporting ${projName}`
     console.log(projName);
-
   }
 
     // Used to open and populate the edit modal with the values of whatever project is
