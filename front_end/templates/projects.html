@@ -83,8 +83,6 @@
     {% with %}
     {% set modal_id = 'modal-edit-proj' %}
     {% set modal_header_text = 'Edit Existing Project' %}
-    {% set modal_trigger_text = '+ New Project' %}
-    {% set modal_trigger_classes = 'new-project' %}
     {% set close_button_text = 'Cancel' %}
     {% set close_btn_fn = "" %}
     {% set modal_contents_html = '<div id="edit-project" class="new-project-form-container {% if hasprojects %}hidden{% endif %}">
@@ -121,6 +119,23 @@
     {% include 'modal.html' %}
   {% endwith %}
   <!-- Edit Project Modal End -->
+      <!-- CSV Exports Modal -->
+      {% with %}
+      {% set modal_id = 'modal-csv' %}
+      {% set modal_header_text = 'Export to CSV' %}
+      {% set close_button_text = 'Cancel' %}
+      {% set close_btn_fn = "" %}
+      {% set modal_contents_html = '<div id="csv-export" class="new-project-form-container {% if hasprojects %}hidden{% endif %}">
+        <div id="csv-export-main" class="project-form new-project">
+          <label>Folder Path:</label><input id="export-directory" type="text" name="filepath" placeholder="C:/filepath/filename.txt" required>
+          <button onclick="dir_select_tk_input()">Select Directory</button>
+          <label>Name of CSV</label><input id="export-name" type="text" name="name" required>
+          <button id="csv-export-request-btn">Extract CSV</button>
+        </div>
+      </div>'|safe %}
+      {% include 'modal.html' %}
+    {% endwith %}
+    <!-- CSV Export Modal End -->
   <!-- Project Stats Modal -->
     {% with %}
     {% set modal_id = 'modal-stats' %}
@@ -200,6 +215,7 @@ async function new_name_prompt(p_id) {
   // "DYNAMICALLY OPEN / FILL OUT MODALS" FUNCTIONS
   // ===================================================/
 
+  // Used to open and populate the stats modal for the selected project
   const showStatsModal = async (selectedId) => {
     let selectedName =  document.querySelector('#project-' + String(selectedId) + '-summary h2').innerHTML;
     let statsData = await eel.eel_return_project_stats(selectedId)();
@@ -210,17 +226,26 @@ async function new_name_prompt(p_id) {
     statsModal_Populate(statsData);
   }
 
+  // Used to open and populate the CSV export screen for selected project
+  const showCSVExportModal = async(p_id) => {
+    document.getElementById("csv-exp-toggle").click();
+    document.getElementById("csv-export-request-btn").onclick = () => submitCSVExportRequest(p_id);
+    let projName = await eel.eel_get_proj_info(p_id)()
+    console.log(projName);
+
+  }
+
     // Used to open and populate the edit modal with the values of whatever project is
     // currently selected
-  const fillEditProjectModal = async(p_id) => {
+  const showEditProjectModal = async(p_id) => {
     document.getElementById("edit-proj-toggle").click();
     document.querySelector("#edit-project form").onsubmit = () => submitEditedProject(p_id);
-    let userProj = await eel_return_projects_by_name(get_username());
-    
-    let currProj = userProj.filter(proj => proj[0] == p_id)[0]
-    console.log(currProj)
-    let dailyWords = currProj[7];
-    let totalWords = currProj[6];
+    let currProj = await eel.eel_get_proj_info(p_id)()
+
+    console.log(currProj);
+
+    let dailyWords = currProj.current_daily_target;
+    let totalWords = currProj.wordcountgoal;
 
     let wordCountElem = document.getElementById("edit_wordcountgoal");
     let dailyCheckElem = document.getElementById("edit_daily");
@@ -229,7 +254,7 @@ async function new_name_prompt(p_id) {
 
     // Checks to see if isWeekly is true
     // Displays either weekly or daily by default
-    if (currProj[10]==1) {
+    if (currProj.is_weekly_wordcount == 1) {
       dailyCheckElem.disabled = true;
       dailyCheckElem.checked = false;
 
@@ -249,10 +274,10 @@ async function new_name_prompt(p_id) {
       wordCountElem.value = dailyWords;
     }
 
-    document.getElementById("edit_project-name").value =  currProj[2];
-    document.getElementById("edit_project-path").value =  currProj[9];
-    document.getElementById("edit_targetenddate").value = currProj[5];
-    document.getElementById("edit_targetstartdate").value = currProj[4];
+    document.getElementById("edit_project-name").value =  currProj.project_name;
+    document.getElementById("edit_project-path").value =  currProj.project_path;
+    document.getElementById("edit_targetstartdate").value = currProj.project_start_date;
+    document.getElementById("edit_targetenddate").value = currProj.deadline;
   } 
 
 
@@ -293,16 +318,16 @@ async function new_name_prompt(p_id) {
       let wp_page = 42; // TO DO: Used for later if someone wants to count pages rather than words
       projectpath = document.querySelector(`#${formType}_project-path`).value;
 
-        // Used for seeing values set by add project
-    localStorage.setItem('extr_projectname', `${projectname}`);
-    localStorage.setItem('extr_targetstartdate', `${targetstartdate}`);
-    localStorage.setItem('extr_targetenddate', `${targetenddate}`);
-    localStorage.setItem('extr_wordcountgoal', `${wordcountgoal}`);
-    localStorage.setItem('extr_current_daily_target', `${current_daily_target}`);
-    localStorage.setItem('extr_wp_page', `${wp_page}`);
-    localStorage.setItem('extr_projectpath', `${projectpath}`);
-    localStorage.setItem('extr_isWeekly', `${isWeekly}`);
-    localStorage.setItem('extr_weeklyCount', `${weeklyCount}`);
+    //     // Used for seeing values set by add project
+    // localStorage.setItem('extr_projectname', `${projectname}`);
+    // localStorage.setItem('extr_targetstartdate', `${targetstartdate}`);
+    // localStorage.setItem('extr_targetenddate', `${targetenddate}`);
+    // localStorage.setItem('extr_wordcountgoal', `${wordcountgoal}`);
+    // localStorage.setItem('extr_current_daily_target', `${current_daily_target}`);
+    // localStorage.setItem('extr_wp_page', `${wp_page}`);
+    // localStorage.setItem('extr_projectpath', `${projectpath}`);
+    // localStorage.setItem('extr_isWeekly', `${isWeekly}`);
+    // localStorage.setItem('extr_weeklyCount', `${weeklyCount}`);
 
 
     return {authorname:authorname, projectname: projectname, projectpath: projectpath, targetstartdate: targetstartdate, 
@@ -314,26 +339,26 @@ async function new_name_prompt(p_id) {
     let {authorname, projectname, projectpath, targetstartdate, targetenddate, 
       wp_page, current_daily_target, wordcountgoal, isWeekly, weeklyCount} = extractValuesFromForum("new");
     
-    localStorage.setItem('authorname', `${authorname}`);
-    localStorage.setItem('type_authorname', `${typeof authorname}`);
-    localStorage.setItem('projectname', `${projectname}`);
-    localStorage.setItem('type_projectname', `${typeof projectname}`);
-    localStorage.setItem('targetstartdate', `${targetstartdate}`);
-    localStorage.setItem('type_targetstartdate', `${typeof targetstartdate}`);
-    localStorage.setItem('targetenddate', `${targetenddate}`);
-    localStorage.setItem('type_targetenddate', `${typeof targetenddate}`);
-    localStorage.setItem('wordcountgoal', `${wordcountgoal}`);
-    localStorage.setItem('type_wordcountgoal', `${typeof wordcountgoal}`);
-    localStorage.setItem('current_daily_target', `${current_daily_target}`);
-    localStorage.setItem('type_current_daily_target', `${typeof current_daily_target}`);
-    localStorage.setItem('wp_page', `${wp_page}`);
-    localStorage.setItem('type_wp_page', `${typeof wp_page}`);
-    localStorage.setItem('projectpath', `${projectpath}`);
-    localStorage.setItem('type_projectpath', `${typeof projectpath}`);
-    localStorage.setItem('isWeekly', `${isWeekly}`);
-    localStorage.setItem('type_isWeekly', `${typeof isWeekly}`);
-    localStorage.setItem('weeklyCount', `${weeklyCount}`);
-    localStorage.setItem('type_weeklyCount', `${typeof weeklyCount}`);
+    // localStorage.setItem('authorname', `${authorname}`);
+    // localStorage.setItem('type_authorname', `${typeof authorname}`);
+    // localStorage.setItem('projectname', `${projectname}`);
+    // localStorage.setItem('type_projectname', `${typeof projectname}`);
+    // localStorage.setItem('targetstartdate', `${targetstartdate}`);
+    // localStorage.setItem('type_targetstartdate', `${typeof targetstartdate}`);
+    // localStorage.setItem('targetenddate', `${targetenddate}`);
+    // localStorage.setItem('type_targetenddate', `${typeof targetenddate}`);
+    // localStorage.setItem('wordcountgoal', `${wordcountgoal}`);
+    // localStorage.setItem('type_wordcountgoal', `${typeof wordcountgoal}`);
+    // localStorage.setItem('current_daily_target', `${current_daily_target}`);
+    // localStorage.setItem('type_current_daily_target', `${typeof current_daily_target}`);
+    // localStorage.setItem('wp_page', `${wp_page}`);
+    // localStorage.setItem('type_wp_page', `${typeof wp_page}`);
+    // localStorage.setItem('projectpath', `${projectpath}`);
+    // localStorage.setItem('type_projectpath', `${typeof projectpath}`);
+    // localStorage.setItem('isWeekly', `${isWeekly}`);
+    // localStorage.setItem('type_isWeekly', `${typeof isWeekly}`);
+    // localStorage.setItem('weeklyCount', `${weeklyCount}`);
+    // localStorage.setItem('type_weeklyCount', `${typeof weeklyCount}`);
 
     eel.new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, isWeekly, weeklyCount);
   };
@@ -342,29 +367,33 @@ async function new_name_prompt(p_id) {
     let {authorname, projectname, projectpath, targetstartdate, targetenddate, 
       wp_page, current_daily_target, wordcountgoal, isWeekly, weeklyCount} = extractValuesFromForum("edit");
     
-    localStorage.setItem('authorname', `${authorname}`);
-    localStorage.setItem('type_authorname', `${typeof authorname}`);
-    localStorage.setItem('projectname', `${projectname}`);
-    localStorage.setItem('type_projectname', `${typeof projectname}`);
-    localStorage.setItem('targetstartdate', `${targetstartdate}`);
-    localStorage.setItem('type_targetstartdate', `${typeof targetstartdate}`);
-    localStorage.setItem('targetenddate', `${targetenddate}`);
-    localStorage.setItem('type_targetenddate', `${typeof targetenddate}`);
-    localStorage.setItem('wordcountgoal', `${wordcountgoal}`);
-    localStorage.setItem('type_wordcountgoal', `${typeof wordcountgoal}`);
-    localStorage.setItem('current_daily_target', `${current_daily_target}`);
-    localStorage.setItem('type_current_daily_target', `${typeof current_daily_target}`);
-    localStorage.setItem('wp_page', `${wp_page}`);
-    localStorage.setItem('type_wp_page', `${typeof wp_page}`);
-    localStorage.setItem('projectpath', `${projectpath}`);
-    localStorage.setItem('type_projectpath', `${typeof projectpath}`);
-    localStorage.setItem('isWeekly', `${isWeekly}`);
-    localStorage.setItem('type_isWeekly', `${typeof isWeekly}`);
-    localStorage.setItem('weeklyCount', `${weeklyCount}`);
-    localStorage.setItem('type_weeklyCount', `${typeof weeklyCount}`);
+    // localStorage.setItem('authorname', `${authorname}`);
+    // localStorage.setItem('type_authorname', `${typeof authorname}`);
+    // localStorage.setItem('projectname', `${projectname}`);
+    // localStorage.setItem('type_projectname', `${typeof projectname}`);
+    // localStorage.setItem('targetstartdate', `${targetstartdate}`);
+    // localStorage.setItem('type_targetstartdate', `${typeof targetstartdate}`);
+    // localStorage.setItem('targetenddate', `${targetenddate}`);
+    // localStorage.setItem('type_targetenddate', `${typeof targetenddate}`);
+    // localStorage.setItem('wordcountgoal', `${wordcountgoal}`);
+    // localStorage.setItem('type_wordcountgoal', `${typeof wordcountgoal}`);
+    // localStorage.setItem('current_daily_target', `${current_daily_target}`);
+    // localStorage.setItem('type_current_daily_target', `${typeof current_daily_target}`);
+    // localStorage.setItem('wp_page', `${wp_page}`);
+    // localStorage.setItem('type_wp_page', `${typeof wp_page}`);
+    // localStorage.setItem('projectpath', `${projectpath}`);
+    // localStorage.setItem('type_projectpath', `${typeof projectpath}`);
+    // localStorage.setItem('isWeekly', `${isWeekly}`);
+    // localStorage.setItem('type_isWeekly', `${typeof isWeekly}`);
+    // localStorage.setItem('weeklyCount', `${weeklyCount}`);
+    // localStorage.setItem('type_weeklyCount', `${typeof weeklyCount}`);
 
     eel.eel_update_project(authorname, project_id, projectname, projectpath, 
       targetstartdate, targetenddate, current_daily_target, wordcountgoal, isWeekly, weeklyCount)
+  }
+
+  const submitCSVExportRequest = (proj_id, dir_path, filename) => {
+    console.log(proj_id, dir_path, filename)
   }
 
 

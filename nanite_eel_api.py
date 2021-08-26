@@ -46,7 +46,8 @@ def list_projects_html(username):
         <div class="header panel">
             <h2>{{ project.project_name }}</h2>
             <div class="project-header-buttons">
-                <a class="edit-project icon" href="#" onclick="fillEditProjectModal({{idx}})"><img src="../static/imgs/icons/pencil.svg"></a>
+                <a class="edit-project icon" href="#" onclick="showCSVExportModal({{idx}})"><img src="../static/imgs/icons/pencil.svg"></a>
+                <a class="edit-project icon" href="#" onclick="showEditProjectModal({{idx}})"><img src="../static/imgs/icons/pencil.svg"></a>
                 <a class="del-project icon" href="#" onclick="delete_project(get_username(),'{{ project.project_name }}')"><img src="../static/imgs/icons/trash.svg"></a>
             </div>
         </div>
@@ -220,6 +221,14 @@ def eel_refresh_wordcounts(project_id):
     return 
 
 @eel.expose
+def eel_get_proj_info(project_id):
+    """
+    Given a project id, retrieves all information about it
+    """
+    pa = ProjectActions()
+    return pa.get_project(project_id)[0]
+
+@eel.expose
 def eel_return_project_stats(project_id):
     """
     Given a project id, retrieves all information required for the stats modal
@@ -230,6 +239,7 @@ def eel_return_project_stats(project_id):
 def eel_update_project(authorname, project_id, proj_name, proj_path, proj_startdate,
  proj_enddate, proj_daily, proj_total, proj_isWeekly, proj_weekly):
     """
+    Takes in all old and new information about project and edits it to match
     """
     pa = ProjectActions()
     pa.set_project(project_id)
@@ -246,3 +256,4 @@ def eel_update_project(authorname, project_id, proj_name, proj_path, proj_startd
     print("EDITED WITH")
     print(authorname, project_id, proj_name, proj_path, proj_startdate, proj_enddate, proj_daily, proj_total, proj_isWeekly, proj_weekly)
     print("=======================================")
+
