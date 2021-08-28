@@ -192,17 +192,6 @@ line {
     pointer-events: none;			
 }
 
-div.tooltip::after {
-    content: " ";
-    position: absolute;
-    top: 95%; 
-    right: 70%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: black transparent transparent transparent;
-  }
-
 @media only screen and (min-width: 900px) {
     .wcDiv {
         flex-basis: 35%;

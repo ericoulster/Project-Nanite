@@ -454,7 +454,7 @@ const statsModal_UpdateGraph = (fullData) => {
     var bar = wcsvg.selectAll("bar")
         .data(barData)
         .enter();
-        
+     
         bar.append("rect")
         .attr("x", function(d) { return x(d.Wdate); })
         .attr("y", function(d) { return y(d.Wcount); })
@@ -478,6 +478,17 @@ const statsModal_UpdateGraph = (fullData) => {
     .attr("class", "tooltip")				
     .style("opacity", 0);
 
+
+    // if (barWidth > 750) {
+    //     fontMultiplier = 1.5;
+    // } else if (barWidth > 600) {
+    //     fontMultiplier = 1.3;
+    // } else {
+    //     fontMultiplier = 1;
+    // }
+
+    let ttMultiplier = fontMultiplier == 1 ? -4 : 20;
+
     // Line-bubbles
     wcsvg.selectAll("circles")
         .data(barData)
@@ -495,16 +506,15 @@ const statsModal_UpdateGraph = (fullData) => {
                 .duration(200)		
                 .style("opacity", .9);		
             div.html(`${d.Wdate}<br>  ${d.Wcount} / ${d.Wtarget_sum}`)	
-                .style("left", (x) + "px")		
-                .style("top", (y - (4 * fontMultiplier)) + "px");	
+                .style("left", (x + ttMultiplier) + "px")		
+                .style("top", (y + ttMultiplier) + "px");	
             })					
         .on("mouseout", function(d) {		
             div.transition()		
                 .duration(500)		
                 .style("opacity", 0);	
-        });;
+        });
 
-        
     wcsvg.append("text")         // Add the Y Axis
         .attr("x", (width / 2))             
         .attr("y", 0 - (margin.top / 2))
