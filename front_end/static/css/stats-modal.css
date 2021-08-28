@@ -45,6 +45,7 @@
 }
 
 #wordcounter {
+    position: relative;
     background-color: #22262a;
     border-radius: 25px;
     padding: 5px;
@@ -173,6 +174,34 @@ line {
 }
 
 
+/* --------------------------------/
+ * TOOLTIP
+ * ------------------------------/
+ */
+ div.tooltip {	
+    position: absolute;			
+    text-align: center;
+    width: 150px;					
+    padding: 2px;				
+    font: 12px sans-serif;		
+    background: black;
+    color: white;
+    font-size: .8rem;
+    border: 0px;		
+    border-radius: 8px;			
+    pointer-events: none;			
+}
+
+div.tooltip::after {
+    content: " ";
+    position: absolute;
+    top: 95%; 
+    right: 70%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+  }
 
 @media only screen and (min-width: 900px) {
     .wcDiv {

@@ -383,9 +383,9 @@ const statsModal_UpdateGraph = (fullData) => {
     // var margin = {top: 30, right: 30, bottom: 70, left: 60},
     //     width = barWidth - margin.left - margin.right,
     //     height = (barWidth * .67) - margin.top - margin.bottom;
-    var margin = {top: barWidth * .15, right: barWidth * .05, bottom: barWidth * .15, left: barWidth * .12},
+    var margin = {top: barWidth * .10, right: barWidth * .05, bottom: barWidth * .10, left: barWidth * .12},
         width = barWidth - margin.left - margin.right,
-        height = (barWidth * .65) - margin.top - margin.bottom; // .67
+        height = (barWidth * .58) - margin.top - margin.bottom; // .67
     
     // setting the width and padding of the userInputDiv to match the graph
     sel_userInputRow.style.width = width + margin.left - margin.right;
@@ -474,6 +474,9 @@ const statsModal_UpdateGraph = (fullData) => {
             .y(function(d) { return y(d.Wtarget_sum) }) // Prev d.Wtarget
         );
 
+    var div = d3.select("#wordcounter").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0);
 
     // Line-bubbles
     wcsvg.selectAll("circles")
@@ -485,7 +488,21 @@ const statsModal_UpdateGraph = (fullData) => {
         .attr("cy", function(d) { return y(d.Wtarget_sum) }) // Prev d.Wtarget
         .attr("fill", "#F6D55C")
         .attr("stroke", "#474F56")
-        .attr("r", (4 * fontMultiplier));
+        .attr("r", (4 * fontMultiplier))
+        .on("mouseover", function(event, d) {	
+            const[x, y] = d3.pointer(event)	
+            div.transition()		
+                .duration(200)		
+                .style("opacity", .9);		
+            div.html(`${d.Wdate}<br>  ${d.Wcount} / ${d.Wtarget_sum}`)	
+                .style("left", (x) + "px")		
+                .style("top", (y - (4 * fontMultiplier)) + "px");	
+            })					
+        .on("mouseout", function(d) {		
+            div.transition()		
+                .duration(500)		
+                .style("opacity", 0);	
+        });;
 
         
     wcsvg.append("text")         // Add the Y Axis
