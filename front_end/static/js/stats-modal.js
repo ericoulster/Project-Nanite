@@ -248,6 +248,10 @@ const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar
         .domain([0, maxY])
         .range([ height, 0]);
 
+    var div = d3.select("#stats-mostActive").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0);
+
     var bar = weekSvg.selectAll("bar")
     .data(weekData)
     .enter()
@@ -258,6 +262,20 @@ const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar
     .attr("height", function(d) { return height - y(d.Wcount); })
     .attr("ry", 3)
     .attr("fill", function(d) {if (d.IsMax === false) {return "#1F2428"} else {return "#F6D55C"}})
+    .on("mouseover", function(event, d) {	
+        const[x, y] = d3.pointer(event)	
+        div.transition()		
+            .duration(200)		
+            .style("opacity", .9);		
+        div.html(`${d.Day}:  ${d.Wcount} `)	
+            .style("right", (x) + "px")		
+            .style("top", (y) + "px");	
+        })					
+    .on("mouseout", function(d) {		
+        div.transition()		
+            .duration(500)		
+            .style("opacity", 0);	
+    });
 
     weekSvg.append("text")
         .attr("x", (width / 2))             
@@ -478,14 +496,6 @@ const statsModal_UpdateGraph = (fullData) => {
     .attr("class", "tooltip")				
     .style("opacity", 0);
 
-
-    // if (barWidth > 750) {
-    //     fontMultiplier = 1.5;
-    // } else if (barWidth > 600) {
-    //     fontMultiplier = 1.3;
-    // } else {
-    //     fontMultiplier = 1;
-    // }
 
     let ttMultiplier = fontMultiplier == 1 ? -4 : 20;
 

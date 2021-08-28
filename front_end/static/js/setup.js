@@ -13,4 +13,5 @@ const prepNaniteUser = async() => {
     }
 
     window.location.href="http://localhost:8000/templates/projects.html";
+
 }
