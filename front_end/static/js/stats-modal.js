@@ -250,7 +250,7 @@ const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar
 
     var wcdiv = d3.select("#stats-mostActive").append("div")	
     .attr("class", "tooltip")				
-    // .style("opacity", 0);
+    .style("opacity", 0);
 
     var bar = weekSvg.selectAll("bar")
     .data(weekData)
@@ -271,12 +271,12 @@ const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar
             .style('display', 'inline')
             .style('right', (x / 5) + 'px')
             .style('top', (y * 1.95) + 'px');
-        });					
-    // .on("mouseout", function(d) {		
-    //     wcdiv.transition()		
-    //         .duration(500)		
-    //         .style("opacity", 0);	
-    // });
+        })				
+    .on("mouseout", function(d) {		
+        wcdiv.transition()		
+            .duration(500)		
+            .style("opacity", 0);	
+    });
 
     weekSvg.append("text")
         .attr("x", (width / 2))             
