@@ -248,9 +248,9 @@ const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar
         .domain([0, maxY])
         .range([ height, 0]);
 
-    var div = d3.select("#stats-mostActive").append("div")	
+    var wcdiv = d3.select("#stats-mostActive").append("div")	
     .attr("class", "tooltip")				
-    .style("opacity", 0);
+    // .style("opacity", 0);
 
     var bar = weekSvg.selectAll("bar")
     .data(weekData)
@@ -264,18 +264,19 @@ const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar
     .attr("fill", function(d) {if (d.IsMax === false) {return "#1F2428"} else {return "#F6D55C"}})
     .on("mouseover", function(event, d) {	
         const[x, y] = d3.pointer(event)	
-        div.transition()		
+        wcdiv.transition()		
             .duration(200)		
             .style("opacity", .9);		
-        div.html(`${d.Day}:  ${d.Wcount} `)	
-            .style("right", (x) + "px")		
-            .style("top", (y) + "px");	
-        })					
-    .on("mouseout", function(d) {		
-        div.transition()		
-            .duration(500)		
-            .style("opacity", 0);	
-    });
+        wcdiv.html(`${d.Day}:  ${d.Wcount} `)	
+            .style('display', 'inline')
+            .style('right', (x / 5) + 'px')
+            .style('top', (y * 1.95) + 'px');
+        });					
+    // .on("mouseout", function(d) {		
+    //     wcdiv.transition()		
+    //         .duration(500)		
+    //         .style("opacity", 0);	
+    // });
 
     weekSvg.append("text")
         .attr("x", (width / 2))             

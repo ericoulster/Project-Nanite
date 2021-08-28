@@ -147,6 +147,7 @@
 }
 
 #stats-mostActive {
+    position: relative;
     margin: 2px 0;
     border-radius: .45rem;
     border: 3px solid #22262a;
@@ -190,6 +191,12 @@ line {
     border: 0px;		
     border-radius: 8px;			
     pointer-events: none;			
+}
+
+#stats-mostActive div.tooltip {
+    width: 90px;
+    font: 11px sans-serif;
+
 }
 
 @media only screen and (min-width: 900px) {
