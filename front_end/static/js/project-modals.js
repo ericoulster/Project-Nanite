@@ -91,11 +91,49 @@ const toggleWordGoal = (wcGoalType) => {
 }
 
 
+// ---------------------------------------------------------/
+// CSV EXPORT MODAL
+// ---------------------------------------------------/
+
+// Used to open and populate the CSV export screen for selected project
+const showCSVExportModal = async(p_id) => {
+    document.getElementById("csv-exp-toggle").click();
+    let projInfo = await eel.eel_get_proj_info(p_id)();
+    let projName = projInfo.project_name;
+    
+    document.getElementById("modal-csv-title").innerHTML = `Exporting ${projName}`
+    document.getElementById("csv-export-input").innerHTML = `<div id="csv-export-main" class="project-form new-project">
+            <div>
+            <label>Folder Path: </label><input id="export-directory-path" type="text" name="filepath" placeholder="C:/filepath" required>
+            <button onclick="dir_select_tk_input('csv')">Select Directory</button>
+            </div>
+            <div>
+            <button id="csv-export-request-btn" onclick="submitCSVExportRequest(${p_id})">Extract CSV</button>
+            </div>
+        </div>`
+}
+
+
+// ---------------------------------------------------------/
+// STATS MODAL
+// ---------------------------------------------------/
+
+// Used to open and populate the stats modal for the selected project
+const showStatsModal = async (selectedId) => {
+let selectedName =  document.querySelector('#project-' + String(selectedId) + '-summary h2').innerHTML;
+let statsData = await eel.eel_return_project_stats(selectedId)();
+
+// NEED TO FIND A BETTER WAY OF DOING THIS BUT FOR NOW HERE WE GO
+document.getElementById("stats-toggle").click();
+document.getElementById("modal-stats-title").innerHTML = `${selectedName} Statistics`
+statsModal_Populate(statsData);
+}
+
 
 
 
 // =================================================================/
-// OPEN / SUBMIT MODAL FUNCTIONS
+// SUBMIT MODAL FUNCTIONS
 // ===========================================================/ 
 
 // ---------------------------------------------------------/
@@ -181,3 +219,34 @@ const projFormExtractVals = async (formType, wcGoalType) => {
         targetenddate: targetenddate, wp_page:wp_page, current_daily_target: current_daily_target, 
         wordcountgoal: wordcountgoal, isWeekly:isWeekly, weeklyCount:weeklyCount}
 }
+
+
+
+// ---------------------------------------------------------/
+// CSV EXPORT MODAL
+// ---------------------------------------------------/
+
+const submitCSVExportRequest = async (proj_id, proj_name) => {
+
+    let dir_path = document.getElementById("export-directory-path").value;
+    let last_char_of_path = dir_path[dir_path.length - 1];
+    
+    if (dir_path[dir_path.length - 1] != "/"){
+      dir_path = dir_path + "/"
+    }
+
+    let export_success = await eel.eel_export_proj_to_csv(proj_id, dir_path)();
+    let resp_message;
+      console.log(export_success)
+    if (export_success == 0) {
+      console.log("We good");
+      resp_message = "<p>CSV exported!</p>"
+    } else {
+      console.log("We good");
+      resp_message = "<p>There was an error in exporting your file. Please double-check the folder you've selected.</p>"
+    }
+
+    document.getElementById("csv-export-input").innerHTML = `<div class='export-response-message'>
+      ${resp_message}
+      </div>`
+  }
