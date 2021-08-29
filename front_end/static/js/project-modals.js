@@ -105,14 +105,16 @@ const toggleWordGoal = (wcGoalType) => {
 // This is the function run by the "Create Project" button.
 // formType expected to be either "new" (add project) or "edit" (edit project)
 // wcGoalType expected to be "daily", "weekly", or "total"
-const handleProjFormSubmit = (formType, wcGoalType) => {
+const handleProjFormSubmit = async (formType, wcGoalType) => {
     let allFilled = checkIfAnyEmpty(formType);
     if (allFilled) {
         let {authorname, projectname, projectpath, targetstartdate, targetenddate, wp_page, current_daily_target, 
-            wordcountgoal, isWeekly, weeklyCount} = projFormExtractVals(formType, wcGoalType);
+            wordcountgoal, isWeekly, weeklyCount} = await projFormExtractVals(formType, wcGoalType);
 
         if (formType == "new") {
-            console.log()
+            console.log(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, isWeekly, weeklyCount);
+            eel.new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, isWeekly, weeklyCount);
+            location.reload();
         }
     } 
     else {
