@@ -348,6 +348,8 @@ const statsModal_UpdateGraph = (fullData) => {
         fontMultiplier = 1;
     }
 
+    let ttMultiplier = fontMultiplier == 1 ? -4 : 20;
+
     // data = buildWordChartData(data.);
     var dropdownMenu = d3.select("#selDataset");
     var granularity = dropdownMenu.property("value");
@@ -480,7 +482,21 @@ const statsModal_UpdateGraph = (fullData) => {
         .attr("width", x.bandwidth())
         .attr("height", function(d) { return height - y(d.Wcount); })
         .attr("ry", 2)
-        .attr("fill", "#F6D55C");
+        .attr("fill", "#F6D55C")
+        .on("mouseover", function(event, d) {	
+            const[x, y] = d3.pointer(event)	
+            div.transition()		
+                .duration(200)		
+                .style("opacity", .9);		
+            div.html(`${d.Wdate}<br>  ${d.Wcount} / ${d.Wtarget_sum}`)	
+                .style("left", (x + ttMultiplier) + "px")		
+                .style("top", (y + ttMultiplier) + "px");	
+            })					
+        .on("mouseout", function(d) {		
+            div.transition()		
+                .duration(500)		
+                .style("opacity", 0);	
+        });
     
     // Line
     wcsvg.append("path")
@@ -497,8 +513,6 @@ const statsModal_UpdateGraph = (fullData) => {
     .attr("class", "tooltip")				
     .style("opacity", 0);
 
-
-    let ttMultiplier = fontMultiplier == 1 ? -4 : 20;
 
     // Line-bubbles
     wcsvg.selectAll("circles")
