@@ -27,22 +27,23 @@ function getCookie(name) {
 
 async function dir_select_tk_input(reqType) {
   let filepath_input
-  switch(reqType){
-    case "edit":
-      filepath_input = document.getElementById("edit_project-path");
-      break;
-    case "csv":
-      filepath_input = document.getElementById("export-directory-path")
-      break;
-    default:
-      filepath_input = document.getElementById("new_project-path");
-    }
-    // Get the selected dir and put it into the input field
+      // Get the selected dir and put it into the input field
     // let filepath_input = document.querySelector('.new-project input[name="filepath"]');
     // Call into Python to get file dialog box
     let selected_dir = await eel.dir_select_tk()();
     // Put it into the form input
-    filepath_input.value = String(selected_dir);
+    //filepath_input.value = String(selected_dir);
+
+    switch(reqType){
+      case "edit":
+        filepath_input = document.getElementById("edit_project-path");
+        break;
+      case "csv":
+        filepath_input = document.getElementById("export-directory-path")
+        break;
+      default:
+        document.getElementById("new_wcProjPath").innerHTML = String(selected_dir);
+    }
 
     return selected_dir;
   }

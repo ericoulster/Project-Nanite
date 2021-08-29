@@ -1,0 +1,53 @@
+.proj-div h5 {
+    font-family: Archivo;
+    letter-spacing: .05rem;
+    margin-bottom: .25rem;
+}
+
+.proj-div input {
+    background-color:#C0C0C0;
+    border-radius: .5rem;
+    padding: 5px;
+    border: none;
+    border: .075rem solid #848884;
+    color: #22262a;
+}
+
+#new_project-name {
+    width: 75%;
+}
+
+#new_wcProjPath {
+    font-size: .75rem;
+    font-style: italic;
+    color: #C0C0C0;
+}
+
+.proj-form-btn {
+    background-color: #C0C0C0;
+    color: #333a40;
+    border: .075rem solid #C0C0C0;
+}
+
+.proj-form-btn:hover {
+    background-color: #f6d55c;
+    color: #333a40;
+    border: .075rem solid #f6d55c;
+}
+
+.proj-form-btn.selected-wc-btn {
+    background-color: #f6d55c;
+    color: #333a40;
+    border: .075rem solid #f6d55c;
+}
+
+#new_wcDateSection {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.proj-date-time-div {
+    align-items: center;
+}

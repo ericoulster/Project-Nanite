@@ -45,37 +45,32 @@
     {% set modal_trigger_classes = 'new-project' %}
     {% set close_button_text = 'Cancel' %}
     {% set close_btn_fn = "" %}
-    {% set modal_contents_html = '<div id="new-project" class="new-project-form-container {% if hasprojects %}hidden{% endif %}">
-      <form class="project-form new-project" onsubmit="add_new_project()">
-        <fieldset> 
-            <!-- <legend class="hidden">Add a new project here:</legend> -->
-              <label>What\'s the name of your project?</label><input id="new_project-name" type="text" name="name" required>
-              <label>File/folder Path:</label><input id="new_project-path" type="text" name="filepath" placeholder="C:/filepath/filename.txt" required>
-              <button onclick="dir_select_tk_input()">Select Directory</button>
-              <!-- <label>Files of type:</label> -->
-              <!-- <select id="filetype" name="filetype" required>
-                <option value="txt">txt</option>
-                <option value="rtf">rtf</option>
-                <option value="docx">docx</option>
-              </select> -->
-              <label>What\'s your writing goal?</label>
-              <div class="writing-goal">
-                <input id="new_wordcountgoal" type="text" name="wordcountgoal" required> words            
-                <div class="radio-buttons">
-                  <input type="radio" id="new_daily" name="wordcountreg" value="daily" required checked>
-                  <label for="new_daily">Daily</label>
-                  <input type="radio" id="new_weekly" name="wordcountreg" value="weekly" required>
-                  <label for="new_weekly">Weekly</label>
-                  <input type="radio" id="new_total" name="wordcountreg" value="total" required>
-                  <label for="new_total">Total</label>
-                </div>
-              </div>
-              <div class="start-date-in"><label>Start Date:</label><input id="new_targetstartdate" type="date" name="targetstartdate" required></div>
-              <div class="end-date-in"><label>Target End Date:</label><input id="new_targetenddate" type="date" name="targetenddate" required></div>
-              <input type="submit" value="Add New Project">
-        </fieldset> 
-      </form>
-    </div>'|safe %}
+    {% set modal_contents_html = '<div id="new-project" class="proj-div new-project-form-container {% if hasprojects %}hidden{% endif %}">
+    <div>
+      <h5>What is your project called?</h5>
+      <input id="new_project-name" type="text" name="name" required>
+  </div>
+  <div>
+      <h5>Where does your project live?</h5>
+      <button onclick="dir_select_tk_input()">Select Directory</button> <span id="new_wcProjPath"></span>
+  </div>
+  <div>
+      <h5>Would you like to set on overall goal or vary the goal day by day?</h5>
+      <button class="proj-form-btn" id="new_wcWeeklyBtn" onclick="toggleWordGoal(`weekly`)">Variable Daily</button> 
+      <button class="proj-form-btn" id="new_wcDailyBtn" onclick="toggleWordGoal(`daily`)">Consistent Daily</button> 
+      <button class="proj-form-btn" id="new_wcTotalBtn" onclick="toggleWordGoal(`total`)">Overall</button>
+      <p id="new_wcTypeDesc"></p>
+  </div>
+  <div id="new_wcGoalInterface">
+
+  </div>
+  <div id="new_wcDateSection">
+      <div class="proj-date-time-div"><h5>Start Date:</h5><input id="new_targetstartdate" type="date" name="targetstartdate" required></div>
+      <div class="proj-date-time-div"><h5>Target End Date:</h5><input id="new_targetenddate" type="date" name="targetenddate" required></div>
+  </div>
+  <div id="new_wcSubmitBtn">
+      
+  </div>'|safe %}
     {% include 'modal.html' %}
   {% endwith %}
   <!-- New Project Modal End -->
@@ -347,18 +342,6 @@ async function new_name_prompt(p_id) {
       let wp_page = 42; // TO DO: Used for later if someone wants to count pages rather than words
       projectpath = document.querySelector(`#${formType}_project-path`).value;
 
-    //     // Used for seeing values set by add project
-    // localStorage.setItem('extr_projectname', `${projectname}`);
-    // localStorage.setItem('extr_targetstartdate', `${targetstartdate}`);
-    // localStorage.setItem('extr_targetenddate', `${targetenddate}`);
-    // localStorage.setItem('extr_wordcountgoal', `${wordcountgoal}`);
-    // localStorage.setItem('extr_current_daily_target', `${current_daily_target}`);
-    // localStorage.setItem('extr_wp_page', `${wp_page}`);
-    // localStorage.setItem('extr_projectpath', `${projectpath}`);
-    // localStorage.setItem('extr_isWeekly', `${isWeekly}`);
-    // localStorage.setItem('extr_weeklyCount', `${weeklyCount}`);
-
-
     return {authorname:authorname, projectname: projectname, projectpath: projectpath, targetstartdate: targetstartdate, 
       targetenddate: targetenddate, wp_page:wp_page, current_daily_target: current_daily_target, 
       wordcountgoal: wordcountgoal, isWeekly:isWeekly, weeklyCount:weeklyCount}
@@ -367,27 +350,6 @@ async function new_name_prompt(p_id) {
   const add_new_project = () => {
     let {authorname, projectname, projectpath, targetstartdate, targetenddate, 
       wp_page, current_daily_target, wordcountgoal, isWeekly, weeklyCount} = extractValuesFromForum("new");
-    
-    // localStorage.setItem('authorname', `${authorname}`);
-    // localStorage.setItem('type_authorname', `${typeof authorname}`);
-    // localStorage.setItem('projectname', `${projectname}`);
-    // localStorage.setItem('type_projectname', `${typeof projectname}`);
-    // localStorage.setItem('targetstartdate', `${targetstartdate}`);
-    // localStorage.setItem('type_targetstartdate', `${typeof targetstartdate}`);
-    // localStorage.setItem('targetenddate', `${targetenddate}`);
-    // localStorage.setItem('type_targetenddate', `${typeof targetenddate}`);
-    // localStorage.setItem('wordcountgoal', `${wordcountgoal}`);
-    // localStorage.setItem('type_wordcountgoal', `${typeof wordcountgoal}`);
-    // localStorage.setItem('current_daily_target', `${current_daily_target}`);
-    // localStorage.setItem('type_current_daily_target', `${typeof current_daily_target}`);
-    // localStorage.setItem('wp_page', `${wp_page}`);
-    // localStorage.setItem('type_wp_page', `${typeof wp_page}`);
-    // localStorage.setItem('projectpath', `${projectpath}`);
-    // localStorage.setItem('type_projectpath', `${typeof projectpath}`);
-    // localStorage.setItem('isWeekly', `${isWeekly}`);
-    // localStorage.setItem('type_isWeekly', `${typeof isWeekly}`);
-    // localStorage.setItem('weeklyCount', `${weeklyCount}`);
-    // localStorage.setItem('type_weeklyCount', `${typeof weeklyCount}`);
 
     eel.new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, isWeekly, weeklyCount);
   };
@@ -395,27 +357,6 @@ async function new_name_prompt(p_id) {
   const submitEditedProject = (project_id) => {
     let {authorname, projectname, projectpath, targetstartdate, targetenddate, 
       wp_page, current_daily_target, wordcountgoal, isWeekly, weeklyCount} = extractValuesFromForum("edit");
-    
-    // localStorage.setItem('authorname', `${authorname}`);
-    // localStorage.setItem('type_authorname', `${typeof authorname}`);
-    // localStorage.setItem('projectname', `${projectname}`);
-    // localStorage.setItem('type_projectname', `${typeof projectname}`);
-    // localStorage.setItem('targetstartdate', `${targetstartdate}`);
-    // localStorage.setItem('type_targetstartdate', `${typeof targetstartdate}`);
-    // localStorage.setItem('targetenddate', `${targetenddate}`);
-    // localStorage.setItem('type_targetenddate', `${typeof targetenddate}`);
-    // localStorage.setItem('wordcountgoal', `${wordcountgoal}`);
-    // localStorage.setItem('type_wordcountgoal', `${typeof wordcountgoal}`);
-    // localStorage.setItem('current_daily_target', `${current_daily_target}`);
-    // localStorage.setItem('type_current_daily_target', `${typeof current_daily_target}`);
-    // localStorage.setItem('wp_page', `${wp_page}`);
-    // localStorage.setItem('type_wp_page', `${typeof wp_page}`);
-    // localStorage.setItem('projectpath', `${projectpath}`);
-    // localStorage.setItem('type_projectpath', `${typeof projectpath}`);
-    // localStorage.setItem('isWeekly', `${isWeekly}`);
-    // localStorage.setItem('type_isWeekly', `${typeof isWeekly}`);
-    // localStorage.setItem('weeklyCount', `${weeklyCount}`);
-    // localStorage.setItem('type_weeklyCount', `${typeof weeklyCount}`);
 
     eel.eel_update_project(authorname, project_id, projectname, projectpath, 
       targetstartdate, targetenddate, current_daily_target, wordcountgoal, isWeekly, weeklyCount)
