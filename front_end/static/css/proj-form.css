@@ -41,6 +41,15 @@
     border: .075rem solid #f6d55c;
 }
 
+#new_wcTypeDesc {
+    font-size: .85rem;
+    color: #C0C0C0;
+}
+
+.wc-toggle-div {
+    margin-bottom: .95rem;
+}
+
 #new_wcDateSection {
     display: flex;
     flex-direction: row;
@@ -48,6 +57,18 @@
     justify-content: space-between;
 }
 
+#new_wcGoalInterface {
+    font-size: .90rem;
+}
+
 .proj-date-time-div {
     align-items: center;
+}
+
+#new_wcSubmitBtn {
+    margin-top: .95rem;
+    text-align: center;
+}
+#new_wcSubmitBtn button{
+    width: 90%;
 }
