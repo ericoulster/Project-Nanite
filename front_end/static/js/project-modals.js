@@ -92,6 +92,28 @@ const toggleWordGoal = (wcGoalType) => {
 
 
 // ---------------------------------------------------------/
+// EDIT PROJECT MODAL
+// ---------------------------------------------------/
+
+const showEditProjectModal = async(p_id) => {
+    document.getElementById("edit-proj-toggle").click();
+    // hook up to submit submitEditedProject(p_id)
+    let currProj = await eel.eel_get_proj_info(p_id)();
+
+    console.log(currProj);
+
+    let dailyWords = currProj.current_daily_target;
+    let totalWords = currProj.wordcountgoal;
+
+    if (currProj.is_weekly_wordcount ==1) {
+        console.log("This is a weekly wordcount");
+    } else {
+        console.log("This is a dailyWord/totalWord count");
+    }
+}
+
+
+// ---------------------------------------------------------/
 // CSV EXPORT MODAL
 // ---------------------------------------------------/
 

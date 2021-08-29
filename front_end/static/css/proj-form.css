@@ -13,11 +13,11 @@
     color: #22262a;
 }
 
-#new_project-name {
+#new_project-name, #edit_project-name {
     width: 75%;
 }
 
-#new_wcProjPath {
+#new_wcProjPath, #edit_wcProjPath {
     font-size: .75rem;
     font-style: italic;
     color: #C0C0C0;
@@ -50,15 +50,11 @@
     margin-bottom: .95rem;
 }
 
-#new_wcDateSection {
+#new_wcDateSection, #edit_wcDateSection {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-}
-
-#new_wcDateSection table {
-    width: 100%;
 }
 
 .wc-weekly-input {
@@ -80,12 +76,16 @@
     align-items: center;
 }
 
-#new_wcSubmitBtn {
+#new_wcSubmitBtn, #edit_wcSubmitBtn {
     margin-top: .95rem;
     text-align: center;
 }
 
 #new_wcSubmitBtn button{
+    width: 90%;
+}
+
+#edit_wcSubmitBtn button{
     width: 90%;
 }
 

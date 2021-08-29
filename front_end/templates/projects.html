@@ -235,48 +235,48 @@ async function new_name_prompt(p_id) {
 
     // Used to open and populate the edit modal with the values of whatever project is
     // currently selected
-  const showEditProjectModal = async(p_id) => {
-    document.getElementById("edit-proj-toggle").click();
-    document.querySelector("#edit-project form").onsubmit = () => submitEditedProject(p_id);
-    let currProj = await eel.eel_get_proj_info(p_id)()
+  // const showEditProjectModal = async(p_id) => {
+  //   document.getElementById("edit-proj-toggle").click();
+  //   document.querySelector("#edit-project form").onsubmit = () => submitEditedProject(p_id);
+  //   let currProj = await eel.eel_get_proj_info(p_id)()
 
-    console.log(currProj);
+  //   console.log(currProj);
 
-    let dailyWords = currProj.current_daily_target;
-    let totalWords = currProj.wordcountgoal;
+  //   let dailyWords = currProj.current_daily_target;
+  //   let totalWords = currProj.wordcountgoal;
 
-    let wordCountElem = document.getElementById("edit_wordcountgoal");
-    let dailyCheckElem = document.getElementById("edit_daily");
-    let weeklyCheckElem = document.getElementById("edit_weekly");
-    let totalCheckElem = document.getElementById("edit_total");
+  //   let wordCountElem = document.getElementById("edit_wordcountgoal");
+  //   let dailyCheckElem = document.getElementById("edit_daily");
+  //   let weeklyCheckElem = document.getElementById("edit_weekly");
+  //   let totalCheckElem = document.getElementById("edit_total");
 
-    // Checks to see if isWeekly is true
-    // Displays either weekly or daily by default
-    if (currProj.is_weekly_wordcount == 1) {
-      dailyCheckElem.disabled = true;
-      dailyCheckElem.checked = false;
+  //   // Checks to see if isWeekly is true
+  //   // Displays either weekly or daily by default
+  //   if (currProj.is_weekly_wordcount == 1) {
+  //     dailyCheckElem.disabled = true;
+  //     dailyCheckElem.checked = false;
 
-      weeklyCheckElem.disabled = false;
-      weeklyCheckElem.checked = true;
+  //     weeklyCheckElem.disabled = false;
+  //     weeklyCheckElem.checked = true;
       
-      totalCheckElem.checked = false;
-      wordCountElem.value = dailyWords * 7;
-    } else {
-      dailyCheckElem.disabled = false;
-      dailyCheckElem.checked = true;
+  //     totalCheckElem.checked = false;
+  //     wordCountElem.value = dailyWords * 7;
+  //   } else {
+  //     dailyCheckElem.disabled = false;
+  //     dailyCheckElem.checked = true;
 
-      weeklyCheckElem.disabled = true;
-      weeklyCheckElem.checked = false;
+  //     weeklyCheckElem.disabled = true;
+  //     weeklyCheckElem.checked = false;
       
-      totalCheckElem.checked = false;
-      wordCountElem.value = dailyWords;
-    }
+  //     totalCheckElem.checked = false;
+  //     wordCountElem.value = dailyWords;
+  //   }
 
-    document.getElementById("edit_project-name").value =  currProj.project_name;
-    document.getElementById("edit_project-path").value =  currProj.project_path;
-    document.getElementById("edit_targetstartdate").value = currProj.project_start_date;
-    document.getElementById("edit_targetenddate").value = currProj.deadline;
-  } 
+  //   document.getElementById("edit_project-name").value =  currProj.project_name;
+  //   document.getElementById("edit_project-path").value =  currProj.project_path;
+  //   document.getElementById("edit_targetstartdate").value = currProj.project_start_date;
+  //   document.getElementById("edit_targetenddate").value = currProj.deadline;
+  // } 
 
 
 
