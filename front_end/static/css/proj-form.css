@@ -88,3 +88,8 @@
 #new_wcSubmitBtn button{
     width: 90%;
 }
+
+.modal__btn.cancel-btn {
+    background-color: #232424;
+    color:#FFF;
+}

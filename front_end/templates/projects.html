@@ -6,18 +6,6 @@
 
 {% block content %}
 <div id="main-content" class="container">
-  <!-- {% if not hasprojects %}
-  <div class="greeting"><p class="username-greet">Hi, <span id="username">{{username}}</span>!</p>
-    <p>Let's create your first project!</p>
-  </div>
-  {% endif %} -->
-
-  <!-- Modal Triggers -->
-  <!-- <button data-micromodal-trigger="modal-1" class="new-project">+ New Project</button>
-  <button data-micromodal-trigger="modal-0" class="welcome-msg">?</button>
-  <button data-micromodal-trigger="modal-stats" id="stats-toggle" style="display:none" aria-hidden="true"></button>
-  <button data-micromodal-trigger="modal-edit-proj" id="edit-proj-toggle" style="display:none" aria-hidden="true"></button>
-  -->
  
   <!-- Projects List -->
   <div id="projectslist" class="projectslist">
@@ -25,6 +13,7 @@
   </div>
 
   <!-- Onboarding Modal -->
+  <!-- Set to display when user logs in without any projects -->
   {% with %}
   {% set modal_id = 'modal-0' %}    
   {% set modal_header_text = 'Welcome to Nanite' %}
@@ -37,13 +26,16 @@
     {% include 'modal.html' %}
   {% endwith %}
   <!-- Onboarding Modal End -->
+
   <!-- New Project Modal -->
+  <!-- Set to display when user clicks + button on sidebar-->
   {% with %}
     {% set modal_id = 'modal-1' %}
     {% set modal_header_text = 'Add A New Project' %}
     {% set modal_trigger_text = '+ New Project' %}
     {% set modal_trigger_classes = 'new-project' %}
     {% set close_button_text = 'Cancel' %}
+    {% set second_class = 'cancel-btn' %}
     {% set close_btn_fn = "" %}
     {% set modal_contents_html = '<div id="new-project" class="proj-div new-project-form-container {% if hasprojects %}hidden{% endif %}">
     <div>
@@ -74,66 +66,61 @@
     {% include 'modal.html' %}
   {% endwith %}
   <!-- New Project Modal End -->
-    <!-- Edit Project Modal -->
-    {% with %}
+
+  <!-- Edit Project Modal -->
+  <!-- Set to display when user clicks the edit option on a project -->
+  {% with %}
     {% set modal_id = 'modal-edit-proj' %}
     {% set modal_header_text = 'Edit Existing Project' %}
     {% set close_button_text = 'Cancel' %}
     {% set close_btn_fn = "" %}
-    {% set modal_contents_html = '<div id="edit-project" class="new-project-form-container {% if hasprojects %}hidden{% endif %}">
-      <form class="project-form new-project">
-        <fieldset> 
-            <!-- <legend class="hidden">Add a new project here:</legend> -->
-              <label>What\'s the name of your project?</label><input id="edit_project-name" type="text" name="name" required>
-              <label>File/folder Path:</label><input id="edit_project-path" type="text" name="filepath" placeholder="C:/filepath/filename.txt" disabled>
-              <!-- <label>File/folder Path:</label><input id="edit_project-path" type="text" name="filepath" placeholder="C:/filepath/filename.txt" required>
-              <button onclick="dir_select_tk_input()">Select Directory</button> -->
-              <!-- <label>Files of type:</label> -->
-              <!-- <select id="filetype" name="filetype" required>
-                <option value="txt">txt</option>
-                <option value="rtf">rtf</option>
-                <option value="docx">docx</option>
-              </select> -->
-              <label>What\'s your writing goal?</label>
-              <div class="writing-goal">
-                <input id="edit_wordcountgoal" type="text" name="wordcountgoal" required> words            
-                <div class="radio-buttons">
-                  <input type="radio" id="edit_daily" name="wordcountreg" value="daily" required checked>
-                  <label for="edit_daily">Daily</label>
-                  <input type="radio" id="edit_weekly" name="wordcountreg" value="weekly" required>
-                  <label for="edit_weekly">Weekly</label>
-                  <input type="radio" id="edit_total" name="wordcountreg" value="total" required>
-                  <label for="edit_total">Total</label>
-                </div>
-              </div>
-              <div class="start-date-in"><label>Start Date:</label><input id="edit_targetstartdate" type="date" name="targetstartdate" required disabled></div>
-              <div class="end-date-in"><label>Target End Date:</label><input id="edit_targetenddate" type="date" name="targetenddate" required></div>
-              <input type="submit" value="Edit Project">
-        </fieldset> 
-      </form>
+    {% set second_class = 'cancel-btn' %}
+    {% set modal_contents_html = '<div id="edit-project" class="proj-div new-project-form-container {% if hasprojects %}hidden{% endif %}">
+      <div>
+        <h5>What\'s your project called?</h5>
+        <input id="new_project-name" type="text" name="name" required>
+    </div>
+    <div>
+        <h5>Where does your project live?</h5>
+        <button onclick="dir_select_tk_input()">Select Directory</button> <span id="edit_wcProjPath"></span>
+    </div>
+    <div id="edit_wcGoalInterface">
+  
+    </div>
+    <div id="edit_wcDateSection">
+        <div class="proj-date-time-div"><h5>Start Date:</h5><input id="edit_targetstartdate" type="date" name="targetstartdate" required></div>
+        <div class="proj-date-time-div"><h5>Target End Date:</h5><input id="edit_targetenddate" type="date" name="targetenddate" required></div>
+    </div>
+    <div id="edit_wcSubmitBtn">
+        
     </div>'|safe %}
     {% include 'modal.html' %}
   {% endwith %}
   <!-- Edit Project Modal End -->
-      <!-- CSV Exports Modal -->
-      {% with %}
-      {% set modal_id = 'modal-csv' %}
-      {% set modal_header_text = 'Export to CSV' %}
-      {% set close_button_text = 'Cancel' %}
-      {% set close_btn_fn = "" %}
-      {% set modal_contents_html = '<div id="csv-export-input" class="new-project-form-container {% if hasprojects %}hidden{% endif %}">
-        <!--CSV Export messages will be added here via js-->
-      </div>'|safe %}
-      {% include 'modal.html' %}
-    {% endwith %}
-    <!-- CSV Export Modal End -->
+
+  <!-- CSV Exports Modal -->
+  <!-- Set to display when user selects the export csv option on proj div-->
+  {% with %}
+    {% set modal_id = 'modal-csv' %}
+    {% set modal_header_text = 'Export to CSV' %}
+    {% set close_button_text = 'Cancel' %}
+    {% set second_class = 'cancel-btn' %}
+    {% set close_btn_fn = "" %}
+    {% set modal_contents_html = '<div id="csv-export-input" class="new-project-form-container {% if hasprojects %}hidden{% endif %}">
+      <!--CSV Export messages will be added here via js-->
+    </div>'|safe %}
+    {% include 'modal.html' %}
+  {% endwith %}
+  <!-- CSV Export Modal End -->
+
   <!-- Project Stats Modal -->
-    {% with %}
+  <!-- Set to display when user clicks "Project stats" button-->
+  {% with %}
     {% set modal_id = 'modal-stats' %}
     {% set modal_header_text = 'Project Stats' %}
     {% set modal_trigger_text = 'Project Stats' %}
     {% set modal_trigger_classes = 'viewStats' %}
-    {% set close_button_text = 'Cancel' %}
+    {% set close_button_text = 'Close' %}
     {% set close_btn_fn = 'onclick=reinitProgressBars()' %}
     {% set modal_contents_html = '<div>
       <!--Contents will be inserted via JS-->
@@ -142,42 +129,41 @@
   {% endwith %}
   <!-- Project Stats Modal End -->
 
+  <!-- About Nanite Modal -->
+  {% with %}
+    {% set modal_id = 'modal-about' %}
+    {% set modal_header_text = 'Nanite' %}
+    {% set modal_trigger_classes = 'about-nanite' %}
+    {% set close_button_text = 'Close' %}
+    {% set close_btn_fn = '' %}
+    {% set modal_contents_html = '<div>
+        <div>
+            <h5>Version [version number]</h5>
+        </div>
+        <div>
+            <h4>Created By:</h4>
+            <h5>UI/UX:</h5>
+            <ul>
+              <li>(Prototype): Evaline Turner</li>
+              <li>(Alpha -> Release): Daniel Ingman</li>
+              </ul>
 
-  <!-- Project Stats Modal -->
-{% with %}
-{% set modal_id = 'modal-about' %}
-{% set modal_header_text = 'Nanite' %}
-{% set modal_trigger_classes = 'about-nanite' %}
-{% set close_button_text = 'Cancel' %}
-{% set close_btn_fn = '' %}
-{% set modal_contents_html = '<div>
-    <div>
-        <h5>Version [version number]</h5>
-    </div>
-    <div>
-        <h4>Created By:</h4>
-        <h5>UI/UX:</h5>
-         <ul>
-           <li>(Prototype): Evaline Turner</li>
-           <li>(Alpha -> Release): Daniel Ingman</li>
-          </ul>
-
-        <h5>Fullstack Developers:</h5>
-          <ul>
-            <li>Benjamin Portelli</li>
-            <li>Eric Oulster</li>
-            <li>Mark Fullton</li>
-          </ul>
-          
-        <h5>Product Manager:</h5>
-          <ul>
-            <li>Eric Oulster</li>
-          </ul>
-    </div>
-</div>'|safe %}
-{% include 'modal.html' %}
-{% endwith %}
-<!-- Project Stats Modal End -->
+            <h5>Fullstack Developers:</h5>
+              <ul>
+                <li>Benjamin Portelli</li>
+                <li>Eric Oulster</li>
+                <li>Mark Fullton</li>
+              </ul>
+              
+            <h5>Product Manager:</h5>
+              <ul>
+                <li>Eric Oulster</li>
+              </ul>
+        </div>
+    </div>'|safe %}
+    {% include 'modal.html' %}
+  {% endwith %}
+  <!-- Project Stats Modal End -->
 </div>
 <script>
   // Initial

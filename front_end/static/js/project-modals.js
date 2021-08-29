@@ -1,9 +1,22 @@
+// =================================================================/
+// FILL / MANIPULATE MODAL FUNCTIONS
+// ===========================================================/ 
+
+// ---------------------------------------------------------/
+// ADD PROJECT MODAL
+// ---------------------------------------------------/
+
+// Object used by toggleWordGoal function to display the description of
+// whichever goal the user has selected
 const wcGoalDescription = {
     "weekly": "Input a target word goal for each day of the week manually. These will be your daily goals each week for the project's duration.",
     "daily": "Set a daily target word goal. This goal will be the same for each day for the duration of the project.",
     "total": "Set an overall target word goal for your project. Daily target word goals will be generated based on the number of days in the project and your overall goal"
 }
 
+
+// DOM manipulation function used by toggleWordGoal function to display
+// the HTML fields of whichever word count goal the user has selected
 const wordCountDivReturn = (wcGoalType) => {
     switch (wcGoalType){
         case "weekly":
@@ -36,6 +49,9 @@ const wordCountDivReturn = (wcGoalType) => {
     }
 }
 
+// CSS manipulation function used by toggleWordGoal function to switch
+// the CSS classes of the word goal buttons to better reflect the user's
+// selection
 const toggleWordGoalClasses = (wcGoalType) => {
     let weeklyBtn = document.getElementById("new_wcWeeklyBtn");
     let dailyBtn = document.getElementById("new_wcDailyBtn");
@@ -59,6 +75,12 @@ const toggleWordGoalClasses = (wcGoalType) => {
     }
 }
 
+
+// Main class used to toggle between word goal form fields. 
+// Uses above object / functions to add / replace form fields based on user choice.
+// Toggled by the buttons themselves.
+// wcGoalType is expected to be "daily", "weekly", or "total"; if it gets something weird
+// it will assume the input to bee "total".
 const toggleWordGoal = (wcGoalType) => {
     document.getElementById("new_wcGoalInterface").innerHTML = wordCountDivReturn(wcGoalType);
     document.getElementById("new_wcTypeDesc").innerHTML = wcGoalDescription[wcGoalType];
@@ -68,14 +90,34 @@ const toggleWordGoal = (wcGoalType) => {
     document.getElementById("new_wcSubmitBtn").innerHTML = `<button onclick="handleProjFormSubmit('new', '${wcGoalType}')">Create Project</button>`
 }
 
+
+
+
+
+// =================================================================/
+// OPEN / SUBMIT MODAL FUNCTIONS
+// ===========================================================/ 
+
+// ---------------------------------------------------------/
+// ADD / EDIT PROJECT MODAL
+// ---------------------------------------------------/
+
+// This is the function run by the "Create Project" button.
+// formType expected to be either "new" (add project) or "edit" (edit project)
+// wcGoalType expected to be "daily", "weekly", or "total"
 const handleProjFormSubmit = (formType, wcGoalType) => {
     let allFilled = checkIfAnyEmpty(formType);
     if (allFilled) {
-        projFormExtractVals(formType, wcGoalType);    
-    } else {
+        let {authorname, projectname, projectpath, targetstartdate, targetenddate, wp_page, current_daily_target, 
+            wordcountgoal, isWeekly, weeklyCount} = projFormExtractVals(formType, wcGoalType);
+
+        if (formType == "new") {
+            console.log()
+        }
+    } 
+    else {
         alert("Please fill out all rows");
-    }
-    
+    } 
 }
 
 const checkIfAnyEmpty = (formType) => {
@@ -87,7 +129,7 @@ const checkIfAnyEmpty = (formType) => {
 
     document.getElementById(`${formType}-project`).querySelectorAll("[required]").forEach(i => {
         if (!filledOut){
-            return;
+            return false;
         } 
         if (!i.value) {
             filledOut = false;
@@ -133,39 +175,7 @@ const projFormExtractVals = async (formType, wcGoalType) => {
             current_daily_target = await eel.wcCalc_dailyWordsCalc(wordcountgoal, targetstartdate, targetenddate)(); 
     }
 
-    console.log({authorname:authorname, projectname: projectname, projectpath: projectpath, targetstartdate: targetstartdate, 
+    return {authorname:authorname, projectname: projectname, projectpath: projectpath, targetstartdate: targetstartdate, 
         targetenddate: targetenddate, wp_page:wp_page, current_daily_target: current_daily_target, 
-        wordcountgoal: wordcountgoal, isWeekly:isWeekly, weeklyCount:weeklyCount})
+        wordcountgoal: wordcountgoal, isWeekly:isWeekly, weeklyCount:weeklyCount}
 }
-/*
-*  <table>
-            <tr>
-                <td>Monday</td>
-                <td><input id="new_wc_mon" type="text" required> words</td>
-            </tr>
-            <tr>
-                <td>Tuesday</td>
-                <td><input id="new_wc_tues" type="text" required> words</td>
-            </tr>
-            <tr>
-                <td>Wednesday</td>
-                <td><input id="new_wc_wed" type="text" required> words</td>
-            </tr>
-            <tr>
-                <td>Thursday</td>
-                <td><input id="new_wc_thurs" type="text" required> words</td>
-            </tr>
-            <tr>
-                <td>Friday</td>
-                <td><input id="new_wc_fri" type="text" required> words</td>
-            </tr>
-            <tr>
-                <td>Saturday</td>
-                <td><input id="new_wc_sat" type="text" required> words</td>
-            </tr>
-            <tr>
-                <td>Sunday</td>
-                <td><input id="new_wc_sun" type="text" required> words</td>
-            </tr>
-        </table>
-*/
