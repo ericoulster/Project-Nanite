@@ -260,11 +260,6 @@ def eel_update_project(authorname, project_id, proj_name, proj_path, proj_startd
     pa.change_daily_words(proj_daily)
     pa.change_word_goal(proj_total)
     pa.change_deadline(proj_enddate)
-    
-    print("=======================================")
-    print("EDITED WITH")
-    print(authorname, project_id, proj_name, proj_path, proj_startdate, proj_enddate, proj_daily, proj_total, proj_isWeekly, proj_weekly)
-    print("=======================================")
 
 @eel.expose
 def eel_export_proj_to_csv(proj_id, csv_path):
@@ -277,3 +272,18 @@ def eel_export_proj_to_csv(proj_id, csv_path):
     except:
         print("WHOOPS THAT DIDN'T WORK")
         return 1
+
+"""
+Word count calculation end points
+"""
+@eel.expose
+def wcCalc_dailyWordsCalc(word_goal, goal_start_date, goal_finish_date):
+    return str(daily_words_calculate(word_goal, goal_start_date, goal_finish_date))
+
+@eel.expose
+def wcCalc_wordgoalCalc(daily_target, goal_start_date, goal_finish_date, is_weekly_wordcount):
+    return str(word_goal_calculate(daily_target, goal_start_date, goal_finish_date, is_weekly_wordcount))
+
+@eel.expose
+def wcCalc_weeklyWordsCalc(weekly_words, goal_start_date, goal_finish_date):
+    return str(weekly_words_calculate(weekly_words, goal_start_date, goal_finish_date))

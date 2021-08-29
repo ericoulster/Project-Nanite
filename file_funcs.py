@@ -175,8 +175,11 @@ def weekly_words_calculate(weekly_words, goal_start_date, goal_finish_date):
     """
     word_goal_calculate, but for weekly wordcounts being true
     """
-    start = datetime.strptime(goal_finish_date,"%Y-%m-%d")
-    end =  datetime.strptime(goal_start_date,"%Y-%m-%d")
+    start = datetime.strptime(goal_start_date,"%Y-%m-%d").date()
+    end =  datetime.strptime(goal_finish_date,"%Y-%m-%d").date()
+    print(f"Start - {start}")
+    print(f"End - {end}")
+
     mondays = np.busday_count(start, end, weekmask='Mon')
     tuesdays = np.busday_count(start, end, weekmask='Tue')
     wednesdays = np.busday_count(start, end, weekmask='Wed')
@@ -189,6 +192,7 @@ def weekly_words_calculate(weekly_words, goal_start_date, goal_finish_date):
 
     result = ((mondays * int(word_array[0])) + (tuesdays * int(word_array[1])) + (wednesdays * int(word_array[2])) + (thursdays * int(word_array[3]))
             + (fridays * int(word_array[4])) + (saturdays * int(word_array[5])) + (sundays * int(word_array[6])))
+    
     return result
 
 

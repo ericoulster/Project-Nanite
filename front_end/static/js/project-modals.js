@@ -11,12 +11,12 @@ const wordCountDivReturn = (wcGoalType) => {
             <tbody>
                 <tr>
                     <td><input class="wc-weekly-input" id="new_wc_mon" type="text" required></td>
-                    <td><input class="wc-weekly-input" id="new_wc_mon" type="text" required></td>
-                    <td><input class="wc-weekly-input" id="new_wc_mon" type="text" required></td>
-                    <td><input class="wc-weekly-input" id="new_wc_mon" type="text" required></td>
-                    <td><input class="wc-weekly-input" id="new_wc_mon" type="text" required></td>
-                    <td><input class="wc-weekly-input" id="new_wc_mon" type="text" required></td>
-                    <td><input class="wc-weekly-input" id="new_wc_mon" type="text" required></td>
+                    <td><input class="wc-weekly-input" id="new_wc_tues" type="text" required></td>
+                    <td><input class="wc-weekly-input" id="new_wc_wed" type="text" required></td>
+                    <td><input class="wc-weekly-input" id="new_wc_thurs" type="text" required></td>
+                    <td><input class="wc-weekly-input" id="new_wc_fri" type="text" required></td>
+                    <td><input class="wc-weekly-input" id="new_wc_sat" type="text" required></td>
+                    <td><input class="wc-weekly-input" id="new_wc_sun" type="text" required></td>
                 </tr>
                 <tr>
                     <td class="wc-weekly-label">Mon</td>
@@ -65,9 +65,51 @@ const toggleWordGoal = (wcGoalType) => {
 
     toggleWordGoalClasses(wcGoalType);
 
-    document.getElementById("new_wcSubmitBtn").innerHTML = `<button onclick="testExtractValues('${wcGoalType}')">Create Project</button>`
+    document.getElementById("new_wcSubmitBtn").innerHTML = `<button onclick="handleProjFormSubmit('new', '${wcGoalType}')">Create Project</button>`
 }
 
+const handleProjFormSubmit = (formType, wcGoalType) => {
+    projFormExtractVals(formType, wcGoalType);
+}
+
+const projFormExtractVals = async (formType, wcGoalType) => {
+    let authorname = "Author";
+    let projectname = document.getElementById(`${formType}_project-name`).value;
+    let projectpath = document.getElementById(`${formType}_wcProjPath`).innerHTML;
+    let targetstartdate = document.getElementById(`${formType}_targetstartdate`).value;
+    let targetenddate = document.getElementById(`${formType}_targetenddate`).value;
+    let wp_page = 42;
+    let current_daily_target, wordcountgoal, isWeekly, weeklyCount;
+    
+    switch (wcGoalType){
+        case "weekly":
+            isWeekly = 1;
+            let rawWcGoals = [];
+            let suffix = ["mon", "tues", "wed", "thurs", "fri", "sat", "sun"];
+            suffix.forEach(dotw => {
+                rawWcGoals.push(document.getElementById(`${formType}_wc_${dotw}`).value);
+            })
+            weeklyCount = rawWcGoals.join(",");
+            wordcountgoal = await eel.wcCalc_weeklyWordsCalc(weeklyCount, targetstartdate, targetenddate)();
+            console.log(wordcountgoal);
+            break;
+        case "daily":
+            isWeekly = 0;
+            weeklyCount = "0,0,0,0,0,0,0";
+            current_daily_target = document.getElementById(`${formType}_dailycountgoal`).value;
+            wordcountgoal = await eel.wcCalc_wordgoalCalc(current_daily_target, targetstartdate, targetenddate, isWeekly)();
+            break;
+        default:
+            isWeekly = 0;
+            weeklyCount = "0,0,0,0,0,0,0";
+            wordcountgoal = document.getElementById(`${formType}_totalcountgoal`).value;
+            current_daily_target = await eel.wcCalc_dailyWordsCalc(wordcountgoal, targetstartdate, targetenddate)(); 
+    }
+
+    console.log({authorname:authorname, projectname: projectname, projectpath: projectpath, targetstartdate: targetstartdate, 
+        targetenddate: targetenddate, wp_page:wp_page, current_daily_target: current_daily_target, 
+        wordcountgoal: wordcountgoal, isWeekly:isWeekly, weeklyCount:weeklyCount})
+}
 /*
 *  <table>
             <tr>
