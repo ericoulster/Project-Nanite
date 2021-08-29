@@ -69,7 +69,34 @@ const toggleWordGoal = (wcGoalType) => {
 }
 
 const handleProjFormSubmit = (formType, wcGoalType) => {
-    projFormExtractVals(formType, wcGoalType);
+    let allFilled = checkIfAnyEmpty(formType);
+    if (allFilled) {
+        projFormExtractVals(formType, wcGoalType);    
+    } else {
+        alert("Please fill out all rows");
+    }
+    
+}
+
+const checkIfAnyEmpty = (formType) => {
+    if (!document.getElementById(`${formType}_wcProjPath`).innerHTML) {
+        return false;
+    }
+
+    let filledOut = true;
+
+    document.getElementById(`${formType}-project`).querySelectorAll("[required]").forEach(i => {
+        if (!filledOut){
+            return;
+        } 
+        if (!i.value) {
+            filledOut = false;
+        }
+    })
+    if (!filledOut) {
+        return false;
+    }
+    return true;
 }
 
 const projFormExtractVals = async (formType, wcGoalType) => {
