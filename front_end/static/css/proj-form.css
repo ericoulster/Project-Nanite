@@ -57,6 +57,21 @@
     justify-content: space-between;
 }
 
+#new_wcDateSection table {
+    width: 100%;
+}
+
+.wc-weekly-input {
+    width: 90%;
+    padding: 0 2.5%;
+}
+
+.wc-weekly-label {
+    padding: 0 2.5%;
+    text-align: center;
+    font-size: .75rem;
+}
+
 #new_wcGoalInterface {
     font-size: .90rem;
 }
@@ -69,6 +84,7 @@
     margin-top: .95rem;
     text-align: center;
 }
+
 #new_wcSubmitBtn button{
     width: 90%;
 }

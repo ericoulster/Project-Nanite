@@ -8,35 +8,27 @@ const wordCountDivReturn = (wcGoalType) => {
     switch (wcGoalType){
         case "weekly":
             return `<table>
-            <tr>
-                <td>Monday</td>
-                <td><input id="new_wc_mon" type="text" required> words</td>
-            </tr>
-            <tr>
-                <td>Tuesday</td>
-                <td><input id="new_wc_tues" type="text" required> words</td>
-            </tr>
-            <tr>
-                <td>Wednesday</td>
-                <td><input id="new_wc_wed" type="text" required> words</td>
-            </tr>
-            <tr>
-                <td>Thursday</td>
-                <td><input id="new_wc_thurs" type="text" required> words</td>
-            </tr>
-            <tr>
-                <td>Friday</td>
-                <td><input id="new_wc_fri" type="text" required> words</td>
-            </tr>
-            <tr>
-                <td>Saturday</td>
-                <td><input id="new_wc_sat" type="text" required> words</td>
-            </tr>
-            <tr>
-                <td>Sunday</td>
-                <td><input id="new_wc_sun" type="text" required> words</td>
-            </tr>
-        </table>`
+            <tbody>
+                <tr>
+                    <td><input class="wc-weekly-input" id="new_wc_mon" type="text" required></td>
+                    <td><input class="wc-weekly-input" id="new_wc_mon" type="text" required></td>
+                    <td><input class="wc-weekly-input" id="new_wc_mon" type="text" required></td>
+                    <td><input class="wc-weekly-input" id="new_wc_mon" type="text" required></td>
+                    <td><input class="wc-weekly-input" id="new_wc_mon" type="text" required></td>
+                    <td><input class="wc-weekly-input" id="new_wc_mon" type="text" required></td>
+                    <td><input class="wc-weekly-input" id="new_wc_mon" type="text" required></td>
+                </tr>
+                <tr>
+                    <td class="wc-weekly-label">Mon</td>
+                    <td class="wc-weekly-label">Tues</td>
+                    <td class="wc-weekly-label">Wed</td>
+                    <td class="wc-weekly-label">Thur</td>
+                    <td class="wc-weekly-label">Fri</td>
+                    <td class="wc-weekly-label">Sat</td>
+                    <td class="wc-weekly-label">Sun</td>
+                </tr>
+            </tbody>
+            </table>`
         case "daily":
             return `<input id="new_dailycountgoal" type="text" name="wordcountgoal" required> words`
         default:
@@ -75,3 +67,36 @@ const toggleWordGoal = (wcGoalType) => {
 
     document.getElementById("new_wcSubmitBtn").innerHTML = `<button onclick="testExtractValues('${wcGoalType}')">Create Project</button>`
 }
+
+/*
+*  <table>
+            <tr>
+                <td>Monday</td>
+                <td><input id="new_wc_mon" type="text" required> words</td>
+            </tr>
+            <tr>
+                <td>Tuesday</td>
+                <td><input id="new_wc_tues" type="text" required> words</td>
+            </tr>
+            <tr>
+                <td>Wednesday</td>
+                <td><input id="new_wc_wed" type="text" required> words</td>
+            </tr>
+            <tr>
+                <td>Thursday</td>
+                <td><input id="new_wc_thurs" type="text" required> words</td>
+            </tr>
+            <tr>
+                <td>Friday</td>
+                <td><input id="new_wc_fri" type="text" required> words</td>
+            </tr>
+            <tr>
+                <td>Saturday</td>
+                <td><input id="new_wc_sat" type="text" required> words</td>
+            </tr>
+            <tr>
+                <td>Sunday</td>
+                <td><input id="new_wc_sun" type="text" required> words</td>
+            </tr>
+        </table>
+*/

@@ -152,10 +152,27 @@
 {% set close_btn_fn = '' %}
 {% set modal_contents_html = '<div>
     <div>
-        <p>Version [version number]</p>
+        <h5>Version [version number]</h5>
     </div>
     <div>
-        <p>Created By: [people who created it and their roles]</p>
+        <h4>Created By:</h4>
+        <h5>UI/UX:</h5>
+         <ul>
+           <li>(Prototype): Evaline Turner</li>
+           <li>(Alpha -> Release): Daniel Ingman</li>
+          </ul>
+
+        <h5>Fullstack Developers:</h5>
+          <ul>
+            <li>Benjamin Portelli</li>
+            <li>Eric Oulster</li>
+            <li>Mark Fullton</li>
+          </ul>
+          
+        <h5>Product Manager:</h5>
+          <ul>
+            <li>Eric Oulster</li>
+          </ul>
     </div>
 </div>'|safe %}
 {% include 'modal.html' %}
