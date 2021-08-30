@@ -171,11 +171,8 @@ const showCSVExportModal = async(p_id) => {
     document.getElementById("modal-csv-title").innerHTML = `Exporting ${projName}`
     document.getElementById("csv-export-input").innerHTML = `<div id="csv-export-main" class="project-form new-project">
             <div>
-            <label>Folder Path: </label><input id="export-directory-path" type="text" name="filepath" placeholder="C:/filepath" required>
-            <button onclick="dir_select_tk_input('csv')">Select Directory</button>
-            </div>
-            <div>
-            <button id="csv-export-request-btn" onclick="submitCSVExportRequest(${p_id})">Extract CSV</button>
+                <h5>Where would you like your CSV uploaded?</h5>
+                <button id="csv-export-request-btn" onclick="submitCSVExportRequest(${p_id})">Select Directory</button>
             </div>
         </div>`
 }

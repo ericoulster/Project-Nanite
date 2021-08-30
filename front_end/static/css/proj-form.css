@@ -97,3 +97,11 @@
     background-color: #232424;
     color:#FFF;
 }
+
+#csv-export-main {
+    text-align: center;
+}
+
+#csv-export-request-btn {
+    width: 90%;
+}
