@@ -253,13 +253,16 @@ def eel_update_project(authorname, project_id, proj_name, proj_path, proj_startd
     pa = ProjectActions()
     pa.set_project(project_id)
     pa.rename_project(proj_name)
-    
-    if proj_isWeekly:
-        pa.change_weekly_words(proj_weekly)
-    
-    pa.change_daily_words(proj_daily)
-    pa.change_word_goal(proj_total)
     pa.change_deadline(proj_enddate)
+
+    print(f"proj_isWeekly {proj_isWeekly}")
+
+    if proj_isWeekly == 1:
+        pa.change_weekly_words(proj_weekly)
+    else:
+        pa.change_daily_words(proj_daily)
+    #pa.change_word_goal(proj_total)
+    
 
 @eel.expose
 def eel_export_proj_to_csv(proj_id, csv_path):

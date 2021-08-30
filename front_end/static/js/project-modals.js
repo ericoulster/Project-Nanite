@@ -95,7 +95,7 @@ const toggleWordGoal = (wcGoalType) => {
 // EDIT PROJECT MODAL
 // ---------------------------------------------------/
 
-const returnShowEditWordDivSection = (wcGoalType, weeklyGoals, dailyGoal, totalGoal) => {
+const returnShowEditWordDivSection = (wcGoalType, weeklyGoals, dailyGoal, totalGoal, p_id) => {
     let wcDivSection = document.getElementById("edit_wcGoalInterface");
 
     switch (wcGoalType) {
@@ -137,6 +137,8 @@ const returnShowEditWordDivSection = (wcGoalType, weeklyGoals, dailyGoal, totalG
             <h5>Overall Word Count Goal:</h5>
             <input id="edit_totalcountgoal" type="text" name="wordcountgoal" value="${totalGoal}" required> words`
     }
+
+    document.getElementById("edit_wcSubmitBtn").innerHTML = `<button onclick="handleProjFormSubmit('edit', '${wcGoalType}', p_id)">Edit Project</button>`
 }
 
 const showEditProjectModal = async(p_id) => {
@@ -152,7 +154,7 @@ const showEditProjectModal = async(p_id) => {
     document.getElementById("edit_targetenddate").value = currProj.deadline;
 
     let wcGoalType = currProj.is_weekly_wordcount == 1 ? "weekly" : "total";
-    returnShowEditWordDivSection(wcGoalType, currProj.weekly_words, currProj.current_daily_target, currProj.wordcount_goal);
+    returnShowEditWordDivSection(wcGoalType, currProj.weekly_words, currProj.current_daily_target, currProj.wordcount_goal, p_id);
 }
 
 
@@ -208,7 +210,7 @@ statsModal_Populate(statsData);
 // This is the function run by the "Create Project" button.
 // formType expected to be either "new" (add project) or "edit" (edit project)
 // wcGoalType expected to be "daily", "weekly", or "total"
-const handleProjFormSubmit = async (formType, wcGoalType) => {
+const handleProjFormSubmit = async (formType, wcGoalType, project_id=null) => {
     let allFilled = checkIfAnyEmpty(formType);
     if (allFilled) {
         let {authorname, projectname, projectpath, targetstartdate, targetenddate, wp_page, current_daily_target, 
@@ -218,6 +220,15 @@ const handleProjFormSubmit = async (formType, wcGoalType) => {
             console.log(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, isWeekly, weeklyCount);
             eel.new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, isWeekly, weeklyCount);
             location.reload();
+        } else {
+            if (project_id != null) {
+                console.log(authorname, project_id, projectname, projectpath, 
+                    targetstartdate, targetenddate, current_daily_target, wordcountgoal, isWeekly, weeklyCount)
+                eel.eel_update_project(authorname, project_id, projectname, projectpath, 
+                    targetstartdate, targetenddate, current_daily_target, wordcountgoal, isWeekly, weeklyCount)
+                location.reload();
+            }
+            
         }
     } 
     else {
