@@ -95,8 +95,48 @@ const toggleWordGoal = (wcGoalType) => {
 // EDIT PROJECT MODAL
 // ---------------------------------------------------/
 
-const returnShowEditWordDivSection = (wcGoalType) => {
-    
+const returnShowEditWordDivSection = (wcGoalType, weeklyGoals, dailyGoal, totalGoal) => {
+    let wcDivSection = document.getElementById("edit_wcGoalInterface");
+
+    switch (wcGoalType) {
+        case "weekly":
+            let rawWcGoals = weeklyGoals.split(",");
+            wcDivSection.innerHTML = `<h5>Varied Daily Word Count Goals:</h5>
+                <table>
+                <tbody>
+                    <tr>
+                        <td><input class="wc-weekly-input" id="edit_wc_mon" type="text" value="${rawWcGoals[0]}" required></td>
+                        <td><input class="wc-weekly-input" id="edit_wc_tues" type="text" value="${rawWcGoals[1]}" required></td>
+                        <td><input class="wc-weekly-input" id="edit_wc_wed" type="text" value="${rawWcGoals[2]}" required></td>
+                        <td><input class="wc-weekly-input" id="edit_wc_thurs" type="text" value="${rawWcGoals[3]}" required></td>
+                        <td><input class="wc-weekly-input" id="edit_wc_fri" type="text" value="${rawWcGoals[4]}" required></td>
+                        <td><input class="wc-weekly-input" id="edit_wc_sat" type="text" value="${rawWcGoals[5]}" required></td>
+                        <td><input class="wc-weekly-input" id="edit_wc_sun" type="text" value="${rawWcGoals[6]}" required></td>
+                    </tr>
+                    <tr>
+                        <td class="wc-weekly-label">Mon</td>
+                        <td class="wc-weekly-label">Tues</td>
+                        <td class="wc-weekly-label">Wed</td>
+                        <td class="wc-weekly-label">Thur</td>
+                        <td class="wc-weekly-label">Fri</td>
+                        <td class="wc-weekly-label">Sat</td>
+                        <td class="wc-weekly-label">Sun</td>
+                    </tr>
+                </tbody>
+                </table>`
+            break;
+        case "daily":
+            wcDivSection.innerHTML = `<div><button class="proj-form-btn" id="edit_wcDailyBtn" onclick="returnShowEditWordDivSection('daily', '${weeklyGoals}', '${dailyGoal}', '${totalGoal}')">Consistent Daily</button> 
+            <button class="proj-form-btn selected-wc-btn" id="edit_wcTotalBtn" onclick="returnShowEditWordDivSection('total', '${weeklyGoals}', '${dailyGoal}', '${totalGoal}')">Overall</button></div>
+            <h5>Consistent Daily Word Count Goal:</h5>
+            <input id="edit_dailycountgoal" type="text" name="wordcountgoal" value="${dailyGoal}" required> words`
+            break;
+        default:
+            wcDivSection.innerHTML = `<div><button class="proj-form-btn" id="edit_wcDailyBtn" onclick="returnShowEditWordDivSection('daily', '${weeklyGoals}', '${dailyGoal}', '${totalGoal}')">Consistent Daily</button> 
+            <button class="proj-form-btn selected-wc-btn" id="edit_wcTotalBtn" onclick="returnShowEditWordDivSection('total', '${weeklyGoals}', '${dailyGoal}', '${totalGoal}')">Overall</button></div>
+            <h5>Overall Word Count Goal:</h5>
+            <input id="edit_totalcountgoal" type="text" name="wordcountgoal" value="${totalGoal}" required> words`
+    }
 }
 
 const showEditProjectModal = async(p_id) => {
@@ -111,14 +151,8 @@ const showEditProjectModal = async(p_id) => {
     document.getElementById("edit_targetstartdate").value = currProj.project_start_date;
     document.getElementById("edit_targetenddate").value = currProj.deadline;
 
-    let dailyWords = currProj.current_daily_target;
-    let totalWords = currProj.wordcountgoal;
-
-    if (currProj.is_weekly_wordcount ==1) {
-        console.log("This is a weekly wordcount");
-    } else {
-        console.log("This is a dailyWord/totalWord count");
-    }
+    let wcGoalType = currProj.is_weekly_wordcount == 1 ? "weekly" : "total";
+    returnShowEditWordDivSection(wcGoalType, currProj.weekly_words, currProj.current_daily_target, currProj.wordcount_goal);
 }
 
 

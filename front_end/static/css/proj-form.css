@@ -89,6 +89,10 @@
     width: 90%;
 }
 
+#edit_targetstartdate {
+    background-color: #7c7a7a;
+}
+
 .modal__btn.cancel-btn {
     background-color: #232424;
     color:#FFF;
