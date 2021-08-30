@@ -164,6 +164,21 @@
     {% include 'modal.html' %}
   {% endwith %}
   <!-- Project Stats Modal End -->
+
+  <!-- Onboarding Modal -->
+  <!-- Set to display when user logs in without any projects -->
+  {% with %}
+    {% set modal_id = 'modal-victory' %}    
+    {% set modal_header_text = 'Congratulations!' %}
+    {% set close_button_text = 'Close and celebrate' %}
+    {% set close_btn_fn = "" %}
+    {% set modal_contents_html = '<div id="victory-modal-container">
+      <!-- Content added via JavaScript -->
+    </div>'|safe %}
+      {% include 'modal.html' %}
+  {% endwith %}
+  <!-- Onboarding Modal End -->
+
 </div>
 <script>
   // Initial

@@ -105,3 +105,7 @@
 #csv-export-request-btn {
     width: 90%;
 }
+
+#victory-modal-container {
+    text-align: center;
+}

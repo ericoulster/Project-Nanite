@@ -187,7 +187,6 @@ const showStatsModal = async (selectedId) => {
 let selectedName =  document.querySelector('#project-' + String(selectedId) + '-summary h2').innerHTML;
 let statsData = await eel.eel_return_project_stats(selectedId)();
 
-// NEED TO FIND A BETTER WAY OF DOING THIS BUT FOR NOW HERE WE GO
 document.getElementById("stats-toggle").click();
 document.getElementById("modal-stats-title").innerHTML = `${selectedName} Statistics`
 statsModal_Populate(statsData);
@@ -335,8 +334,11 @@ const submitCSVExportRequest = async (proj_id) => {
 // the user met their goal
 const refreshWordCountAndCheck = async (proj_id) => {
     let goalMet = await eel.eel_refresh_wordcounts(proj_id)();
+    let projInfo = await eel.eel_get_proj_info(proj_id)();
     
     if (goalMet == true){
-        alert("YA DID GOOD")
+        document.getElementById("victory-modal-toggle").click();
+        document.getElementById("victory-modal-container").innerHTML = `<h4>You just met your goal of ${projInfo.wordcount_goal} words!</h4>
+            <p>If you'd like to write more, you can always edit your project goal!</p>`
     }
 }
