@@ -126,19 +126,19 @@ const returnShowEditWordDivSection = (wcGoalType, weeklyGoals, dailyGoal, totalG
                 </table>`
             break;
         case "daily":
-            wcDivSection.innerHTML = `<div><button class="proj-form-btn" id="edit_wcDailyBtn" onclick="returnShowEditWordDivSection('daily', '${weeklyGoals}', '${dailyGoal}', '${totalGoal}')">Consistent Daily</button> 
-            <button class="proj-form-btn selected-wc-btn" id="edit_wcTotalBtn" onclick="returnShowEditWordDivSection('total', '${weeklyGoals}', '${dailyGoal}', '${totalGoal}')">Overall</button></div>
+            wcDivSection.innerHTML = `<div><button class="proj-form-btn" id="edit_wcDailyBtn" onclick="returnShowEditWordDivSection('daily', '${weeklyGoals}', '${dailyGoal}', '${totalGoal}', ${p_id})">Consistent Daily</button> 
+            <button class="proj-form-btn selected-wc-btn" id="edit_wcTotalBtn" onclick="returnShowEditWordDivSection('total', '${weeklyGoals}', '${dailyGoal}', '${totalGoal}', ${p_id})">Overall</button></div>
             <h5>Consistent Daily Word Count Goal:</h5>
             <input id="edit_dailycountgoal" type="text" name="wordcountgoal" value="${dailyGoal}" required> words`
             break;
         default:
-            wcDivSection.innerHTML = `<div><button class="proj-form-btn" id="edit_wcDailyBtn" onclick="returnShowEditWordDivSection('daily', '${weeklyGoals}', '${dailyGoal}', '${totalGoal}')">Consistent Daily</button> 
-            <button class="proj-form-btn selected-wc-btn" id="edit_wcTotalBtn" onclick="returnShowEditWordDivSection('total', '${weeklyGoals}', '${dailyGoal}', '${totalGoal}')">Overall</button></div>
+            wcDivSection.innerHTML = `<div><button class="proj-form-btn" id="edit_wcDailyBtn" onclick="returnShowEditWordDivSection('daily', '${weeklyGoals}', '${dailyGoal}', '${totalGoal}', ${p_id})">Consistent Daily</button> 
+            <button class="proj-form-btn selected-wc-btn" id="edit_wcTotalBtn" onclick="returnShowEditWordDivSection('total', '${weeklyGoals}', '${dailyGoal}', '${totalGoal}', ${p_id})">Overall</button></div>
             <h5>Overall Word Count Goal:</h5>
             <input id="edit_totalcountgoal" type="text" name="wordcountgoal" value="${totalGoal}" required> words`
     }
 
-    document.getElementById("edit_wcSubmitBtn").innerHTML = `<button onclick="handleProjFormSubmit('edit', '${wcGoalType}', p_id)">Edit Project</button>`
+    document.getElementById("edit_wcSubmitBtn").innerHTML = `<button onclick="handleProjFormSubmit('edit', '${wcGoalType}', ${p_id})">Edit Project</button>`
 }
 
 const showEditProjectModal = async(p_id) => {
@@ -222,9 +222,9 @@ const handleProjFormSubmit = async (formType, wcGoalType, project_id=null) => {
             location.reload();
         } else {
             if (project_id != null) {
-                console.log(authorname, project_id, projectname, projectpath, 
+                console.log(wcGoalType, authorname, project_id, projectname, projectpath, 
                     targetstartdate, targetenddate, current_daily_target, wordcountgoal, isWeekly, weeklyCount)
-                eel.eel_update_project(authorname, project_id, projectname, projectpath, 
+                eel.eel_update_project(wcGoalType, authorname, project_id, projectname, projectpath, 
                     targetstartdate, targetenddate, current_daily_target, wordcountgoal, isWeekly, weeklyCount)
                 location.reload();
             }

@@ -177,8 +177,6 @@ def weekly_words_calculate(weekly_words, goal_start_date, goal_finish_date):
     """
     start = datetime.strptime(goal_start_date,"%Y-%m-%d").date()
     end =  datetime.strptime(goal_finish_date,"%Y-%m-%d").date()
-    print(f"Start - {start}")
-    print(f"End - {end}")
 
     mondays = np.busday_count(start, end, weekmask='Mon')
     tuesdays = np.busday_count(start, end, weekmask='Tue')

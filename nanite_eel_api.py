@@ -245,7 +245,7 @@ def eel_return_project_stats(project_id):
     return return_stats_screen(project_id)
 
 @eel.expose
-def eel_update_project(authorname, project_id, proj_name, proj_path, proj_startdate,
+def eel_update_project(wcGoalType, authorname, project_id, proj_name, proj_path, proj_startdate,
  proj_enddate, proj_daily, proj_total, proj_isWeekly, proj_weekly):
     """
     Takes in all old and new information about project and edits it to match
@@ -255,13 +255,12 @@ def eel_update_project(authorname, project_id, proj_name, proj_path, proj_startd
     pa.rename_project(proj_name)
     pa.change_deadline(proj_enddate)
 
-    print(f"proj_isWeekly {proj_isWeekly}")
-
     if proj_isWeekly == 1:
         pa.change_weekly_words(proj_weekly)
-    else:
+    elif wcGoalType == "daily":
         pa.change_daily_words(proj_daily)
-    #pa.change_word_goal(proj_total)
+    else:
+        pa.change_word_goal(proj_total)
     
 
 @eel.expose
