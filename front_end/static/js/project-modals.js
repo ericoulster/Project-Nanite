@@ -335,10 +335,13 @@ const submitCSVExportRequest = async (proj_id) => {
 const refreshWordCountAndCheck = async (proj_id) => {
     let goalMet = await eel.eel_refresh_wordcounts(proj_id)();
     let projInfo = await eel.eel_get_proj_info(proj_id)();
-    
+
     if (goalMet == true){
         document.getElementById("victory-modal-toggle").click();
         document.getElementById("victory-modal-container").innerHTML = `<h4>You just met your goal of ${projInfo.wordcount_goal} words!</h4>
             <p>If you'd like to write more, you can always edit your project goal!</p>`
+    } else {
+        location.reload();
     }
+    
 }
