@@ -77,18 +77,18 @@
     {% set second_class = 'cancel-btn' %}
     {% set modal_contents_html = '<div id="edit-project" class="proj-div new-project-form-container {% if hasprojects %}hidden{% endif %}">
       <div>
-        <h5>What\'s your project called?</h5>
+        <h5>Project Name:</h5>
         <input id="edit_project-name" type="text" name="name" required>
     </div>
     <div>
-        <h5>Where does your project live?</h5>
-        <button onclick="dir_select_tk_input()">Select Directory</button> <span id="edit_wcProjPath"></span>
+        <h5>Project Location:</h5>
+        <p id="edit_wcProjPath"></p>
     </div>
     <div id="edit_wcGoalInterface">
   
     </div>
     <div id="edit_wcDateSection">
-        <div class="proj-date-time-div"><h5>Start Date:</h5><input id="edit_targetstartdate" type="date" name="targetstartdate" required></div>
+        <div class="proj-date-time-div"><h5>Start Date:</h5><input id="edit_targetstartdate" type="date" name="targetstartdate" required disabled></div>
         <div class="proj-date-time-div"><h5>Target End Date:</h5><input id="edit_targetenddate" type="date" name="targetenddate" required></div>
     </div>
     <div id="edit_wcSubmitBtn">

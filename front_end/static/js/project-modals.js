@@ -95,12 +95,21 @@ const toggleWordGoal = (wcGoalType) => {
 // EDIT PROJECT MODAL
 // ---------------------------------------------------/
 
+const returnShowEditWordDivSection = (wcGoalType) => {
+    
+}
+
 const showEditProjectModal = async(p_id) => {
     document.getElementById("edit-proj-toggle").click();
     // hook up to submit submitEditedProject(p_id)
     let currProj = await eel.eel_get_proj_info(p_id)();
 
     console.log(currProj);
+
+    document.getElementById("edit_project-name").value = currProj.project_name;
+    document.getElementById("edit_wcProjPath").innerHTML = currProj.project_path;
+    document.getElementById("edit_targetstartdate").value = currProj.project_start_date;
+    document.getElementById("edit_targetenddate").value = currProj.deadline;
 
     let dailyWords = currProj.current_daily_target;
     let totalWords = currProj.wordcountgoal;
