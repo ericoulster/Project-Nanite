@@ -136,28 +136,28 @@
     {% set modal_trigger_classes = 'about-nanite' %}
     {% set close_button_text = 'Close' %}
     {% set close_btn_fn = '' %}
-    {% set modal_contents_html = '<div>
+    {% set modal_contents_html = '<div class="about-container">
         <div>
-            <h5>Version [version number]</h5>
-        </div>
-        <div>
+            <h4>Version 1.0</h4>
             <h4>Created By:</h4>
-            <h5>UI/UX:</h5>
+        </div>
+        <div class="about-credit-list">
+            <h5 class="about-subhead">UI/UX:</h5>
             <ul>
-              <li>(Prototype): Evaline Turner</li>
-              <li>(Alpha -> Release): Daniel Ingman</li>
+              <li class="about-li"><strong>(Prototype):</strong> Evaline Turner</li>
+              <li class="about-li"><strong>(Alpha -> Release):</strong> Daniel Ingman</li>
               </ul>
 
-            <h5>Fullstack Developers:</h5>
+            <h5 class="about-subhead">Fullstack Developers:</h5>
               <ul>
-                <li>Benjamin Portelli</li>
-                <li>Eric Oulster</li>
-                <li>Mark Fullton</li>
+                <li class="about-li">Benjamin Portelli</li>
+                <li class="about-li">Eric Oulster</li>
+                <li class="about-li">Mark Fullton</li>
               </ul>
               
-            <h5>Product Manager:</h5>
+            <h5 class="about-subhead">Product Manager:</h5>
               <ul>
-                <li>Eric Oulster</li>
+                <li class="about-li">Eric Oulster</li>
               </ul>
         </div>
     </div>'|safe %}

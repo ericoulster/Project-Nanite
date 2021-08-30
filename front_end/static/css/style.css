@@ -369,6 +369,31 @@ ul li {
   -webkit-transform: scale(1.05);
   transform: scale(1.05);
 }
+.about-container{
+  padding: 0 2.5rem;
+}
+.about-container h4 {
+  margin: .5rem;
+}
+.about-credit-list{
+  margin-left: 1.5rem;
+}
+.about-container ul {
+  margin-top:.35rem;
+  margin-bottom: .95rem;
+  padding-left:.65rem;
+}
+.about-subhead {
+  letter-spacing: .05rem;
+  margin-top: .1rem;
+  margin-bottom: 0;
+}
+.about-li {
+  list-style-type: none;
+  font-size: .95rem;
+  margin: .15rem 0;
+  color: #d8d8d8;
+}
 /**************************\
     Demo Animation Style
   \**************************/
