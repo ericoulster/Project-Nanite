@@ -38,9 +38,6 @@ async function dir_select_tk_input(reqType) {
       case "edit":
         document.getElementById("edit_wcProjPath").innerHTML = String(selected_dir)
         break;
-      case "csv":
-        filepath_input = document.getElementById("export-directory-path")
-        break;
       default:
         document.getElementById("new_wcProjPath").innerHTML = String(selected_dir);
     }

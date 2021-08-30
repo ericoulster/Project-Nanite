@@ -324,3 +324,19 @@ const submitCSVExportRequest = async (proj_id) => {
       ${resp_message}
       </div>`
   }
+
+
+
+
+// =================================================================/
+// REFRESH WORDCOUNTS FOR VICTORY MODAL
+// ===========================================================/ 
+// Runs the typical refresh wordcounts function and displays the modal if
+// the user met their goal
+const refreshWordCountAndCheck = async (proj_id) => {
+    let goalMet = await eel.eel_refresh_wordcounts(proj_id)();
+    
+    if (goalMet == true){
+        alert("YA DID GOOD")
+    }
+}

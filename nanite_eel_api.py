@@ -40,6 +40,7 @@ def list_projects_html(username):
     project_ids = [int(p['project_id']) for p in projects] # list project ids
     projects_zip = zip(project_ids, projects) # zip for looping
 
+
     t = Template("""{% for idx, project in projects %}
     <article id="project-{{idx}}" class="projects-item" data-pid="{{ project.project_id }}">
       <div id="project-{{idx}}-summary" class="project-summary panels">
@@ -69,7 +70,7 @@ def list_projects_html(username):
         </div>
         <div class="actions panel">
           <a onclick="showStatsModal({{project.project_id}})" class="btn">Project Stats</a>
-          <a onclick="refresh_wordcounts({{project.project_id}})" class="btn">Refresh Project</a>
+          <a onclick="refreshWordCountAndCheck({{project.project_id}})" class="btn">Refresh Project</a>
         </div>
       </div>
     </article>
@@ -227,7 +228,11 @@ def eel_refresh_wordcounts(project_id):
     pa = ProjectActions()
     pa.set_project(project_id)
     pa.enter_wordcount()
-    return 
+    wc_stat = return_stats_screen(project_id)
+    
+    if wc_stat["current_wc"] >= wc_stat["word_goal_and_deadline"]["wordgoal"]:
+        return True
+    return False
 
 @eel.expose
 def eel_get_proj_info(project_id):
