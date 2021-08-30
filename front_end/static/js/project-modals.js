@@ -171,7 +171,7 @@ const showCSVExportModal = async(p_id) => {
     document.getElementById("modal-csv-title").innerHTML = `Exporting ${projName}`
     document.getElementById("csv-export-input").innerHTML = `<div id="csv-export-main" class="project-form new-project">
             <div>
-                <h5>Where would you like your CSV uploaded?</h5>
+                <h4>Where would you like your CSV uploaded?</h4>
                 <button id="csv-export-request-btn" onclick="submitCSVExportRequest(${p_id})">Select Directory</button>
             </div>
         </div>`
@@ -299,9 +299,10 @@ const projFormExtractVals = async (formType, wcGoalType) => {
 // CSV EXPORT MODAL
 // ---------------------------------------------------/
 
-const submitCSVExportRequest = async (proj_id, proj_name) => {
+const submitCSVExportRequest = async (proj_id) => {
 
-    let dir_path = document.getElementById("export-directory-path").value;
+    let dir_path = String(await eel.dir_select_tk()())
+    console.log(dir_path);
     let last_char_of_path = dir_path[dir_path.length - 1];
     
     if (dir_path[dir_path.length - 1] != "/"){
@@ -313,7 +314,7 @@ const submitCSVExportRequest = async (proj_id, proj_name) => {
       console.log(export_success)
     if (export_success == 0) {
       console.log("We good");
-      resp_message = "<p>CSV exported!</p>"
+      resp_message = "<p>CSV exporting!</p>"
     } else {
       console.log("We good");
       resp_message = "<p>There was an error in exporting your file. Please double-check the folder you've selected.</p>"
