@@ -1,3 +1,5 @@
+// Does exactly what you think it does. Calls itself to resize all graphs every time the screen is resized.
+// Called by showStatsModal in project-modals.js
 const statsModal_Populate = (data) => {
     // Adds the base html to the modal
     statsModal_AddBones();
@@ -197,6 +199,7 @@ const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar
     var weekData = statsModal_CreateWeekData(weekBar.weekmeans,sidebarWidth);
     var maxday = weekBar.maxday
 
+    // Resizes the font based on current size of sidebar
     var fontMultiplier;
     if (sidebarWidth > 150) {
         fontMultiplier = 1.65;
@@ -207,9 +210,6 @@ const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar
     }
 
     // set the dimensions and margins of the graph
-    //  var margin = {top: 30, right: 30, bottom: 70, left: 60},
-    //       width = sidebarWidth - margin.left - margin.right,
-    //       height = (sidebarWidth * .5) - margin.top - margin.bottom;
     var margin = {top: (sidebarWidth * .4), right: (sidebarWidth * .08), bottom: (sidebarWidth * .3), left: (sidebarWidth * .07)},
         width = sidebarWidth * .97,
         height = (sidebarWidth * .28) 
@@ -291,8 +291,6 @@ const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar
 
 /* ================================================================================================/
    *   CREATE WEEK DATE : Used by statsModal_AddSidebar to format incoming weekdata for render
-   *   
-   *   To Do: Change formattedWeek.day's value depending on render size 
    * ===============================================================================================/
    **/
 const statsModal_CreateWeekData = (weekData, sidebarWidth) => {
@@ -317,6 +315,7 @@ const statsModal_CreateWeekData = (weekData, sidebarWidth) => {
                 dotw.IsMax = true;
             }
         }
+        // If sidebar is small, it'll switch from three letter day (Mon) to 1-2 letter (M)
         if (sidebarWidth < 125){
             dotw.Day = oneLetterWeek[dotw.Day]
         }
@@ -335,7 +334,6 @@ const statsModal_UpdateGraph = (fullData) => {
     var sel_userInputRow = document.getElementById("userInputRow");
     var sel_numBars = document.getElementById("numBars");
     var barWidth = parseInt(window.getComputedStyle(document.querySelector("#stats-barChart")).width.slice(0, -2));
-    // d3.selectAll("svg").remove();
     document.getElementById("wordcounter").innerHTML = "";
     
     // Increases the font size based on render size
@@ -348,9 +346,10 @@ const statsModal_UpdateGraph = (fullData) => {
         fontMultiplier = 1;
     }
 
+    // Changes the tooltip render based on screensize
     let ttMultiplier = fontMultiplier == 1 ? -4 : 20;
 
-    // data = buildWordChartData(data.);
+    // Grabbing user input
     var dropdownMenu = d3.select("#selDataset");
     var granularity = dropdownMenu.property("value");
     var time_name, numBars, barData;
@@ -401,9 +400,6 @@ const statsModal_UpdateGraph = (fullData) => {
     document.getElementById("currMeasurement").innerText = time_name + "s";
 
     // set the dimensions and margins of the graph
-    // var margin = {top: 30, right: 30, bottom: 70, left: 60},
-    //     width = barWidth - margin.left - margin.right,
-    //     height = (barWidth * .67) - margin.top - margin.bottom;
     var margin = {top: barWidth * .10, right: barWidth * .05, bottom: barWidth * .10, left: barWidth * .12},
         width = barWidth - margin.left - margin.right,
         height = (barWidth * .58) - margin.top - margin.bottom; // .67
