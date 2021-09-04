@@ -27,18 +27,16 @@ function getCookie(name) {
 
 async function dir_select_tk_input(reqType) {
   let filepath_input
-      // Get the selected dir and put it into the input field
-    // let filepath_input = document.querySelector('.new-project input[name="filepath"]');
     // Call into Python to get file dialog box
     let selected_dir = await eel.dir_select_tk()();
-    // Put it into the form input
-    //filepath_input.value = String(selected_dir);
-
+    // Display file path to user based on form
     switch(reqType){
       case "edit":
+        // Currently not used as path cannot be edited
         document.getElementById("edit_wcProjPath").innerHTML = String(selected_dir)
         break;
       default:
+        // Default is for add project modal
         document.getElementById("new_wcProjPath").innerHTML = String(selected_dir);
     }
 
