@@ -95,6 +95,8 @@ const toggleWordGoal = (wcGoalType) => {
 // EDIT PROJECT MODAL
 // ---------------------------------------------------/
 
+// Sets up the edit project modal. The modal will appear differently based on the first variable (the word count goal type).
+// Originally, this is called by the showEditModal function and then called again when daily / total buttons toggled.
 const returnShowEditWordDivSection = (wcGoalType, weeklyGoals, dailyGoal, totalGoal, p_id) => {
     let wcDivSection = document.getElementById("edit_wcGoalInterface");
 
@@ -138,16 +140,20 @@ const returnShowEditWordDivSection = (wcGoalType, weeklyGoals, dailyGoal, totalG
             <input id="edit_totalcountgoal" type="text" name="wordcountgoal" value="${totalGoal}" required> words`
     }
 
+    // Submit button includes the word count goal type since the function processing the input needs to know which
+    // fields to look for
     document.getElementById("edit_wcSubmitBtn").innerHTML = `<button onclick="handleProjFormSubmit('edit', '${wcGoalType}', ${p_id})">Edit Project</button>`
 }
 
+
+// The main function for displaying the edit stats modal. Takes in the project id, gets the information required,
+// and calls returnShowEditWordDivSection based on the wordtype
 const showEditProjectModal = async(p_id) => {
     document.getElementById("edit-proj-toggle").click();
-    // hook up to submit submitEditedProject(p_id)
+    
     let currProj = await eel.eel_get_proj_info(p_id)();
 
-    console.log(currProj);
-
+    // This part of the edit modal is the same regarless of word count goal type
     document.getElementById("edit_project-name").value = currProj.project_name;
     document.getElementById("edit_wcProjPath").innerHTML = currProj.project_path;
     document.getElementById("edit_targetstartdate").value = currProj.project_start_date;
@@ -168,7 +174,10 @@ const showCSVExportModal = async(p_id) => {
     let projInfo = await eel.eel_get_proj_info(p_id)();
     let projName = projInfo.project_name;
     
+    // Dynamically updating the title of modal so user knows which project they've selected
     document.getElementById("modal-csv-title").innerHTML = `Exporting ${projName}`
+    
+    // This section changes via JS whether the export is successful
     document.getElementById("csv-export-input").innerHTML = `<div id="csv-export-main" class="project-form new-project">
             <div>
                 <h4>Where would you like your CSV uploaded?</h4>
@@ -189,6 +198,8 @@ let statsData = await eel.eel_return_project_stats(selectedId)();
 
 document.getElementById("stats-toggle").click();
 document.getElementById("modal-stats-title").innerHTML = `${selectedName} Statistics`
+
+// This function can be found in stats-modal.js
 statsModal_Populate(statsData);
 }
 
@@ -232,6 +243,8 @@ const handleProjFormSubmit = async (formType, wcGoalType, project_id=null) => {
     } 
 }
 
+// Does exactly what you think it does. Runs on both the add project and edit project modals.
+// Called by handleProjFormSubmit
 const checkIfAnyEmpty = (formType) => {
     if (!document.getElementById(`${formType}_wcProjPath`).innerHTML) {
         return false;
@@ -253,6 +266,9 @@ const checkIfAnyEmpty = (formType) => {
     return true;
 }
 
+// Called by handleFormSubmit once all fields have been filled out.
+// Extracts all values from the form based on its modal (add or edit) and goal type (daily, weekly, total)
+// Authorname currently defaulted to Author
 const projFormExtractVals = async (formType, wcGoalType) => {
     let authorname = "Author";
     let projectname = document.getElementById(`${formType}_project-name`).value;
@@ -298,10 +314,12 @@ const projFormExtractVals = async (formType, wcGoalType) => {
 // CSV EXPORT MODAL
 // ---------------------------------------------------/
 
+// Asks user for where they wish to export their CSV and tries to do so. Displays whether it was successful
+// in the modal.
 const submitCSVExportRequest = async (proj_id) => {
 
     let dir_path = String(await eel.dir_select_tk()())
-    console.log(dir_path);
+    
     let last_char_of_path = dir_path[dir_path.length - 1];
     
     if (dir_path[dir_path.length - 1] != "/"){
