@@ -1,3 +1,4 @@
+// Checks whether Author is in the database and adds if not. Called by the welcome screen.
 const prepNaniteUser = async() => {
     let currUsername = "Author";
 
