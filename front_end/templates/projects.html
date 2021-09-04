@@ -214,18 +214,17 @@
     return doc;
   }
 
-  // Rename Project
-
-async function new_name_prompt(p_id) {
-  let projectname =  document.querySelector('#project-' + String(p_id) + '-summary h2');
-  let editbuttonimg =  document.querySelector('#project-' + String(p_id) + '-summary .edit-project.icon img');
-  // Set title to be editable
-  projectname.contentEditable = "true";
-  projectname.focus();
-  // Set edit button to be OK button
-  editbuttonimg.src = '../static/imgs/icons/green-tick.svg';
-  editbuttonimg.parentElement.onclick = function(){rename_project(p_id,projectname.textContent);}; // When tick is clicked, change name
-}
+// Old Rename Project
+// async function new_name_prompt(p_id) {
+//   let projectname =  document.querySelector('#project-' + String(p_id) + '-summary h2');
+//   let editbuttonimg =  document.querySelector('#project-' + String(p_id) + '-summary .edit-project.icon img');
+//   // Set title to be editable
+//   projectname.contentEditable = "true";
+//   projectname.focus();
+//   // Set edit button to be OK button
+//   editbuttonimg.src = '../static/imgs/icons/green-tick.svg';
+//   editbuttonimg.parentElement.onclick = function(){rename_project(p_id,projectname.textContent);}; // When tick is clicked, change name
+// }
 
   //////////////////////////////////////
 // DEBUGGER Function
