@@ -6,6 +6,7 @@ from tkinter import *
 def dir_select_tk():
     root = Tk()
     root.withdraw()
+    root.wm_attributes('-topmost',1)
     folder_selected = filedialog.askdirectory()
 
     # print(folder_selected)
