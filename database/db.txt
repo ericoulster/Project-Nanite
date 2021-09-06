@@ -1,0 +1,13 @@
+Github requires a folder to have a file within it in order for that folder to be uploaded.
+
+This folder is referenced within the code, and so it must contain a file.
+
+As a result, this is a load-bearing text file.
+
+We probably could have programmed it so that the python files generate the folder on start-up.
+
+But this seemed slightly more efficient.
+
+Thank you for listening to our story. 
+
+I hope you are having a nice day.
