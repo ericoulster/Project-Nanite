@@ -331,7 +331,7 @@ const submitCSVExportRequest = async (proj_id) => {
       console.log(export_success)
     if (export_success == 0) {
       console.log("We good");
-      resp_message = "<p>CSV exporting!</p>"
+      resp_message = "<p>CSV exported!</p>"
     } else {
       console.log("We good");
       resp_message = "<p>There was an error in exporting your file. Please double-check the folder you've selected.</p>"
@@ -340,6 +340,12 @@ const submitCSVExportRequest = async (proj_id) => {
     document.getElementById("csv-export-input").innerHTML = `<div class='export-response-message'>
       ${resp_message}
       </div>`
+
+    
+    await sleep(500);
+
+    location.reload();
+    
   }
 
 
@@ -362,4 +368,10 @@ const refreshWordCountAndCheck = async (proj_id) => {
         location.reload();
     }
     
+}
+
+
+// MISC 
+const sleep = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
