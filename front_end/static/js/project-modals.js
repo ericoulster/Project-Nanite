@@ -342,10 +342,10 @@ const submitCSVExportRequest = async (proj_id) => {
       </div>`
 
     
-    await sleep(500);
-
-    location.reload();
-    
+    if (export_success == 0) {
+        await sleep(400);
+        location.reload();
+    }
   }
 
 
