@@ -2,12 +2,26 @@ import eel, os
 from tkinter import filedialog
 from tkinter import *
 
+
+@eel.expose
+def file_select_tk():
+    filetypes = (
+        ("text files", "*.txt"),
+        ("rich text files", "*.rtf"),
+        ("word documents", "*.docx")
+    )
+    root = Tk()
+    root.withdraw()
+    root.wm_attributes('-topmost',1)
+    file_selected = filedialog.askopenfilename(title="Select a file", filetypes=filetypes)
+    return file_selected
+
 @eel.expose
 def dir_select_tk():
     root = Tk()
     root.withdraw()
     root.wm_attributes('-topmost',1)
-    folder_selected = filedialog.askdirectory()
+    folder_selected = filedialog.askdirectory(title="Select a folder")
 
     # print(folder_selected)
     return folder_selected
