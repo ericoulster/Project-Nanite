@@ -1,3 +1,7 @@
+.freeze { 
+    pointer-events: none; 
+}
+
 .proj-div h5 {
     font-family: Archivo;
     letter-spacing: .05rem;
@@ -100,6 +104,17 @@
 
 #csv-export-main {
     text-align: center;
+}
+
+#csv_errorNote {
+    font-size: .95em;
+    background-color: #22262a;
+    padding: .5em;
+    border-radius: .5em;
+}
+
+#csv_errorNote p {
+    color: #b4b3b3;
 }
 
 #csv-export-request-btn {

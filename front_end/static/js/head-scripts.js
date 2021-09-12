@@ -25,9 +25,21 @@ function getCookie(name) {
 
 // Eel / Python Functions
 
-async function select_tk_input(reqType, inType) {
+const toggleOnclick = (idToToggle, funcToToggle) => {
+  document.getElementById(idToToggle).onclick = funcToToggle;
+}
+
+const select_tk_input = async (reqType, inType) => {
+  // Removing the onclick function from the select path buttons to prevent the creation
+  // of multiple file dialog windows (since the system is async, multiple windows will line up otherwise)
+  if (reqType == "add") {
+    toggleOnclick("new_filePathBtn", "");
+    toggleOnclick("new_dirPathBtn", "");
+  }
+
     // Call into Python to get file dialog box
     let selected_path = inType == "dir" ? await eel.dir_select_tk()() : await eel.file_select_tk()();
+
     // Display file path to user based on form
     switch(reqType){
       case "edit":
@@ -37,6 +49,13 @@ async function select_tk_input(reqType, inType) {
       default:
         // Default is for add project modal
         document.getElementById("new_wcProjPath").innerHTML = String(selected_path);
+    }
+    
+    // Returning the select_tk_input function to the select path buttons now that the 
+    // dialogue window is closed.
+    if (reqType == "add"){
+      toggleOnclick("new_filePathBtn", () => select_tk_input(`add`,`file`));
+      toggleOnclick("new_dirPathBtn", () => select_tk_input(`add`,`dir`));
     }
 
     return selected_path;

@@ -274,10 +274,10 @@ def eel_export_proj_to_csv(proj_id, csv_path):
     pa.set_project(proj_id)
     try:
         pa.render_wordcounts(csv_path)
-        print("We should be good!")
+        # Exported okay
         return 0
     except:
-        print("WHOOPS THAT DIDN'T WORK")
+        # Error in exporting
         return 1
 
 """

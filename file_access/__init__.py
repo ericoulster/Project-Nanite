@@ -2,7 +2,6 @@ import eel, os
 from tkinter import filedialog
 from tkinter import *
 
-
 @eel.expose
 def file_select_tk():
     filetypes = (
@@ -19,11 +18,11 @@ def file_select_tk():
 @eel.expose
 def dir_select_tk():
     root = Tk()
+    
     root.withdraw()
     root.wm_attributes('-topmost',1)
     folder_selected = filedialog.askdirectory(title="Select a folder")
 
-    # print(folder_selected)
     return folder_selected
 
 @eel.expose
