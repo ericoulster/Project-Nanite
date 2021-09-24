@@ -8,3 +8,5 @@ dev_notes/
 wordcount_meta.csv
 database/nanite_storage.sqlite3
 __pycache__/file_funcs.cpython-36.pyc
+build
+dist

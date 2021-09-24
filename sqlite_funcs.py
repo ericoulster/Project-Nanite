@@ -3,6 +3,7 @@ from datetime import datetime
 from collections import namedtuple
 import time
 import os
+import sys #added
 
 import numpy as np
 import pandas as pd
@@ -14,7 +15,8 @@ from file_funcs import file_pipe, is_streak, streak_length, change_goal, daily_w
 
 ### Variables ###
 
-sqlite3_path = './database/nanite_storage.sqlite3'
+#sqlite3_path = './database/nanite_storage.sqlite3'
+sqlite3_path = os.path.join(os.path.dirname(sys.executable),"nanite_storage.sqlite3")
 
 # Using namedtuple to define dict-like structure for retrieved data (using ._asdict() method on them)
 
@@ -98,12 +100,15 @@ def db_init():
     Should be Run on start-up.
     """
     if os.path.exists(sqlite3_path) == False:
-        conn = sqlite3.connect(sqlite3_path)
-        conn.execute("PRAGMA foreign_keys = 1")
-        conn.execute(create_author_sql)
-        conn.execute(create_project_sql)
-        conn.execute(create_words_sql)
-        conn.close()
+        try:
+            conn = sqlite3.connect(sqlite3_path)
+            conn.execute("PRAGMA foreign_keys = 1")
+            conn.execute(create_author_sql)
+            conn.execute(create_project_sql)
+            conn.execute(create_words_sql)
+            conn.close()
+        except Exception as e:
+            print(e)
     else:
         print("db already exists")
 
