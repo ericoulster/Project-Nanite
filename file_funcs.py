@@ -10,6 +10,9 @@ import docx2txt
 
 import numpy as np
 
+import os # added
+import sys # added
+
 
 # Note for etl: .stat().st_mtime in pathlib gives the time of last modification of a file
 
@@ -104,7 +107,14 @@ def file_pipe(path: str) -> str:
     For use in sqlite_funcs.
     """
     orig = Path(f'{path}'.format(r''))
-    local = r"./temp_filestore/"
+
+    dir_path = os.path.join(os.environ["HOME"], "Library", "Application Support", "nanite")
+
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+
+    #local = r"./temp_filestore/"
+    local = f'{dir_path}/temp_filestore'.format(r'')
     Path(local).mkdir(exist_ok=True)
     copy = Path(local)
     

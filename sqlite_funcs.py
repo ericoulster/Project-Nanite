@@ -15,8 +15,15 @@ from file_funcs import file_pipe, is_streak, streak_length, change_goal, daily_w
 
 ### Variables ###
 
+dir_path = os.path.join(os.environ["HOME"], "Library", "Application Support", "nanite")
+
 #sqlite3_path = './database/nanite_storage.sqlite3'
-sqlite3_path = os.path.join(os.path.dirname(sys.executable),"nanite_storage.sqlite3")
+
+if not os.path.exists(dir_path):
+    os.makedirs(dir_path)
+sqlite3_path = os.path.join(dir_path, "nanite_storage.sqlite3")
+
+print(sqlite3_path)
 
 # Using namedtuple to define dict-like structure for retrieved data (using ._asdict() method on them)
 
@@ -100,15 +107,12 @@ def db_init():
     Should be Run on start-up.
     """
     if os.path.exists(sqlite3_path) == False:
-        try:
-            conn = sqlite3.connect(sqlite3_path)
-            conn.execute("PRAGMA foreign_keys = 1")
-            conn.execute(create_author_sql)
-            conn.execute(create_project_sql)
-            conn.execute(create_words_sql)
-            conn.close()
-        except Exception as e:
-            print(e)
+        conn = sqlite3.connect(sqlite3_path)
+        conn.execute("PRAGMA foreign_keys = 1")
+        conn.execute(create_author_sql)
+        conn.execute(create_project_sql)
+        conn.execute(create_words_sql)
+        conn.close()
     else:
         print("db already exists")
 
@@ -661,7 +665,7 @@ class ProjectActions:
             try:
                 wc = file_pipe(self.project_path)
             except:
-                raise Exception("Error: wordcount pipeline (file_pipe) failed.")
+                raise Exception("Error: wordcount pipeline (file_pipe) failed.", self.project_path)
             now = timestamp()
             query = '''INSERT INTO words values (
                 ?, ?, ?, ?, ?, ?) '''
