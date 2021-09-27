@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(['nanite.py'],
-             pathex=['/Users/duskconductor/Desktop/Project-Nanite', '/Users/duskconductor/Desktop/Project-Nanite/venv/lib/python3.9/site-packages', '/Users/duskconductor/Desktop/Project-Nanite/database', '/Users/duskconductor/Desktop/Project-Nanite/file_access', '/Users/duskconductor/Desktop/Project-Nanite/front_end', '/Users/duskconductor/Desktop/Project-Nanite'],
+             pathex=['/{INSERT_PATH}/Project-Nanite, '/{INSERT_PATH}/Project-Nanite/venv/lib/python3.9/site-packages', '/{INSERT_PATH}/Project-Nanite/database', '/{INSERT_PATH}/Project-Nanite/file_access', '/{INSERT_PATH}/Project-Nanite/front_end', '/{INSERT_PATH}/Project-Nanite],
              binaries=[],
              datas=[
                 ('nanite.icns', '.'),
@@ -208,7 +208,7 @@ exe = EXE(pyz,
           console=False,
           disable_windowed_traceback=False,
           target_arch=None,
-          codesign_identity='Project Nanite',
+          codesign_identity=None,
           entitlements_file=None)
 app = BUNDLE(exe,
              name='nanite.app',
