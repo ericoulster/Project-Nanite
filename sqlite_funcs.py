@@ -15,7 +15,7 @@ from file_funcs import file_pipe, is_streak, streak_length, change_goal, daily_w
 
 ### Variables ###
 
-dir_path = os.path.join(os.environ["HOME"], "Library", "Application Support", "nanite")
+dir_path = os.path.join(os.environ["HOME"], ".local", "share", "applications", "nanite")
 
 #sqlite3_path = './database/nanite_storage.sqlite3'
 

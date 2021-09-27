@@ -108,7 +108,7 @@ def file_pipe(path: str) -> str:
     """
     orig = Path(f'{path}'.format(r''))
 
-    dir_path = os.path.join(os.environ["HOME"], "Library", "Application Support", "nanite")
+    dir_path = os.path.join(os.environ["HOME"], ".local", "share", "applications", "nanite")
 
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
