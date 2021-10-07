@@ -798,6 +798,16 @@ class ProjectActions:
         conn.commit()
         conn.close()
         self.project_name = new_name
+    
+    
+    def change_path(self, new_path):
+        """Replaces project path with new_path"""
+        conn = sqlite3.connect(sqlite3_path)
+        cur = conn.cursor()
+        cur.execute("UPDATE projects SET project_path=? WHERE project_id=?", (new_path, self.project_id))
+        conn.commit()
+        conn.close()
+        self.project_path = new_path
 
 
 

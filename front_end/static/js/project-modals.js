@@ -227,13 +227,10 @@ const handleProjFormSubmit = async (formType, wcGoalType, project_id=null) => {
             wordcountgoal, isWeekly, weeklyCount} = await projFormExtractVals(formType, wcGoalType);
 
         if (formType == "new") {
-            console.log(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, isWeekly, weeklyCount);
             eel.new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, isWeekly, weeklyCount);
             location.reload();
         } else {
             if (project_id != null) {
-                console.log(wcGoalType, authorname, project_id, projectname, projectpath, 
-                    targetstartdate, targetenddate, current_daily_target, wordcountgoal, isWeekly, weeklyCount)
                 eel.eel_update_project(wcGoalType, authorname, project_id, projectname, projectpath, 
                     targetstartdate, targetenddate, current_daily_target, wordcountgoal, isWeekly, weeklyCount)
                 location.reload();

@@ -35,6 +35,9 @@ const select_tk_input = async (reqType, inType) => {
   if (reqType == "add") {
     toggleOnclick("new_filePathBtn", "");
     toggleOnclick("new_dirPathBtn", "");
+  } else if (reqType == "edit") {
+    toggleOnclick("edit_filePathBtn", "");
+    toggleOnclick("edit_dirPathBtn", "");
   }
 
     // Call into Python to get file dialog box
@@ -43,7 +46,6 @@ const select_tk_input = async (reqType, inType) => {
     // Display file path to user based on form
     switch(reqType){
       case "edit":
-        // Currently not used as path cannot be edited
         document.getElementById("edit_wcProjPath").innerHTML = String(selected_path)
         break;
       default:
@@ -56,7 +58,10 @@ const select_tk_input = async (reqType, inType) => {
     if (reqType == "add"){
       toggleOnclick("new_filePathBtn", () => select_tk_input(`add`,`file`));
       toggleOnclick("new_dirPathBtn", () => select_tk_input(`add`,`dir`));
-    }
+    } else if (reqType == "edit"){
+      toggleOnclick("edit_filePathBtn", () => select_tk_input(`edit`,`file`));
+      toggleOnclick("edit_dirPathBtn", () => select_tk_input(`edit`,`dir`));
+    } 
 
     return selected_path;
   }

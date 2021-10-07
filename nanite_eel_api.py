@@ -258,6 +258,7 @@ def eel_update_project(wcGoalType, authorname, project_id, proj_name, proj_path,
     pa = ProjectActions()
     pa.set_project(project_id)
     pa.rename_project(proj_name)
+    pa.change_path(proj_path)
     pa.change_deadline(proj_enddate)
 
     if proj_isWeekly == 1:
