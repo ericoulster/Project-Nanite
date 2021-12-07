@@ -1,0 +1,18 @@
+Mac (Intel 64) Binary Instructions
+====================================
+
+(Writing this down because I completely forgot about step 3 && 4 when coming back to this project)
+
+Most everything you'll need has already been set up in the 'nanite.spec' file.
+
+------------------------------------
+
+1) [requirements.txt] Use to create and activate an environment instance
+
+2) [nanite.spec] Make sure to replace all instances of {INSERT_PATH} with the actual path to the specified file_acces_ui
+
+3) [terminal] PYTHONPATH="/{PATH_TO_YOUR_ENVIRONMENT}/venv/lib/python3.9/site-packages"
+
+4) [terminal] export PYTHONPATH
+
+5) [terminal] pyinstaller --onefile --windowed nanite.spec

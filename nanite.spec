@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(['nanite.py'],
-             pathex=['/{INSERT_PATH}/Project-Nanite, '/{INSERT_PATH}/Project-Nanite/venv/lib/python3.9/site-packages', '/{INSERT_PATH}/Project-Nanite/database', '/{INSERT_PATH}/Project-Nanite/file_access', '/{INSERT_PATH}/Project-Nanite/front_end', '/{INSERT_PATH}/Project-Nanite],
+             pathex=['/{INSERT_PATH}/Project-Nanite', '/{INSERT_PATH}/Project-Nanite/venv/lib/python3.9/site-packages', '/{INSERT_PATH}/Project-Nanite/database', '/{INSERT_PATH}/Project-Nanite/file_access', '/{INSERT_PATH}/Project-Nanite/front_end', '/{INSERT_PATH}/Project-Nanite'],
              binaries=[],
              datas=[
                 ('nanite.icns', '.'),
@@ -180,7 +180,7 @@ a = Analysis(['nanite.py'],
                 ('front_end/static/js/stats-modal.js', './front_end/static/js'),
                 ('front_end/static/js/viewport-scripts.js', './front_end/static/js')
                 ],
-             hiddenimports=["sqlite3"],
+             hiddenimports=["sqlite3","gevent"],
              hookspath=[],
              hooksconfig={},
              runtime_hooks=[],

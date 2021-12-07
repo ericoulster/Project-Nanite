@@ -11,3 +11,5 @@ __pycache__/file_funcs.cpython-36.pyc
 build
 dist
 .DS_Store
+
+Chromium.app
