@@ -16,3 +16,11 @@ Most everything you'll need has already been set up in the 'nanite.spec' file.
 4) [terminal] export PYTHONPATH
 
 5) [terminal] pyinstaller --onefile --windowed nanite.spec
+
+---------/ ALSO NOTE /---------------
+
+Because this binary is set up to be a onefile / windowed version, please include any new fonts, files, images, etc in the .spec file in that massive array in Analysis.datas.
+
+How the tuples work (if I remember correctly):
+
+({The original filepath}, {The new location of said file})
