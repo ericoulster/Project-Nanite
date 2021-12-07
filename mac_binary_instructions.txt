@@ -5,7 +5,7 @@ Mac (Intel 64) Binary Instructions
 
 Most everything you'll need has already been set up in the 'nanite.spec' file.
 
-------------------------------------
+-----------/ HOW TO BINARIZE ON MAC /------------------
 
 1) [requirements.txt] Use to create and activate an environment instance
 
