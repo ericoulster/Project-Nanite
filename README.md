@@ -7,6 +7,6 @@ Project Nanite is an open-source tool designed to help you track and analyze you
 
 It is designed to help you keep forward momentum through visual analytics, gamification and additional info about your writing habits.
 
-At the time of writing (2021-06-22), the project is unreleased, but nearing beta. The 'master' branch does not reflect most recent progress.
+At the time of writing (2021-12-12), we have a worked build released, though are still in the progress of overhauling documentation (including here)
 
 This project follows a GNU AGPLv3 licence.
