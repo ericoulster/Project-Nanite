@@ -22,7 +22,7 @@
   {% set close_button_text = 'Continue' %}
   {% set close_btn_fn = "" %}
   {% set modal_contents_html = '<p>Nanite is designed to help you keep track of your writing habits and increase your productivity the more you use it.</p>
-  <p>To get started, click the "+" button and link your text file to Nanite. Nanite will then traack your progress and give you useful insights.</p>'|safe %}
+  <p>To get started, click the "+" button and link your text file to Nanite. Nanite will then track your progress and give you useful insights.</p>'|safe %}
     {% include 'modal.html' %}
   {% endwith %}
   <!-- Onboarding Modal End -->
@@ -44,7 +44,8 @@
   </div>
   <div>
       <h5>Where does your project live?</h5>
-      <button onclick="dir_select_tk_input()">Select Directory</button> <span id="new_wcProjPath"></span>
+      <button id="new_filePathBtn" onclick="select_tk_input(`add`,`file`)">Select File</button> <button id="new_dirPathBtn" onclick="select_tk_input(`add`,`dir`)">Select Directory</button> 
+      <span id="new_wcProjPath"></span>
   </div>
   <div class="wc-toggle-div">
       <h5>Would you like to set on overall goal or vary the goal day by day?</h5>
@@ -138,7 +139,7 @@
     {% set close_btn_fn = '' %}
     {% set modal_contents_html = '<div class="about-container">
         <div>
-            <h4>Version 1.0</h4>
+            <h4>Version - Beta</h4>
             <h4>Created By:</h4>
         </div>
         <div class="about-credit-list">

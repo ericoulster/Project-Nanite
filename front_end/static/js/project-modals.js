@@ -169,16 +169,19 @@ const showEditProjectModal = async(p_id) => {
 // ---------------------------------------------------/
 
 // Used to open and populate the CSV export screen for selected project
-const showCSVExportModal = async(p_id) => {
+const showCSVExportModal = async(p_id ,errorNote="") => {
     document.getElementById("csv-exp-toggle").click();
     let projInfo = await eel.eel_get_proj_info(p_id)();
     let projName = projInfo.project_name;
-    
+    let errorDiv = errorNote != "" ? `<div id="csv_errorNote">${errorNote}</div>` : "";
+
+
     // Dynamically updating the title of modal so user knows which project they've selected
     document.getElementById("modal-csv-title").innerHTML = `Exporting ${projName}`
     
     // This section changes via JS whether the export is successful
     document.getElementById("csv-export-input").innerHTML = `<div id="csv-export-main" class="project-form new-project">
+            ${errorDiv}
             <div>
                 <h4>Where would you like your CSV uploaded?</h4>
                 <button id="csv-export-request-btn" onclick="submitCSVExportRequest(${p_id})">Select Directory</button>
@@ -317,29 +320,25 @@ const projFormExtractVals = async (formType, wcGoalType) => {
 // Asks user for where they wish to export their CSV and tries to do so. Displays whether it was successful
 // in the modal.
 const submitCSVExportRequest = async (proj_id) => {
+    toggleOnclick("csv-export-request-btn", "");
 
     let dir_path = String(await eel.dir_select_tk()())
-    
-    let last_char_of_path = dir_path[dir_path.length - 1];
     
     if (dir_path[dir_path.length - 1] != "/"){
       dir_path = dir_path + "/"
     }
 
     let export_success = await eel.eel_export_proj_to_csv(proj_id, dir_path)();
-    let resp_message;
-      console.log(export_success)
-    if (export_success == 0) {
-      console.log("We good");
-      resp_message = "<p>CSV exporting!</p>"
-    } else {
-      console.log("We good");
-      resp_message = "<p>There was an error in exporting your file. Please double-check the folder you've selected.</p>"
-    }
+    
+    let resp_message = export_success == 0 ? "" : "<p>There was an error in exporting your file. Please double-check the folder you've selected.</p>"; 
 
-    document.getElementById("csv-export-input").innerHTML = `<div class='export-response-message'>
-      ${resp_message}
-      </div>`
+    if (export_success == 0) {
+        // If file successfully exported, just reloads
+        location.reload();
+    } else {
+        // If there was an error, brings back the CSV modal but with an error displayed
+        showCSVExportModal(proj_id, resp_message);
+    }
   }
 
 
