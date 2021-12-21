@@ -91,11 +91,6 @@ def samedate(date: str) -> bool(): # For some reason date is actually a date? No
         else:
             return False
 
-def offset_initial_words(total_words, word_offset=None) -> int:
-    if word_offset is None:
-        return total_words
-    else:
-        return total_words - word_offset
 
 def db_init():
     """
@@ -650,7 +645,7 @@ class ProjectActions:
     def return_wordgoal_and_deadline(self):
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT deadline, wordcount_goal FROM projects where project_id=?", (self.project_id,))
+        cur.execute("SELECT deadline, wordcount_goal, FROM projects where project_id=?", (self.project_id,))
         row = cur.fetchone()
         conn.close()
         wordgoal_and_deadline = dict({'wordgoal':row[1], 'deadline':row[0]})
@@ -698,7 +693,7 @@ class ProjectActions:
         TODO: re-test
         """
         if (self.project_start_date is not None) & (self.deadline is not None):
-            word_goal = word_goal_calculate(daily_words, self.project_start_date, self.deadline)
+            word_goal = word_goal_calculate(daily_words, self.word_offset, self.project_start_date, self.deadline)
             conn = sqlite3.connect(sqlite3_path)
             cur = conn.cursor()
             cur.execute(
