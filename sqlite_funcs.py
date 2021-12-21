@@ -23,7 +23,7 @@ ProjectVals = namedtuple(
     'Project', 
     'project_id author_id project_name project_created_on project_start_date \
     deadline wordcount_goal current_daily_target wp_page project_path is_weekly_wordcount \
-    weekly_words offset_words'
+    weekly_words starting_words'
     )
 WordVals = namedtuple('Wordcounts', 'record_id project_id author_id Wdate Wcount Wtarget')
 
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS projects (
     project_path text,
     is_weekly_wordcount int,
     weekly_words text,
-    offset_words int,
+    starting_words int,
     FOREIGN KEY (author_id) REFERENCES authors (author_id)
 )
 """
@@ -324,7 +324,7 @@ class AuthorActions:
         project_path=None,
         is_weekly_wordcount=0,
         weekly_words=None,
-        offset_words=None
+        starting_words=None
         ):
         """
         Takes in a project info, then creates a new project for a given author.
@@ -343,7 +343,7 @@ class AuthorActions:
                 ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) '''
             params = [None, self.author_id, project_name, now, project_start_date, deadline, 
             wordcount_goal, current_daily_target, wp_page, project_path, 
-            is_weekly_wordcount, weekly_words, offset_words]
+            is_weekly_wordcount, weekly_words, starting_words]
             try:
                 cur.execute(query, params)
                 conn.commit()
@@ -449,7 +449,7 @@ class ProjectActions:
         self.project_path = None
         self.is_weekly_wordcount = None
         self.weekly_words = None
-        self.offset_words = None
+        self.starting_words = None
 
         self.author_set = False
         self.daily_target_set = False
@@ -484,7 +484,7 @@ class ProjectActions:
         self.project_path = data[9]
         self.is_weekly_wordcount = data[10]
         self.weekly_words = data[11]
-        self.offset_words = data[12]
+        self.starting_words = data[12]
         self.author_set = True
         self.daily_target_set = True
         conn.close()
@@ -693,7 +693,7 @@ class ProjectActions:
         TODO: re-test
         """
         if (self.project_start_date is not None) & (self.deadline is not None):
-            word_goal = word_goal_calculate(daily_words, self.word_offset, self.project_start_date, self.deadline)
+            word_goal = word_goal_calculate(daily_words, self.starting_words, self.project_start_date, self.deadline)
             conn = sqlite3.connect(sqlite3_path)
             cur = conn.cursor()
             cur.execute(
