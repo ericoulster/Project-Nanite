@@ -715,7 +715,7 @@ class ProjectActions:
         Requires project_start_date, deadline, and project_id to work
         """
         if (self.project_start_date is not None) & (self.deadline is not None):
-            word_goal = str(weekly_words_calculate(weekly_wordcount, self.project_start_date, self.deadline))
+            word_goal = str(weekly_words_calculate(weekly_wordcount, self.starting_words, self.project_start_date, self.deadline))
             conn = sqlite3.connect(sqlite3_path)
             cur = conn.cursor()
             cur.execute("UPDATE projects SET wordcount_goal=?, weekly_words=?, is_weekly_wordcount=1 WHERE project_id=?", (word_goal, weekly_wordcount, self.project_id))
@@ -737,7 +737,7 @@ class ProjectActions:
         if (self.project_start_date is not None) & (self.deadline is not None):
             
             if (self.is_weekly_wordcount == 0):
-                daily_words = daily_words_calculate(word_goal, self.project_start_date, self.deadline)
+                daily_words = daily_words_calculate(word_goal, self.starting_words, self.project_start_date, self.deadline)
                 conn = sqlite3.connect(sqlite3_path)
                 cur = conn.cursor()
                 cur.execute(
@@ -749,7 +749,7 @@ class ProjectActions:
                 self.wordcount_goal = word_goal
             
             else:
-                daily_words = daily_words_calculate(word_goal, self.project_start_date, self.deadline)
+                daily_words = daily_words_calculate(word_goal, self.starting_words, self.project_start_date, self.deadline)
                 weekly_words = str(
                     daily_words + "," + daily_words + "," + daily_words + "," + daily_words + "," + daily_words + "," + daily_words + "," + daily_words + ","
                     )
@@ -773,7 +773,7 @@ class ProjectActions:
         Requires project_start_date, word_goal, and project_id to work
         """
         if (self.project_start_date is not None) & (self.wordcount_goal is not None):
-            daily_words = daily_words_calculate(self.wordcount_goal, self.project_start_date, new_deadline)
+            daily_words = daily_words_calculate(self.wordcount_goal, self.starting_words, self.project_start_date, new_deadline)
             conn = sqlite3.connect(sqlite3_path)
             cur = conn.cursor()
             cur.execute(
