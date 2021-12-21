@@ -91,6 +91,11 @@ def samedate(date: str) -> bool(): # For some reason date is actually a date? No
         else:
             return False
 
+def offset_initial_words(total_words, word_offset=None) -> int:
+    if word_offset is None:
+        return total_words
+    else:
+        return total_words - word_offset
 
 def db_init():
     """
