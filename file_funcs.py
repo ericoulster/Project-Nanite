@@ -179,7 +179,7 @@ def word_goal_calculate(daily_target, starting_words, goal_start_date, goal_fini
         return offset_word_goal
 
 
-def weekly_words_calculate(weekly_words, goal_start_date, goal_finish_date):
+def weekly_words_calculate(weekly_words, starting_words, goal_start_date, goal_finish_date):
     """
     word_goal_calculate, but for weekly wordcounts being true
     """
@@ -199,7 +199,9 @@ def weekly_words_calculate(weekly_words, goal_start_date, goal_finish_date):
     result = ((mondays * int(word_array[0])) + (tuesdays * int(word_array[1])) + (wednesdays * int(word_array[2])) + (thursdays * int(word_array[3]))
             + (fridays * int(word_array[4])) + (saturdays * int(word_array[5])) + (sundays * int(word_array[6])))
     
-    return result
+    offset_result = offset_initial_words(result, starting_words)
+
+    return offset_result
 
 
 def change_goal(goal_start_date, goal_end_date, word_goal=None, daily_target=None, starting_words=None):
