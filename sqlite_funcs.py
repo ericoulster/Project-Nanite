@@ -23,7 +23,7 @@ ProjectVals = namedtuple(
     'Project', 
     'project_id author_id project_name project_created_on project_start_date \
     deadline wordcount_goal current_daily_target wp_page project_path is_weekly_wordcount \
-    weekly_words'
+    weekly_words offset_words'
     )
 WordVals = namedtuple('Wordcounts', 'record_id project_id author_id Wdate Wcount Wtarget')
 
@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS projects (
     project_path text,
     is_weekly_wordcount int,
     weekly_words text,
+    offset_words int,
     FOREIGN KEY (author_id) REFERENCES authors (author_id)
 )
 """
@@ -198,7 +199,11 @@ def return_stats_screen(p_id:int) -> dict():
     for obj in monthly:
         obj["Wdate"] = obj["Wdate"].strftime("%m/%d/%y")
 
-    stats_screen = {'word_goal_and_deadline': wgad, 'barData': {'daily':daily, 'weekly':weekly, 'monthly':monthly}, 'weekBar': weekBar, 'max_streak':max_streak, 'current_streak': current_streak, 'max_wc': max_wc, 'mean_wc':mean_wc, 'current_wc':current_wc}
+    stats_screen = {'word_goal_and_deadline': wgad, 
+    'barData': {'daily':daily, 'weekly':weekly, 'monthly':monthly}, 
+    'weekBar': weekBar, 'max_streak':max_streak, 
+    'current_streak': current_streak, 'max_wc': max_wc, 
+    'mean_wc':mean_wc, 'current_wc':current_wc}
 
     return stats_screen
 
@@ -318,7 +323,8 @@ class AuthorActions:
         wp_page=None,
         project_path=None,
         is_weekly_wordcount=0,
-        weekly_words=None
+        weekly_words=None,
+        offset_words=None
         ):
         """
         Takes in a project info, then creates a new project for a given author.
@@ -334,10 +340,10 @@ class AuthorActions:
             conn = sqlite3.connect(sqlite3_path)
             cur = conn.cursor()
             query = '''INSERT INTO projects values (
-                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) '''
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) '''
             params = [None, self.author_id, project_name, now, project_start_date, deadline, 
             wordcount_goal, current_daily_target, wp_page, project_path, 
-            is_weekly_wordcount, weekly_words]
+            is_weekly_wordcount, weekly_words, offset_words]
             try:
                 cur.execute(query, params)
                 conn.commit()
@@ -443,6 +449,7 @@ class ProjectActions:
         self.project_path = None
         self.is_weekly_wordcount = None
         self.weekly_words = None
+        self.offset_words = None
 
         self.author_set = False
         self.daily_target_set = False
@@ -477,6 +484,7 @@ class ProjectActions:
         self.project_path = data[9]
         self.is_weekly_wordcount = data[10]
         self.weekly_words = data[11]
+        self.offset_words = data[12]
         self.author_set = True
         self.daily_target_set = True
         conn.close()
