@@ -150,28 +150,36 @@ def savepath(project_name: str, save_path: str) -> str:
     p = Path(save_path).joinpath("wordcounts-" + str(project_name) + "-" + datetime.today().strftime('%Y-%m-%d') + ".csv")
     return p
 
+
+def offset_initial_words(total_words, starting_words=None) -> int:
+    if starting_words is None:
+        return total_words
+    else:
+        return total_words - starting_words
+
+
 ## Time Intelligence Funcs ##
 
-def daily_words_calculate(word_goal, goal_start_date, goal_finish_date):
+def daily_words_calculate(word_goal, starting_words, goal_start_date, goal_finish_date):
     # We currently assume you are starting at zero words, or are factoring your already existant words into your decision.
     # This assumption may be worth revisiting later
     #NOTE: changed incoming date format #days_left = abs((datetime.strptime(goal_finish_date,"%d/%m/%Y") - datetime.strptime(goal_start_date,"%d/%m/%Y")).days)
     days_left = abs((datetime.strptime(goal_finish_date,"%Y-%m-%d") - datetime.strptime(goal_start_date,"%Y-%m-%d")).days)
-    daily_target = ceil(int(word_goal)/days_left)
+    daily_target = ceil(offset_initial_words(int(word_goal), starting_words=starting_words)/days_left)
     return daily_target
 
 
-def word_goal_calculate(daily_target, goal_start_date, goal_finish_date, is_weekly_wordcount=0):
-    # We currently assume you are starting at zero words, or are factoring your already existant words into your decision.
+def word_goal_calculate(daily_target, starting_words, goal_start_date, goal_finish_date, is_weekly_wordcount=0):
     # This assumption may be worth revisiting later
     #NOTE: changed incoming date format #days_left = abs((datetime.strptime(goal_finish_date,"%d/%m/%Y") - datetime.strptime(goal_start_date,"%d/%m/%Y")).days)
     days_left = abs((datetime.strptime(goal_finish_date,"%Y-%m-%d") - datetime.strptime(goal_start_date,"%Y-%m-%d")).days)
     if (is_weekly_wordcount == 0):
         word_goal = int(daily_target)*days_left
-        return word_goal
+        offset_word_goal = offset_initial_words(word_goal, starting_words=starting_words)
+        return offset_word_goal
 
 
-def weekly_words_calculate(weekly_words, goal_start_date, goal_finish_date):
+def weekly_words_calculate(weekly_words, starting_words, goal_start_date, goal_finish_date):
     """
     word_goal_calculate, but for weekly wordcounts being true
     """
@@ -191,18 +199,20 @@ def weekly_words_calculate(weekly_words, goal_start_date, goal_finish_date):
     result = ((mondays * int(word_array[0])) + (tuesdays * int(word_array[1])) + (wednesdays * int(word_array[2])) + (thursdays * int(word_array[3]))
             + (fridays * int(word_array[4])) + (saturdays * int(word_array[5])) + (sundays * int(word_array[6])))
     
-    return result
+    offset_result = offset_initial_words(result, starting_words)
+
+    return offset_result
 
 
-def change_goal(goal_start_date, goal_end_date, word_goal=None, daily_target=None):
+def change_goal(goal_start_date, goal_end_date, word_goal=None, daily_target=None, starting_words=None):
     """
     Takes daily_words_calculate and word_goal_calculate and combines them as one function
     """
     if (word_goal is not None) and (daily_target is None):
-        goal = daily_words_calculate(word_goal, goal_start_date, goal_end_date)
+        goal = daily_words_calculate(word_goal, starting_words, goal_start_date, goal_end_date)
         return goal
     elif (daily_target is not None) and (word_goal is None):
-        goal = word_goal_calculate(daily_target, goal_start_date, goal_end_date)
+        goal = word_goal_calculate(daily_target, starting_words, goal_start_date, goal_end_date)
         return goal
     elif (word_goal is not None) and (daily_target is not None):
         pass
