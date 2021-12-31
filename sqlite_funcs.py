@@ -645,7 +645,7 @@ class ProjectActions:
     def return_wordgoal_and_deadline(self):
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT deadline, wordcount_goal, FROM projects where project_id=?", (self.project_id,))
+        cur.execute("SELECT deadline, wordcount_goal FROM projects where project_id=?", (self.project_id,))
         row = cur.fetchone()
         conn.close()
         wordgoal_and_deadline = dict({'wordgoal':row[1], 'deadline':row[0]})
