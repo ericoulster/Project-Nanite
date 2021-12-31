@@ -224,10 +224,10 @@ const handleProjFormSubmit = async (formType, wcGoalType, project_id=null) => {
     let allFilled = checkIfAnyEmpty(formType);
     if (allFilled) {
         let {authorname, projectname, projectpath, targetstartdate, targetenddate, wp_page, current_daily_target, 
-            wordcountgoal, isWeekly, weeklyCount} = await projFormExtractVals(formType, wcGoalType);
+            wordcountgoal, isWeekly, weeklyCount, startWords} = await projFormExtractVals(formType, wcGoalType);
 
         if (formType == "new") {
-            eel.new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, isWeekly, weeklyCount);
+            eel.new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, isWeekly, weeklyCount, startWords);
             location.reload();
         } else {
             if (project_id != null) {
@@ -275,6 +275,8 @@ const projFormExtractVals = async (formType, wcGoalType) => {
     let projectpath = document.getElementById(`${formType}_wcProjPath`).innerHTML;
     let targetstartdate = document.getElementById(`${formType}_targetstartdate`).value;
     let targetenddate = document.getElementById(`${formType}_targetenddate`).value;
+    let startWords = document.getElementById(`${formType}_project-start-words`).value;
+
     let wp_page = 42;
     let current_daily_target, wordcountgoal, isWeekly, weeklyCount;
     
@@ -287,25 +289,25 @@ const projFormExtractVals = async (formType, wcGoalType) => {
                 rawWcGoals.push(document.getElementById(`${formType}_wc_${dotw}`).value);
             })
             weeklyCount = rawWcGoals.join(",");
-            wordcountgoal = await eel.wcCalc_weeklyWordsCalc(weeklyCount, targetstartdate, targetenddate)();
+            wordcountgoal = await eel.wcCalc_weeklyWordsCalc(weeklyCount, startWords, targetstartdate, targetenddate)();
             console.log(wordcountgoal);
             break;
         case "daily":
             isWeekly = 0;
             weeklyCount = "0,0,0,0,0,0,0";
             current_daily_target = document.getElementById(`${formType}_dailycountgoal`).value;
-            wordcountgoal = await eel.wcCalc_wordgoalCalc(current_daily_target, targetstartdate, targetenddate, isWeekly)();
+            wordcountgoal = await eel.wcCalc_wordgoalCalc(current_daily_target, startWords, targetstartdate, targetenddate, isWeekly)();
             break;
         default:
             isWeekly = 0;
             weeklyCount = "0,0,0,0,0,0,0";
             wordcountgoal = document.getElementById(`${formType}_totalcountgoal`).value;
-            current_daily_target = await eel.wcCalc_dailyWordsCalc(wordcountgoal, targetstartdate, targetenddate)(); 
+            current_daily_target = await eel.wcCalc_dailyWordsCalc(wordcountgoal, startWords, targetstartdate, targetenddate)(); 
     }
 
     return {authorname:authorname, projectname: projectname, projectpath: projectpath, targetstartdate: targetstartdate, 
         targetenddate: targetenddate, wp_page:wp_page, current_daily_target: current_daily_target, 
-        wordcountgoal: wordcountgoal, isWeekly:isWeekly, weeklyCount:weeklyCount}
+        wordcountgoal: wordcountgoal, isWeekly:isWeekly, weeklyCount:weeklyCount, startWords: startWords}
 }
 
 

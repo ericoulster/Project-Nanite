@@ -13,16 +13,16 @@ def file_select_tk():
     root.withdraw()
     root.wm_attributes('-topmost',1)
     file_selected = filedialog.askopenfilename(title="Select a file", filetypes=filetypes)
+    root.update()
     return file_selected
 
 @eel.expose
 def dir_select_tk():
     root = Tk()
-    
     root.withdraw()
     root.wm_attributes('-topmost',1)
     folder_selected = filedialog.askdirectory(title="Select a folder")
-
+    root.update()
     return folder_selected
 
 @eel.expose

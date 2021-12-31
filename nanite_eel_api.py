@@ -166,12 +166,12 @@ def new_author(authorname):
     create_author(authorname)
 
 @eel.expose
-def new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, is_weekly_word_count, weekly_words):
+def new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, is_weekly_word_count, weekly_words, startWords):
     #print(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath)
     
     a = AuthorActions()
     a.id_by_name(authorname)
-    a.create_project(projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, is_weekly_word_count, weekly_words)
+    a.create_project(projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, is_weekly_word_count, weekly_words, startWords)
 
     # Samples
     # a.id_by_name('Johnny')
@@ -285,13 +285,13 @@ def eel_export_proj_to_csv(proj_id, csv_path):
 Word count calculation end points
 """
 @eel.expose
-def wcCalc_dailyWordsCalc(word_goal, goal_start_date, goal_finish_date):
-    return str(daily_words_calculate(word_goal, goal_start_date, goal_finish_date))
+def wcCalc_dailyWordsCalc(word_goal, startWords, goal_start_date, goal_finish_date):
+    return str(daily_words_calculate(word_goal, startWords, goal_start_date, goal_finish_date))
 
 @eel.expose
-def wcCalc_wordgoalCalc(daily_target, goal_start_date, goal_finish_date, is_weekly_wordcount):
-    return str(word_goal_calculate(daily_target, goal_start_date, goal_finish_date, is_weekly_wordcount))
+def wcCalc_wordgoalCalc(daily_target, startWords, goal_start_date, goal_finish_date, is_weekly_wordcount):
+    return str(word_goal_calculate(daily_target, startWords, goal_start_date, goal_finish_date, is_weekly_wordcount))
 
 @eel.expose
-def wcCalc_weeklyWordsCalc(weekly_words, goal_start_date, goal_finish_date):
-    return str(weekly_words_calculate(weekly_words, goal_start_date, goal_finish_date))
+def wcCalc_weeklyWordsCalc(weekly_words, startWords, goal_start_date, goal_finish_date):
+    return str(weekly_words_calculate(weekly_words, startWords, goal_start_date, goal_finish_date))
