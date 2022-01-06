@@ -663,10 +663,7 @@ class ProjectActions:
             raise Exception("Project Path not set- Data cannot be pulled!")
         else:
             try:
-                if self.starting_words is None:
-                    wc = file_pipe(self.project_path)
-                else:
-                    wc = offset_initial_words(file_pipe(self.project_path))
+                wc = offset_initial_words(file_pipe(self.project_path), self.starting_words)
             except:
                 raise Exception("Error: wordcount pipeline (file_pipe) failed.")
             now = timestamp()
