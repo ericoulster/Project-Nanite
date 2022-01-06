@@ -9,7 +9,8 @@ import pandas as pd
 
 import sqlite3
 
-from file_funcs import file_pipe, is_streak, streak_length, change_goal, daily_words_calculate, word_goal_calculate, weekly_words_calculate, savepath
+from file_funcs import file_pipe, is_streak, streak_length, change_goal, \
+    daily_words_calculate, word_goal_calculate, weekly_words_calculate, savepath, offset_initial_words
 
 
 ### Variables ###
@@ -662,7 +663,10 @@ class ProjectActions:
             raise Exception("Project Path not set- Data cannot be pulled!")
         else:
             try:
-                wc = file_pipe(self.project_path)
+                if self.starting_words is None:
+                    wc = file_pipe(self.project_path)
+                else:
+                    wc = offset_initial_words(file_pipe(self.project_path))
             except:
                 raise Exception("Error: wordcount pipeline (file_pipe) failed.")
             now = timestamp()
