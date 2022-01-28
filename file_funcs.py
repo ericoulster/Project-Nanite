@@ -150,6 +150,14 @@ def savepath(project_name: str, save_path: str) -> str:
     p = Path(save_path).joinpath("wordcounts-" + str(project_name) + "-" + datetime.today().strftime('%Y-%m-%d') + ".csv")
     return p
 
+
+def offset_initial_words(total_words, starting_words=None) -> int:
+    if starting_words is None:
+        return total_words
+    else:
+        return total_words - starting_words
+
+
 ## Time Intelligence Funcs ##
 
 def daily_words_calculate(word_goal, goal_start_date, goal_finish_date):
@@ -162,7 +170,6 @@ def daily_words_calculate(word_goal, goal_start_date, goal_finish_date):
 
 
 def word_goal_calculate(daily_target, goal_start_date, goal_finish_date, is_weekly_wordcount=0):
-    # We currently assume you are starting at zero words, or are factoring your already existant words into your decision.
     # This assumption may be worth revisiting later
     #NOTE: changed incoming date format #days_left = abs((datetime.strptime(goal_finish_date,"%d/%m/%Y") - datetime.strptime(goal_start_date,"%d/%m/%Y")).days)
     days_left = abs((datetime.strptime(goal_finish_date,"%Y-%m-%d") - datetime.strptime(goal_start_date,"%Y-%m-%d")).days)
@@ -190,7 +197,7 @@ def weekly_words_calculate(weekly_words, goal_start_date, goal_finish_date):
 
     result = ((mondays * int(word_array[0])) + (tuesdays * int(word_array[1])) + (wednesdays * int(word_array[2])) + (thursdays * int(word_array[3]))
             + (fridays * int(word_array[4])) + (saturdays * int(word_array[5])) + (sundays * int(word_array[6])))
-    
+
     return result
 
 

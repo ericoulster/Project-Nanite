@@ -9,7 +9,8 @@ import pandas as pd
 
 import sqlite3
 
-from file_funcs import file_pipe, is_streak, streak_length, change_goal, daily_words_calculate, word_goal_calculate, weekly_words_calculate, savepath
+from file_funcs import file_pipe, is_streak, streak_length, change_goal, \
+    daily_words_calculate, word_goal_calculate, weekly_words_calculate, savepath, offset_initial_words
 
 
 ### Variables ###
@@ -23,7 +24,7 @@ ProjectVals = namedtuple(
     'Project', 
     'project_id author_id project_name project_created_on project_start_date \
     deadline wordcount_goal current_daily_target wp_page project_path is_weekly_wordcount \
-    weekly_words'
+    weekly_words starting_words'
     )
 WordVals = namedtuple('Wordcounts', 'record_id project_id author_id Wdate Wcount Wtarget')
 
@@ -52,6 +53,7 @@ CREATE TABLE IF NOT EXISTS projects (
     project_path text,
     is_weekly_wordcount int,
     weekly_words text,
+    starting_words int,
     FOREIGN KEY (author_id) REFERENCES authors (author_id)
 )
 """
@@ -198,7 +200,11 @@ def return_stats_screen(p_id:int) -> dict():
     for obj in monthly:
         obj["Wdate"] = obj["Wdate"].strftime("%m/%d/%y")
 
-    stats_screen = {'word_goal_and_deadline': wgad, 'barData': {'daily':daily, 'weekly':weekly, 'monthly':monthly}, 'weekBar': weekBar, 'max_streak':max_streak, 'current_streak': current_streak, 'max_wc': max_wc, 'mean_wc':mean_wc, 'current_wc':current_wc}
+    stats_screen = {'word_goal_and_deadline': wgad, 
+    'barData': {'daily':daily, 'weekly':weekly, 'monthly':monthly}, 
+    'weekBar': weekBar, 'max_streak':max_streak, 
+    'current_streak': current_streak, 'max_wc': max_wc, 
+    'mean_wc':mean_wc, 'current_wc':current_wc}
 
     return stats_screen
 
@@ -318,7 +324,8 @@ class AuthorActions:
         wp_page=None,
         project_path=None,
         is_weekly_wordcount=0,
-        weekly_words=None
+        weekly_words=None,
+        starting_words=None
         ):
         """
         Takes in a project info, then creates a new project for a given author.
@@ -334,10 +341,10 @@ class AuthorActions:
             conn = sqlite3.connect(sqlite3_path)
             cur = conn.cursor()
             query = '''INSERT INTO projects values (
-                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) '''
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) '''
             params = [None, self.author_id, project_name, now, project_start_date, deadline, 
             wordcount_goal, current_daily_target, wp_page, project_path, 
-            is_weekly_wordcount, weekly_words]
+            is_weekly_wordcount, weekly_words, starting_words]
             try:
                 cur.execute(query, params)
                 conn.commit()
@@ -443,6 +450,7 @@ class ProjectActions:
         self.project_path = None
         self.is_weekly_wordcount = None
         self.weekly_words = None
+        self.starting_words = None
 
         self.author_set = False
         self.daily_target_set = False
@@ -477,6 +485,7 @@ class ProjectActions:
         self.project_path = data[9]
         self.is_weekly_wordcount = data[10]
         self.weekly_words = data[11]
+        self.starting_words = data[12]
         self.author_set = True
         self.daily_target_set = True
         conn.close()
@@ -637,7 +646,7 @@ class ProjectActions:
     def return_wordgoal_and_deadline(self):
         conn = sqlite3.connect(sqlite3_path)
         cur = conn.cursor()
-        cur.execute("SELECT deadline, wordcount_goal FROM projects where project_id=?", (self.project_id,))
+        cur.execute("SELECT deadline, wordcount_goal, FROM projects where project_id=?", (self.project_id,))
         row = cur.fetchone()
         conn.close()
         wordgoal_and_deadline = dict({'wordgoal':row[1], 'deadline':row[0]})
@@ -654,7 +663,7 @@ class ProjectActions:
             raise Exception("Project Path not set- Data cannot be pulled!")
         else:
             try:
-                wc = file_pipe(self.project_path)
+                wc = offset_initial_words(file_pipe(self.project_path), self.starting_words)
             except:
                 raise Exception("Error: wordcount pipeline (file_pipe) failed.")
             now = timestamp()
@@ -685,7 +694,7 @@ class ProjectActions:
         TODO: re-test
         """
         if (self.project_start_date is not None) & (self.deadline is not None):
-            word_goal = word_goal_calculate(daily_words, self.project_start_date, self.deadline)
+            word_goal = word_goal_calculate(daily_words, self.starting_words, self.project_start_date, self.deadline)
             conn = sqlite3.connect(sqlite3_path)
             cur = conn.cursor()
             cur.execute(
@@ -809,14 +818,4 @@ class ProjectActions:
         conn.close()
         self.project_path = new_path
 
-
-
-## Additional Project Actions ##
-
-def get_max_streak(df: pd.DataFrame()) -> int():
-    """
-    Use on the output of get_wordcount to ge the max wordcount.
-    """
-    df = pd.DataFrame(records)
-    return df['streak'].max()
 
