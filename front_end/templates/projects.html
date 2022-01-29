@@ -41,20 +41,24 @@
     <div>
       <h5>What\'s your project called?</h5>
       <input id="new_project-name" type="text" name="name" required>
-  </div>
-  <div>
+    </div>
+    <div>
       <h5>Where does your project live?</h5>
       <button id="new_filePathBtn" onclick="select_tk_input(`add`,`file`)">Select File</button> <button id="new_dirPathBtn" onclick="select_tk_input(`add`,`dir`)">Select Directory</button> 
       <span id="new_wcProjPath"></span>
-  </div>
-  <div class="wc-toggle-div">
+    </div>
+    <div id="new_previousWordsSection">
+      <h5>How many words are you starting out with?</h5>
+      <input type="text" id="new_previousWords" name="new_previousWords" required>
+    </div>
+    <div class="wc-toggle-div">
       <h5>Would you like to set on overall goal or vary the goal day by day?</h5>
       <button class="proj-form-btn" id="new_wcWeeklyBtn" onclick="toggleWordGoal(`weekly`)">Variable Daily</button> 
       <button class="proj-form-btn" id="new_wcDailyBtn" onclick="toggleWordGoal(`daily`)">Consistent Daily</button> 
       <button class="proj-form-btn" id="new_wcTotalBtn" onclick="toggleWordGoal(`total`)">Overall</button>
       <p id="new_wcTypeDesc"></p>
-  </div>
-  <div id="new_wcGoalInterface">
+    </div>
+    <div id="new_wcGoalInterface">
 
   </div>
   <div id="new_wcDateSection">
@@ -85,6 +89,10 @@
         <h5>Project Location:</h5>
         <button id="edit_filePathBtn" onclick="select_tk_input(`edit`,`file`)">Select New File</button> <button id="edit_dirPathBtn" onclick="select_tk_input(`edit`,`dir`)">New Directory</button> 
         <p id="edit_wcProjPath"></p>
+    </div>
+    <div id="new_previousWordsSection">
+      <h5>How many words do you want to exclude from your goal?</h5>
+      <input type="text" id="edit_previousWords" name="edit_previousWords" required>
     </div>
     <div id="edit_wcGoalInterface">
   

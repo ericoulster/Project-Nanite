@@ -166,12 +166,12 @@ def new_author(authorname):
     create_author(authorname)
 
 @eel.expose
-def new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, is_weekly_word_count, weekly_words):
+def new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, is_weekly_word_count, weekly_words, startWords):
     #print(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath)
     
     a = AuthorActions()
     a.id_by_name(authorname)
-    a.create_project(projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, is_weekly_word_count, weekly_words)
+    a.create_project(projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, is_weekly_word_count, weekly_words, startWords)
 
     # Samples
     # a.id_by_name('Johnny')
@@ -251,7 +251,7 @@ def eel_return_project_stats(project_id):
 
 @eel.expose
 def eel_update_project(wcGoalType, authorname, project_id, proj_name, proj_path, proj_startdate,
- proj_enddate, proj_daily, proj_total, proj_isWeekly, proj_weekly):
+ proj_enddate, proj_daily, proj_total, proj_isWeekly, proj_weekly, startWords):
     """
     Takes in all old and new information about project and edits it to match
     """

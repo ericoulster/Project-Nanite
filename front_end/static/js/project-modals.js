@@ -224,15 +224,15 @@ const handleProjFormSubmit = async (formType, wcGoalType, project_id=null) => {
     let allFilled = checkIfAnyEmpty(formType);
     if (allFilled) {
         let {authorname, projectname, projectpath, targetstartdate, targetenddate, wp_page, current_daily_target, 
-            wordcountgoal, isWeekly, weeklyCount} = await projFormExtractVals(formType, wcGoalType);
+            wordcountgoal, isWeekly, weeklyCount, startWords} = await projFormExtractVals(formType, wcGoalType);
 
         if (formType == "new") {
-            eel.new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, isWeekly, weeklyCount);
+            eel.new_project(authorname, projectname, targetstartdate , targetenddate, wordcountgoal, current_daily_target, wp_page, projectpath, isWeekly, weeklyCount, startWords);
             location.reload();
         } else {
             if (project_id != null) {
                 eel.eel_update_project(wcGoalType, authorname, project_id, projectname, projectpath, 
-                    targetstartdate, targetenddate, current_daily_target, wordcountgoal, isWeekly, weeklyCount)
+                    targetstartdate, targetenddate, current_daily_target, wordcountgoal, isWeekly, weeklyCount, startWords)
                 location.reload();
             }
             
@@ -275,6 +275,7 @@ const projFormExtractVals = async (formType, wcGoalType) => {
     let projectpath = document.getElementById(`${formType}_wcProjPath`).innerHTML;
     let targetstartdate = document.getElementById(`${formType}_targetstartdate`).value;
     let targetenddate = document.getElementById(`${formType}_targetenddate`).value;
+    let startWords = document.getElementById(`${formType}_previousWords`).value;
     let wp_page = 42;
     let current_daily_target, wordcountgoal, isWeekly, weeklyCount;
     
@@ -305,7 +306,7 @@ const projFormExtractVals = async (formType, wcGoalType) => {
 
     return {authorname:authorname, projectname: projectname, projectpath: projectpath, targetstartdate: targetstartdate, 
         targetenddate: targetenddate, wp_page:wp_page, current_daily_target: current_daily_target, 
-        wordcountgoal: wordcountgoal, isWeekly:isWeekly, weeklyCount:weeklyCount}
+        wordcountgoal: wordcountgoal, isWeekly:isWeekly, weeklyCount:weeklyCount, startWords:startWords}
 }
 
 
