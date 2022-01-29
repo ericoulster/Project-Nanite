@@ -158,6 +158,7 @@ const showEditProjectModal = async(p_id) => {
     document.getElementById("edit_wcProjPath").innerHTML = currProj.project_path;
     document.getElementById("edit_targetstartdate").value = currProj.project_start_date;
     document.getElementById("edit_targetenddate").value = currProj.deadline;
+    document.getElementById("edit_previousWords").value = currProj.starting_words;
 
     let wcGoalType = currProj.is_weekly_wordcount == 1 ? "weekly" : "total";
     returnShowEditWordDivSection(wcGoalType, currProj.weekly_words, currProj.current_daily_target, currProj.wordcount_goal, p_id);
@@ -289,7 +290,6 @@ const projFormExtractVals = async (formType, wcGoalType) => {
             })
             weeklyCount = rawWcGoals.join(",");
             wordcountgoal = await eel.wcCalc_weeklyWordsCalc(weeklyCount, targetstartdate, targetenddate)();
-            console.log(wordcountgoal);
             break;
         case "daily":
             isWeekly = 0;

@@ -261,6 +261,8 @@ def eel_update_project(wcGoalType, authorname, project_id, proj_name, proj_path,
     pa.change_path(proj_path)
     pa.change_deadline(proj_enddate)
 
+    print("Start words", startWords)
+
     if proj_isWeekly == 1:
         pa.change_weekly_words(proj_weekly)
     elif wcGoalType == "daily":
