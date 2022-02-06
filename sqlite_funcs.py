@@ -598,11 +598,11 @@ class ProjectActions:
         row = cur.fetchall()
         data = [dict(WordVals(*row[i])._asdict()) for i in range(len(row))]
         conn.close()
-        print(data)
+        
         save_df = pd.DataFrame(data, columns=['record_id', 'project_id', 'author_id', 'Wdate', 'Wcount', 'Wtarget'])
-        print(save_df)
+        
         save_df = save_df.drop(columns=['record_id', 'project_id', 'author_id'])
-        print(save_df)
+        
         try:
             if self.project_name is not None:
                 save_df.to_csv(savepath(project_name=self.project_name, save_path=save_path))
@@ -819,5 +819,17 @@ class ProjectActions:
         conn.commit()
         conn.close()
         self.project_path = new_path
+    
+
+    def change_starting_words(self, new_starting_words):
+        """Takes in and replaces starting words"""
+        conn = sqlite3.connect(sqlite3_path)
+        cur = conn.cursor()
+        cur.execute("UPDATE projects SET starting_words=? WHERE project_id=? AND author_id=?;", (new_starting_words, self.project_id, self.author_id))
+        conn.commit()
+        conn.close()
+        self.starting_words = new_starting_words
+
+        
 
 

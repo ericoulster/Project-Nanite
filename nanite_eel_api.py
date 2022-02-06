@@ -260,8 +260,7 @@ def eel_update_project(wcGoalType, authorname, project_id, proj_name, proj_path,
     pa.rename_project(proj_name)
     pa.change_path(proj_path)
     pa.change_deadline(proj_enddate)
-
-    print("Start words", startWords)
+    pa.change_starting_words(startWords);
 
     if proj_isWeekly == 1:
         pa.change_weekly_words(proj_weekly)
