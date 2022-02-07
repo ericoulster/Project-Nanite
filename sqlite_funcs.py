@@ -136,11 +136,12 @@ def return_project_screen(author_id:int) -> list(dict()):
             # Maybe I should just raise an exception?
             row = {'Wcount': 0, 'Wdate': None, 'Wtarget': 0, 'project_id': p.project_id, 'record_id': None, 'Wtarget_sum': 0, 'daily_words': 0.0, 'streak': 0}
         if samedate(row['Wdate']) is False:
+            print("Running samedate is False")
             p_dict = {
             'project_name': p.project_name, 'project_id': row['project_id'], 'daily_words': 0, 
             'today_goal': row['Wtarget'], 'total_progress': row['Wcount'], 'current_streak':0
             }   
-        else:   
+        else:
             p_dict = {
             'project_name': p.project_name, 'project_id': row['project_id'], 'daily_words': row['daily_words'], 
             'today_goal': row['Wtarget'], 'total_progress': row['Wcount'], 'current_streak':row['streak']
@@ -555,6 +556,7 @@ class ProjectActions:
         cur.execute("SELECT * FROM words where project_id=?", (self.project_id, ))
         row = cur.fetchall()
         data = [dict(WordVals(*row[i])._asdict()) for i in range(len(row))]
+        
         conn.close()
         df = pd.DataFrame(data)
         df.index = pd.DatetimeIndex(df['Wdate'])
@@ -565,7 +567,7 @@ class ProjectActions:
         new_index = pd.date_range(earliest, latest, freq='D')
 
         df = df.groupby(pd.Grouper(freq='D')).last()
-        df = df.reindex(new_index, method='ffill')
+        #df = df.reindex(new_index, method='ffill')
         df = df.fillna(method='ffill')
         df = df.drop(columns='Wdate')
         df['Wtarget_sum'] = df['Wtarget'].cumsum()
@@ -579,7 +581,7 @@ class ProjectActions:
             ]
         df['streak'] = [is_streak(i, df['Wcount'], df['Wtarget']) for i in range(len(df))]
         d_list = streak_length(df['streak'])
-        df['streak'] = pd.Series(d_list, index=new_index)
+        #df['streak'] = pd.Series(d_list, index=new_index)
         
         df = df.groupby(pd.Grouper(freq=freq)).last()
         df = df.reset_index().rename(columns={'index':'Wdate'})
