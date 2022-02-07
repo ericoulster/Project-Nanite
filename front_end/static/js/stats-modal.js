@@ -267,7 +267,7 @@ const statsModal_AddSidebar = (deadline, current_streak, longest_streak, weekBar
         wcdiv.transition()		
             .duration(200)		
             .style("opacity", .9);		
-        wcdiv.html(`${d.Day}:  ${d.Wcount} `)	
+        wcdiv.html(`${d.Day}:  ${Math.round(d.Wcount)} `)	
             .style('display', 'inline')
             .style('right', (x / 5) + 'px')
             .style('top', (y * 1.95) + 'px');

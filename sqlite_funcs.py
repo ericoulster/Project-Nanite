@@ -136,7 +136,6 @@ def return_project_screen(author_id:int) -> list(dict()):
             # Maybe I should just raise an exception?
             row = {'Wcount': 0, 'Wdate': None, 'Wtarget': 0, 'project_id': p.project_id, 'record_id': None, 'Wtarget_sum': 0, 'daily_words': 0.0, 'streak': 0}
         if samedate(row['Wdate']) is False:
-            print("Running samedate is False")
             p_dict = {
             'project_name': p.project_name, 'project_id': row['project_id'], 'daily_words': 0, 
             'today_goal': row['Wtarget'], 'total_progress': row['Wcount'], 'current_streak':0
@@ -176,10 +175,6 @@ def return_stats_screen(p_id:int) -> dict():
     weekly = p.return_wordcounts('W')
     monthly = p.return_wordcounts('M')
     
-    #  ===========================================/
-    #  Refactor Later - Changed max_streak and current_streak to string since js 
-    #     has trouble reading numpy.int64.
-    # ==========================================/
     day_df = pd.DataFrame(daily)
     max_streak = int(day_df['streak'].max())
     current_streak = int(day_df['streak'].iloc[-1])
@@ -188,11 +183,6 @@ def return_stats_screen(p_id:int) -> dict():
     mean_wc = day_df['daily_words'].mean()
     
     current_wc = int(day_df['Wcount'].iloc[-1])
-
-    # ====================================================!!
-    # Refactor later -- JS has trouble retrieving Python Timestamp for some reason
-    #    need to figure out why.
-    # ====================================================!!
 
     for obj in daily:
         obj["Wdate"] = obj["Wdate"].strftime("%m/%d/%y")
