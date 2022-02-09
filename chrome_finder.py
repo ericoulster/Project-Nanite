@@ -9,6 +9,7 @@ def has_chrome():
         "Linux":"/usr/bin/google-chrome"
     }
 
+
     try:
         install_path = expected_chrome_locations[platform.system()]
     except:
@@ -16,4 +17,16 @@ def has_chrome():
     
     return os.path.exists(install_path)
 
+def has_chromium():
+    expected_chrome_locations = {
+        "Darwin":"./Chromium.app",
+        "Windows":".\Chromium.exe",
+        "Linux":"./Chromium"
+    }
 
+    try:
+        install_path = expected_chrome_locations[platform.system()]
+    except:
+        raise NotImplemented(f"Error: {platform.system()} not recognized os")
+    
+    return os.path.exists(install_path)
