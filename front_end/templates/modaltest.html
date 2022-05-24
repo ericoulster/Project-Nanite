@@ -1,4 +1,9 @@
-{% extends 'base-app.html' %}
+{% extends 'base.html' %}
+
+{% block body_open_sidebar %} 
+  {% include 'bodyopen-sidebar.html' %}
+{% endblock %} 
+
 {% block content %}
 {% with %}
     {% set modal_header_text = 'Micromodal' %}

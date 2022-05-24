@@ -1,0 +1,126 @@
+.freeze { 
+    pointer-events: none; 
+}
+
+.proj-div h5 {
+    font-family: Archivo;
+    letter-spacing: .05rem;
+    margin-bottom: .25rem;
+}
+
+.proj-div input {
+    background-color:#C0C0C0;
+    border-radius: .5rem;
+    padding: 5px;
+    border: none;
+    border: .075rem solid #848884;
+    color: #22262a;
+}
+
+#new_project-name, #edit_project-name {
+    width: 75%;
+}
+
+#new_wcProjPath, #edit_wcProjPath {
+    font-size: .75rem;
+    font-style: italic;
+    color: #C0C0C0;
+}
+
+.proj-form-btn {
+    background-color: #C0C0C0;
+    color: #333a40;
+    border: .075rem solid #C0C0C0;
+}
+
+.proj-form-btn:hover {
+    background-color: #f6d55c;
+    color: #333a40;
+    border: .075rem solid #f6d55c;
+}
+
+.proj-form-btn.selected-wc-btn {
+    background-color: #f6d55c;
+    color: #333a40;
+    border: .075rem solid #f6d55c;
+}
+
+#new_wcTypeDesc {
+    font-size: .85rem;
+    color: #C0C0C0;
+}
+
+.wc-toggle-div {
+    margin-bottom: .95rem;
+}
+
+#new_wcDateSection, #edit_wcDateSection {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.wc-weekly-input {
+    width: 90%;
+    padding: 0 2.5%;
+}
+
+.wc-weekly-label {
+    padding: 0 2.5%;
+    text-align: center;
+    font-size: .75rem;
+}
+
+#new_wcGoalInterface {
+    font-size: .90rem;
+}
+
+.proj-date-time-div {
+    align-items: center;
+}
+
+#new_wcSubmitBtn, #edit_wcSubmitBtn {
+    margin-top: .95rem;
+    text-align: center;
+}
+
+#new_wcSubmitBtn button{
+    width: 90%;
+}
+
+#edit_wcSubmitBtn button{
+    width: 90%;
+}
+
+#edit_targetstartdate {
+    background-color: #7c7a7a;
+}
+
+.modal__btn.cancel-btn {
+    background-color: #232424;
+    color:#FFF;
+}
+
+#csv-export-main {
+    text-align: center;
+}
+
+#csv_errorNote {
+    font-size: .95em;
+    background-color: #22262a;
+    padding: .5em;
+    border-radius: .5em;
+}
+
+#csv_errorNote p {
+    color: #b4b3b3;
+}
+
+#csv-export-request-btn {
+    width: 90%;
+}
+
+#victory-modal-container {
+    text-align: center;
+}

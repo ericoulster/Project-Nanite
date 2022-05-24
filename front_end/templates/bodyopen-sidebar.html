@@ -1,0 +1,37 @@
+<body class="{{pagetitle.lower().replace(' ', '-')}} grid-container">
+  <header class="nanite-header">
+    <a href="home.html">
+      <div class="header-logo"><img src="../static/imgs/nanite-icon.svg">
+        <h1>Nanite</h1>
+      </div>
+    </a>
+  </header>
+  <div id="left-sidebar" class="leftside sidebar">
+    <div id="left-sidebar-content" class="content">
+      <div id="sidebar-insights" class="insights">
+        <p><a id="username_link" class="username" href="home.html"><img class="user-img" src="../static/imgs/new-user.png" alt="{{username}}"><div id="username">Writer</div></a></p>
+      </div>
+      <nav>
+        <ul class="navbar">
+          <li class="nav-item">
+            <a class="nav-link" href="home.html"><img class="icon" src="../static/imgs/icons/home.svg"></a> 
+            <span class="optionExplanation">Home</span>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link new-project" data-micromodal-trigger="modal-1"><img class="icon" src="../static/imgs/icons/add-circle.svg"></a> 
+            <span class="optionExplanation">Add Project</span>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link about-nanite" data-micromodal-trigger="modal-about"><img class="icon" src="../static/imgs/icons/settings.svg"></a> 
+            <span class="optionExplanation">About Nanite</span>
+          </li>
+        </ul>
+      </nav>
+      <!--Modal triggers-->
+      <button data-micromodal-trigger="modal-stats" id="stats-toggle" style="display:none" aria-hidden="true"></button>
+      <button data-micromodal-trigger="modal-edit-proj" id="edit-proj-toggle" style="display:none" aria-hidden="true"></button>
+      <button data-micromodal-trigger="modal-csv" id="csv-exp-toggle" style="display:none" aria-hidden="true"></button>
+      <button data-micromodal-trigger="modal-victory" id="victory-modal-toggle" style="display:none" aria-hidden="true"></button>
+      <button data-micromodal-trigger="modal-0" id="starter-modal-toggle" style="display:none" aria-hidden="true"></button>
+    </div>
+  </div>  

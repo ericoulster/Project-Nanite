@@ -1,121 +1,381 @@
-{% extends 'base-app.html' %}
+{% extends 'base.html' %}
+
+{% block body_open_sidebar %} 
+  {% include 'bodyopen-sidebar.html' %}
+{% endblock %} 
 
 {% block content %}
-<h1>{{pagetitle}}</h1>
 <div id="main-content" class="container">
-  {% if not hasprojects %}
-  <div class="greeting"><p class="username-greet">Hi, {{username}}!</p>
-    <p>Let's create your first project!</p>
+ 
+  <!-- Projects List -->
+  <div id="projectslist" class="projectslist">
+    <!-- Projects listed here by JS -->
   </div>
-  {% endif %}
+
+  <!-- Onboarding Modal -->
+  <!-- Set to display when user logs in without any projects -->
   {% with %}
-    {% set modal_header_text = 'New Project' %}
+  {% set modal_id = 'modal-0' %}    
+  {% set modal_header_text = 'Welcome to Nanite' %}
+  {% set modal_trigger_text = '?' %}
+  {% set modal_trigger_classes = 'welcome-msg' %}
+  {% set close_button_text = 'Continue' %}
+  {% set close_btn_fn = "" %}
+  {% set modal_contents_html = '<p>Nanite is designed to help you keep track of your writing habits and increase your productivity the more you use it.</p>
+  <p>To get started, click the "+" button and link your text file to Nanite. Nanite will then track your progress and give you useful insights.</p>'|safe %}
+    {% include 'modal.html' %}
+  {% endwith %}
+  <!-- Onboarding Modal End -->
+
+  <!-- New Project Modal -->
+  <!-- Set to display when user clicks + button on sidebar-->
+  {% with %}
+    {% set modal_id = 'modal-1' %}
+    {% set modal_header_text = 'Add A New Project' %}
     {% set modal_trigger_text = '+ New Project' %}
     {% set modal_trigger_classes = 'new-project' %}
     {% set close_button_text = 'Cancel' %}
-    {% set modal_contents_html = '<div id="new-project" class="new-project-form-container {% if hasprojects %}hidden{% endif %}">
-      <form class="project-form new-project" action="/projects" method="post">
-        <fieldset> 
-            <legend class="hidden">Add a new project here:</legend>
-              <label>What\'s the name of your project?</label><input type="text" name="name" required>
-              <label>File/folder Path: <span style="font-size: smaller;">Use / not \</span></label><input type="text" name="filepath" placeholder="C:/filepath/Filename.txt" required>
-              <label>Files of type:</label>
-              <select name="filetype" required>
-                <option value="txt">txt</option>
-                <option value="rtf">rtf</option>
-                <option value="docx">docx</option>
-              </select>
-              <label>What\'s your writing goal?</label>
-              <div class="writing-goal">
-                <input type="text" name="wordcountgoal" required> words            
-                <div class="radio-buttons">
-                  <input type="radio" id="daily-new" name="wordcountreg" value="daily" required checked>
-                  <label for="daily-new">Daily</label>
-                  <input type="radio" id="total-new" name="wordcountreg" value="total" required>
-                  <label for="total-new">Total</label>
-                </div>
-              </div>
-              <label>Start Date:</label><input type="date" name="targetstartdate" required>
-              <label>Goal End Date:</label><input type="date" name="targetenddate" required>
-              <input type="submit" value="Add New Project">
-        </fieldset> 
-      </form>
+    {% set second_class = 'cancel-btn' %}
+    {% set close_btn_fn = "" %}
+    {% set modal_contents_html = '<div id="new-project" class="proj-div new-project-form-container {% if hasprojects %}hidden{% endif %}">
+    <div>
+      <h5>What\'s your project called?</h5>
+      <input id="new_project-name" type="text" name="name" required>
+  </div>
+  <div>
+      <h5>Where does your project live?</h5>
+      <button id="new_filePathBtn" onclick="select_tk_input(`add`,`file`)">Select File</button> <button id="new_dirPathBtn" onclick="select_tk_input(`add`,`dir`)">Select Directory</button> 
+      <span id="new_wcProjPath"></span>
+  </div>
+  <div class="wc-toggle-div">
+      <h5>Would you like to set on overall goal or vary the goal day by day?</h5>
+      <button class="proj-form-btn" id="new_wcWeeklyBtn" onclick="toggleWordGoal(`weekly`)">Variable Daily</button> 
+      <button class="proj-form-btn" id="new_wcDailyBtn" onclick="toggleWordGoal(`daily`)">Consistent Daily</button> 
+      <button class="proj-form-btn" id="new_wcTotalBtn" onclick="toggleWordGoal(`total`)">Overall</button>
+      <p id="new_wcTypeDesc"></p>
+  </div>
+  <div id="new_wcGoalInterface">
+
+  </div>
+  <div id="new_wcDateSection">
+      <div class="proj-date-time-div"><h5>Start Date:</h5><input id="new_targetstartdate" type="date" name="targetstartdate" required></div>
+      <div class="proj-date-time-div"><h5>Target End Date:</h5><input id="new_targetenddate" type="date" name="targetenddate" required></div>
+  </div>
+  <div id="new_wcSubmitBtn">
+      
+  </div>'|safe %}
+    {% include 'modal.html' %}
+  {% endwith %}
+  <!-- New Project Modal End -->
+
+  <!-- Edit Project Modal -->
+  <!-- Set to display when user clicks the edit option on a project -->
+  {% with %}
+    {% set modal_id = 'modal-edit-proj' %}
+    {% set modal_header_text = 'Edit Existing Project' %}
+    {% set close_button_text = 'Cancel' %}
+    {% set close_btn_fn = "" %}
+    {% set second_class = 'cancel-btn' %}
+    {% set modal_contents_html = '<div id="edit-project" class="proj-div new-project-form-container {% if hasprojects %}hidden{% endif %}">
+      <div>
+        <h5>Project Name:</h5>
+        <input id="edit_project-name" type="text" name="name" required>
+    </div>
+    <div>
+        <h5>Project Location:</h5>
+        <button id="edit_filePathBtn" onclick="select_tk_input(`edit`,`file`)">Select New File</button> <button id="edit_dirPathBtn" onclick="select_tk_input(`edit`,`dir`)">New Directory</button> 
+        <p id="edit_wcProjPath"></p>
+    </div>
+    <div id="edit_wcGoalInterface">
+  
+    </div>
+    <div id="edit_wcDateSection">
+        <div class="proj-date-time-div"><h5>Start Date:</h5><input id="edit_targetstartdate" type="date" name="targetstartdate" required disabled></div>
+        <div class="proj-date-time-div"><h5>Target End Date:</h5><input id="edit_targetenddate" type="date" name="targetenddate" required></div>
+    </div>
+    <div id="edit_wcSubmitBtn">
+        
     </div>'|safe %}
     {% include 'modal.html' %}
   {% endwith %}
-    <div id="projectslist" class="projectslist">
-    {% for idx, project in projects %}
-    <div id="project-{{idx}}" class="projects-item">
-      <div id="project-{{idx}}-summary" class="project-summary panels">
-        <div class="panel"><h2>{{ project.name }}</h2></div>
-        <div class="panel"><label for="project-progress">Writing Goal: {{project.wordcountgoal}} Total Words</label>
-          <progress id="project-progress" value="{{WCtotal[idx]}}" max="{{project.wordcountgoal}}"> {{WCtotal[idx] / project.wordcountgoal}} </progress><p> <span class="progress-to-goal">{{WCtotal[idx]}} / {{project.wordcountgoal}}</span> <span class="last-update hidden">Last Update: No Update Yet!</span> </p>
+  <!-- Edit Project Modal End -->
+
+  <!-- CSV Exports Modal -->
+  <!-- Set to display when user selects the export csv option on proj div-->
+  {% with %}
+    {% set modal_id = 'modal-csv' %}
+    {% set modal_header_text = 'Export to CSV' %}
+    {% set close_button_text = 'Cancel' %}
+    {% set second_class = 'cancel-btn' %}
+    {% set close_btn_fn = "" %}
+    {% set modal_contents_html = '<div id="csv-export-input" class="new-project-form-container {% if hasprojects %}hidden{% endif %}">
+      <!--CSV Export messages will be added here via js-->
+    </div>'|safe %}
+    {% include 'modal.html' %}
+  {% endwith %}
+  <!-- CSV Export Modal End -->
+
+  <!-- Project Stats Modal -->
+  <!-- Set to display when user clicks "Project stats" button-->
+  {% with %}
+    {% set modal_id = 'modal-stats' %}
+    {% set modal_header_text = 'Project Stats' %}
+    {% set modal_trigger_text = 'Project Stats' %}
+    {% set modal_trigger_classes = 'viewStats' %}
+    {% set close_button_text = 'Close' %}
+    {% set close_btn_fn = 'onclick=reinitProgressBars()' %}
+    {% set modal_contents_html = '<div>
+      <!--Contents will be inserted via JS-->
+    </div>'|safe %}
+    {% include 'modal.html' %}
+  {% endwith %}
+  <!-- Project Stats Modal End -->
+
+  <!-- About Nanite Modal -->
+  {% with %}
+    {% set modal_id = 'modal-about' %}
+    {% set modal_header_text = 'Nanite' %}
+    {% set modal_trigger_classes = 'about-nanite' %}
+    {% set close_button_text = 'Close' %}
+    {% set close_btn_fn = '' %}
+    {% set modal_contents_html = '<div class="about-container">
+        <div>
+            <h4>Version - Beta</h4>
+            <h4>Created By:</h4>
         </div>
-        <div class="panel">
-          <p>Start Date: {{ project.targetstartdate }}</p>
-          <p>Finish Date: {{ project.targetenddate }}</p>
-          <button onclick="pm = document.querySelector('#project-{{idx}}-more').classList.toggle('hidden');">More...</button>
+        <div class="about-credit-list">
+            <h5 class="about-subhead">UI/UX:</h5>
+            <ul>
+              <li class="about-li"><strong>(Prototype):</strong> Evaline Turner</li>
+              <li class="about-li"><strong>(Alpha -> Release):</strong> Daniel Ingman</li>
+              </ul>
+
+            <h5 class="about-subhead">Fullstack Developers:</h5>
+              <ul>
+                <li class="about-li">Benjamin Portelli</li>
+                <li class="about-li">Eric Oulster</li>
+                <li class="about-li">Mark Fullton</li>
+              </ul>
+              
+            <h5 class="about-subhead">Product Manager:</h5>
+              <ul>
+                <li class="about-li">Eric Oulster</li>
+              </ul>
         </div>
-      </div>
-      <div id="project-{{idx}}-more" class="project-summary-more panels hidden">
-       <form id="project-{{idx}}-form" action="/project-options/{{idx}}" method="POST" class="project-form existing-project">
-        <div class="formfields">
-          <fieldset> 
-              <legend>Setup</legend>
-                <input type="text" name="projectid" value="{{idx}}" class="formfield" hidden required disabled>
-                <input type="text" name="name" value="{{ project.name }}" class="formfield" hidden required disabled>
-                <label>File/folder Path:</label><input type="text" name="filepath" value="{{ project.filepath }}" class="formfield" required disabled><br/>
-                <label>Files of type:</label>
-                  <select name="filetype" class="formfield" required disabled>
-                    <option value="" selected hidden>{{ project.filetype }}</option>
-                    <option value="txt">txt</option>
-                    <option value="rtf">rtf</option>
-                    <option value="docx">docx</option>
-                  </select><br/>
-          </fieldset>
-          <fieldset> 
-            <legend>Goals</legend>
-                <label>Word Count Goal:</label><input type="text" name="wordcountgoal" value="{{ project.wordcountgoal }}" class="formfield" required disabled> words
-                <div class="regularity selection" style="display:inline-block;">
-                  <input type="radio" id="daily-{{idx}}" name="wordcountreg" value="daily" class="formfield" required disabled>
-                  <label for="daily-{{idx}}">Daily</label>
-                  <input type="radio" id="total-{{idx}}" name="wordcountreg" value="total" class="formfield" required checked disabled>
-                  <label for="total-{{idx}}">Total</label>
-                </div>
-                <br/>
-                <label>Start Date:</label><input type="date" name="targetstartdate" value="{{ project.targetstartdate }}" class="formfield" required disabled><br/>
-                <label>Goal End Date:</label><input type="date" name="targetenddate" value="{{ project.targetenddate }}" class="formfield" required disabled><br/>
-            </fieldset>
-        </div>
-            <input type="submit" value="Update Project" class="formfield hidden" disabled> 
-        </form>
-        <div class="modal modal-{{idx}} hidden">
-          <form action = "/project-options/{{idx}}/ren" method = "POST">
-            <input type="text" name="name" value="{{ project.name }}" class="formfield" required hidden>
-            <input type="text" name="newname" value="{{ project.name }}" class="formfield" required>
-            <input type="submit" value="Rename Project">
-          </form>
-        </div>
-        <div id="project-actions-{{idx}}" class="project-actions project-actions-{{idx}}">
-          <form class="" action = "/current-project" method = "POST">
-              <input type="hidden" name="currentproject" value="{{idx}}">
-              <input type="submit" value="Show Insights">
-          </form>
-            <button class="debug" onclick="alert(document.cookie);">Cookie Alert</button>
-            <button onclick="m = document.querySelector('.modal-{{idx}}'); m.classList.toggle('hidden');">Rename Project</button>
-            <button onclick="pr = document.querySelectorAll('div#project-{{idx}} form#project-{{idx}}-form .formfield'); pr.forEach(function(x){x.toggleAttribute('disabled');}); document.querySelector('#project-{{idx}}-form > input[type=\'submit\']').classList.toggle('hidden');">Edit Project</button>
-          <form action = "/project-options/{{idx}}/del" method = "POST">
-              <input type="text" name="name" value="{{ project.name }}" class="formfield" required hidden>
-              <input type="submit" value="Delete Project">
-          </form>
-          <form action = "/project-options/{{idx}}" method = "POST">
-            <input type="text" name="name" value="{{ project.name }}" class="formfield" required hidden>
-            <input type="submit" value="Refresh Word Count">
-          </form>
-        </div>
-      </div>
-    </div>
-  {% endfor %}
-  </div>
+    </div>'|safe %}
+    {% include 'modal.html' %}
+  {% endwith %}
+  <!-- Project Stats Modal End -->
+
+  <!-- Onboarding Modal -->
+  <!-- Set to display when user logs in without any projects -->
+  {% with %}
+    {% set modal_id = 'modal-victory' %}    
+    {% set modal_header_text = 'Congratulations!' %}
+    {% set close_button_text = 'Close and celebrate' %}
+    {% set close_btn_fn = "onclick=location.reload();" %}
+    {% set modal_contents_html = '<div id="victory-modal-container">
+      <!-- Content added via JavaScript -->
+    </div>'|safe %}
+      {% include 'modal.html' %}
+  {% endwith %}
+  <!-- Onboarding Modal End -->
+
 </div>
+<script>
+  // Initial
+  var projectPage = document;
+  var projectWindow = window;
+
+  (async function () {
+    let doc = await eel_list_projects_html_current_user();
+    progress_bars(doc);
+  }) ();
+
+
+  // List all projects
+  async function eel_list_projects_html_current_user() {
+    let a = await eel_list_projects_html(get_username());
+    return a;
+  }
+
+  async function eel_list_projects_html(username) {
+    const parser = new DOMParser();
+    let projectslist = document.querySelector('#projectslist');
+
+    let htmlString = await eel.list_projects_html(username)();
+    let doc = parser.parseFromString(htmlString, "text/html");
+
+    // append to projects list div
+    doc.querySelectorAll('body > *').forEach(x => {projectslist.appendChild(x);} )
+
+    if (htmlString.length == 0){
+        document.getElementById("starter-modal-toggle").click();
+    }
+
+    return doc;
+  }
+
+// Old Rename Project
+// async function new_name_prompt(p_id) {
+//   let projectname =  document.querySelector('#project-' + String(p_id) + '-summary h2');
+//   let editbuttonimg =  document.querySelector('#project-' + String(p_id) + '-summary .edit-project.icon img');
+//   // Set title to be editable
+//   projectname.contentEditable = "true";
+//   projectname.focus();
+//   // Set edit button to be OK button
+//   editbuttonimg.src = '../static/imgs/icons/green-tick.svg';
+//   editbuttonimg.parentElement.onclick = function(){rename_project(p_id,projectname.textContent);}; // When tick is clicked, change name
+// }
+
+  //////////////////////////////////////
+// DEBUGGER Function
+  async function debug_p() {
+    let projectslist = document.querySelector('#projectslist');
+    let project = document.createElement('div');
+    let a = await eel_return_projects_by_name(get_username());
+    project.textContent = a;
+    projectslist.appendChild(project);
+  };
+
+  async function eel_return_projects_by_name(username) {
+    let a = await eel.return_projects_by_name(username)();
+    return a;
+  }
+
+
+  // ======================================================/
+  // PROJECT PAGE PROGRESS BAR FUNCTIONS
+  // ===================================================/
+    function progress_bars(doc) {
+      waiting = doc; // this function should only run once doc has been awaited (from the previous function)
+      let projectslist_items = projectPage.querySelectorAll('#projectslist > .projects-item');
+      projectslist_items.forEach(x => {
+        pb = x.querySelector('div[class^="progress-"]');
+        p_id = pb.dataset.pid;
+        daily_words = pb.dataset.todaywords; // currently Showing up as 0 despite all? <- due to lack of cascade drop
+        today_goal = pb.dataset.todaygoal; 
+        
+        progress_bar(p_id, daily_words, today_goal); // previously 300  
+
+        // Removes progress bars and creates new ones upon window resize
+        reinitProgressBars();
+      })
+    }
+
+    function progress_bar(p_id, daily_words, today_goal) { // previously , svgwidth
+      var svgwidth = parseInt(window.getComputedStyle(document.querySelector(`div.project-summary.panels`)).width.slice(0, -2)) * .65;
+
+      var data = {
+            'Wtarget_sum': today_goal, 
+            'daily_words': daily_words
+      };
+        
+      // Sets progress_val to 0 if data.Wtarget_sum is 0 to avoid division by 0
+        var progress_val = data.Wtarget_sum == 0 ? 0 : (data.daily_words / data.Wtarget_sum) * 100;
+
+        if (progress_val < 25) {
+            progress_color = "#D0D0D0"
+        }
+        else if (progress_val < 50) {
+            progress_color = "#F6B85C"
+        }
+        else if (progress_val < 75) {
+            progress_color = "#F6D55C"
+        }
+        else if (progress_val < 100) {
+            progress_color = "#CEF65C"
+        }
+        else if (progress_val < 115) {
+            progress_color = "#96F65C"
+        }
+        else if (progress_val < 200) {
+            progress_color = "#5CF6D1"
+        }
+        else {
+            progress_color = "#5CBFF6"
+        };
+
+        if (progress_val > 100) {
+            progress_val_capped = 100
+        }
+        else {progress_val_capped = progress_val};
+
+        
+        var svg = d3.select(`.progress-${String(p_id)}`)
+            .append('svg')
+            .attr('height', 100)
+            .attr('width', svgwidth * 2); // svgwidth previously set to 800
+
+        var bar_width = svgwidth * 0.9; // previously 600 (or 0.75 * svg width)
+        var bar_height = 20;
+
+
+        var bar_x = (bar_width/50);
+        var bar_y = (bar_height/3);
+
+        var bar_cap = (bar_width/100);
+
+        if (progress_val < 50) {
+            var text_color ='#E3E3E3'
+        }
+        else {
+            var text_color = '#1F2428'}
+
+        svg.append('rect')
+            .attr('class', 'bg-rect')
+            .attr('rx', 20)
+            .attr('ry', 20)
+            .attr('fill', 'none')
+            .attr('stroke', '#333A40')
+            .attr('stroke-width', 4)
+            .attr('height', bar_height + (bar_height*1))
+            .attr('width', function(){
+                return bar_width + (bar_width*0.07);
+            })
+            .attr('x', bar_x)
+            .attr('y', bar_y);
+        
+        var progress = svg.append('rect')
+                        .attr('class', 'progress-rect')
+                        .attr('fill', progress_color)
+                        .attr('height', bar_height)
+                        .attr('width', 0)
+                        .attr('rx', 10)
+                        .attr('ry', 10)
+                        .attr('x', bar_x + (bar_x*1.5)) // .2
+                        .attr('y', bar_y + (bar_y*1.5));
+    
+        progress.transition()
+            .duration(1000)
+            .attr('width', function(){
+                var index = progress_val_capped;
+                return index * bar_cap;
+            });
+
+
+
+        let wordPerc = isNaN(Math.floor(progress_val)) ? 0 : Math.floor(progress_val);
+        svg.append("text")
+            .text(`${data['daily_words']}/${data['Wtarget_sum']} words (${wordPerc}%)`)
+            .attr('x', bar_width/2 -50)
+            .attr('y', bar_height*1.5)
+            .attr('fill', '#333A40')
+            .attr('font-family', 'Archivo')
+            .attr('font-weight', 100)
+            .attr('font-size', 'small')
+            .style('fill', text_color)
+            .raise()
+    }
+
+        // Used to delete and load progress bars upon resize
+    const reinitProgressBars = () =>{
+      d3.select(projectWindow).on("resize", () => {
+          projectPage.querySelectorAll(".progress svg").forEach( elem => elem.parentNode.removeChild(elem))
+          progress_bars("reloading")
+        });  
+    }
+
+  </script>
+  <script src="../static/js/stats-modal.js"></script>
 {% endblock %}

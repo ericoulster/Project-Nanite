@@ -2,12 +2,13 @@
 ########### Helper Functions ##########
 #######################################
 
-from flask             import request
 from wordcounter_funcs import wordmeta_pull, wordmeta_pull_all
 
 # Get the ID for the current project
 def get_current_project_id():
-    currentproject = request.cookies.get('currentproject')
+    #TODO: THIS IS A DUMMY FUNCTION
+    #currentproject = request.cookies.get('currentproject')
+    currentproject = False
 
     if not currentproject:
         currentproject = False

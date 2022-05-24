@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Eel Demo</title>
+        <link rel="stylesheet" href="style.css">
+        <style>
+          div {
+            border: 1px solid black; 
+            padding: 1px;
+          }
+        </style>
+        <script type='text/javascript' src='/eel.js'></script>
+        <script type='text/javascript'>
+
+        // On page load
+        window.onload = async function () {
+          let a = await set_to_cwd()
+          initial_list_contents(a)
+        };
+
+        // Functions
+        function initial_list_contents (a) {
+            list_contents()
+          }
+
+        async function dir_select() {
+            let selected_dirname = await eel.dir_select_tk()();
+            console.log(selected_dirname);
+        }
+        
+        async function pick_file() {
+            let folder = document.getElementById('current-directory-input').value;
+            let file_div = document.getElementById('file-name');
+            
+            // Call into Python so we can access the file system
+            let random_filename = await eel.pick_file(folder)();
+            file_div.innerHTML = random_filename;
+        }
+
+        async function parent_dir() {
+            let folder = document.getElementById('current-directory-input').value;
+            let file_div = document.getElementById('file-name');
+
+            // Call into Python so we can access the file system
+            let parent_folder_name = await eel.parent_dir(folder)();
+            document.getElementById('current-directory-input').value = parent_folder_name;
+            list_contents();
+        }
+
+        async function list_contents() {
+            let folder = document.getElementById('current-directory-input').value;
+            let contents_div = document.getElementById('dir-contents');
+            let contents_div_ul = document.getElementById('dir-contents-list');
+            let contents_types = await list_contents_are_directories();
+            
+            // Call into Python so we can access the file system
+            let dir_contents = await eel.enter_dir_and_list_contents(folder)();
+            contents_div_ul.innerHTML = ""; // clear ul
+            dir_contents.forEach((x,j)=>{add_LI(x,contents_div_ul,add_to_cd_or_file_select,[contents_types[j]])});
+            return dir_contents;
+        }
+
+        async function list_contents_are_directories() {           
+            // List of booleans corresponding to the current dir contents (TRUE means the item is a directory)
+            let folder = document.getElementById('current-directory-input').value;
+            let dir_contents_types = await eel.list_contents_are_directories(folder)();
+            return dir_contents_types;
+        }
+
+        async function set_to_cwd() { 
+            let folder_in = document.getElementById('current-directory-input');
+            let cwd = await eel.get_cwd()();
+            folder_in.value = cwd;
+        }
+
+        // async function native_folder_select() {
+        //   let folder = await eel.native_selectFolder();
+        //   console.log(folder);
+        //   document.getElementById('current-directory-input').value = folder;
+        //   list_contents();
+        //   console.log(folder);
+        // }
+
+        // Helper functions
+        function add_LI(str,ul,filter_fun, filter_args) {
+          // Appends a li containing text [str] (optionally filtered with [filter_fun] function) to the specified [ul]
+          let li = document.createElement("li");
+          if (typeof filter_fun !== 'undefined')  {
+            txt = filter_fun(str, filter_args);
+          } else {
+            txt = document.createTextNode(str);
+          }
+          li.appendChild(txt);
+          ul.appendChild(li);
+        }
+
+        function add_to_cd(str, filter_args) {
+          // Make the listings into buttons that add to current directory
+          // NB: doesn't use the filter_args
+          buttontext = document.createTextNode(str);
+          let btn = document.createElement("button");
+          btn.style.background = 'white';
+          btn.onclick = function(){
+            let folder = document.getElementById('current-directory-input').value;
+            document.getElementById('current-directory-input').value = folder + '\\' + str;
+            list_contents();
+          };
+          btn.appendChild(buttontext);
+          return btn;
+        }
+
+        function add_to_file_select(str, filter_args) {
+          // Make the listings into buttons that add to file selected input
+          // NB: doesn't use the filter_args
+          buttontext = document.createTextNode(str);
+          let btn = document.createElement("button");
+          btn.style.border = 'none';
+          btn.style.textDecoration = 'underline';
+          btn.style.background = 'white';
+          btn.onclick = function(){
+            document.getElementById('file-select-input').value = str;
+          };
+          btn.appendChild(buttontext);
+          return btn;
+        }
+
+        function add_to_cd_or_file_select(str,filter_args) {
+          // Make the listings into buttons that add to current directory IF they are directories. Else just text.
+          if (filter_args[0])  { // if this is a directory, this resolves to TRUE
+            txt = add_to_cd(str, filter_args[0]);
+          } else {
+            txt = add_to_file_select(str, filter_args[0]);
+          }
+          return txt;
+        }
+
+        </script>
+    </head>
+    
+    <body>
+      <form id="file-explore" onsubmit="list_contents(); return false;" >
+        <label for="current-directory-input">Directory Selected:</label><input id='current-directory-input' placeholder='Type folder here' value='C:\'/>
+        <button type="submit">Go</button>
+      </form>
+      <form id="file-select" >
+        <label for="file-select-input">File Selected:</label><input id='file-select-input' placeholder='Type file path here' value=''/>
+        <button type="submit">Select File</button>
+      </form>
+      <button onclick="parent_dir()">Up</button>
+      <button onclick="dir_select()">Select Directory</button>
+      <div id='dir-contents'><ul id="dir-contents-list"></ul></div>
+    </body>
+</html>

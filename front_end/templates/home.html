@@ -1,17 +1,22 @@
-{% extends 'base-nosidebar.html' %}
+{% extends 'base.html' %}
+
+{% block body_open_sidebar %} 
+  {% include 'bodyopen-nosidebar.html' %}
+{% endblock %} 
 
 {% block content %} 
-  <div id="main" class="main">   
+  <div id="main" class="home main">   
 
     <div id="main-content" class="container">
       <div class="nanite-welcome-image">
-        <img src="{{url_for('static', filename='imgs/innovation_.svg')}}"/>
+        <img class="icon-in-logo" src="../static/imgs/nanite-icon.svg"/><h1 class="nanite-in-logo">NANITE</h1>
+        <p class="welcome-subtitle">Keep track of your writing habits and increase your productivity</p>
       </div>
-      <div class="nanite-welcome-text"><h1>Nanite</h1><p class="font-med">Increase your writing productivity in a fun and engaging way.</p></div>
-      <div class="nanite-start-button"><a role="button" class="btn" href={{url_for('pg_welcome')}}>Let's Get Started</a></div>
-      <div class="skip"><a href={{url_for('pg_projects')}}>Skip to Projects</a></div>
+      <div class="nanite-user-select">
+        <a class="welcome-checkin-link" onclick="prepNaniteUser()"><div class="welcome-checkin-btn">Check in</div></a>
     </div>
 
   </div>  
   
+  <script src="../static/js/setup.js"></script>
 {% endblock %} 

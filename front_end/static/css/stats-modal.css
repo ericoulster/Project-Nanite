@@ -1,0 +1,276 @@
+/* =====================================================================/
+ * MARK'S WORKING ON THESE
+ * ====================================================================/
+ */ 
+
+/* For whatever reason, it kept adding this margin to this p tag and I was not about that life*/
+.modal__container p {
+    margin-top: .25rem !important;
+    margin-bottom: .25rem !important;
+}
+
+ #stats-wordRow {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-content: flex-start;
+  }
+  
+.wcDiv {
+    flex-basis: 40%;
+    margin-right: .5em;
+    text-align: center;
+    border-radius: .45rem;
+    border: 3px solid #22262a;
+    font-family: 'Archivo';
+    font-size: 11px;
+    color:#aaaaaa;
+}
+
+.wcDiv .emph {
+    font-size: 12px;
+    font-weight: bolder;
+}
+
+#stats-body {
+    width: 98%;
+    margin: 0 auto;
+    padding-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+#stats-barChart {
+    width: 70%;
+}
+
+#wordcounter {
+    position: relative;
+    background-color: #22262a;
+    border-radius: 25px;
+    padding: 5px;
+}
+
+#userInputRow {
+    display: flex;
+    margin-top: 0;
+    margin-bottom: 1em;
+    padding: 0 .5em;
+    justify-content: space-between;
+}
+
+#selDataset {
+    font-size: 12px;
+    background-color: #22262a;
+    padding: .3em;
+    color: #fff;
+    border-radius: 7px;
+    border: none;
+}
+
+.numBarsContainer {
+    font-size: 12px;
+}
+
+#numBars {
+    margin: 0 .3em;
+    padding: .3em;
+    background-color: #22262a;
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    text-align: center;
+}
+
+.numBarsContainer {
+    color: #fff;
+}
+
+#stats-sideBar {
+    margin-top: 0;
+    padding-top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 26%;
+}
+#stats-cal-link {
+    text-align: center;
+}
+#stats-cal-link a.btn {
+    width: 90%;
+    margin-bottom: 5px;
+    text-align: center;
+    font-size: 10px;
+    font-weight: bolder;
+}
+#stats-deadline {
+    margin: 2px 0;
+    font-size: 10px;
+    font-family: 'Archivo';
+    text-align: center;
+    border-radius: .45rem;
+    border: 3px solid #22262a;
+}
+
+#stats-deadline .emph {
+    font-size: 12px;
+    font-weight: bolder;
+}
+
+#stats-currStreak {
+    margin: 2px 0;
+    font-size: 10px;
+    font-family: 'Archivo';
+    text-align: center;
+    border-radius: .45rem;
+    border: 3px solid #22262a;
+}
+
+#stats-currStreak .emph {
+    font-size: 11px;
+    font-weight: bolder;
+}
+
+#stats-longestStreak {
+    margin: 2px 0;
+    font-size: 10px;
+    font-family: 'Archivo';
+    text-align: center;
+    border-radius: .45rem;
+    border: 3px solid #22262a;
+}
+
+#stats-longestStreak .emph {
+    font-size: 11px;
+    font-weight: bolder;
+}
+
+#stats-mostActive {
+    position: relative;
+    margin: 2px 0;
+    border-radius: .45rem;
+    border: 3px solid #22262a;
+    text-align: center;
+}
+
+
+/* ---------------------------------/
+ *  From Daily Words Chart
+ * --------------------------------/
+ */
+.grid .tick {
+    stroke: lightgrey;
+    opacity: 0.7;
+    stroke-width: 3;
+}
+
+x.tick line{
+    visibility:hidden;
+}
+
+line {
+    stroke: #333A40;
+    stroke-linecap: round;
+}
+
+
+/* --------------------------------/
+ * TOOLTIP
+ * ------------------------------/
+ */
+ div.tooltip {	
+    position: absolute;			
+    text-align: center;
+    width: 150px;					
+    padding: 2px;				
+    font: 12px sans-serif;		
+    background: black;
+    color: white;
+    font-size: .8rem;
+    border: 0px;		
+    border-radius: 8px;			
+    pointer-events: none;			
+}
+
+#stats-mostActive div.tooltip {
+    width: 90px;
+    font: 11px sans-serif;
+
+}
+
+@media only screen and (min-width: 900px) {
+    .wcDiv {
+        flex-basis: 35%;
+        font-size: 13px;
+        transition-duration: 2s;
+    }   
+    .wcDiv .emph {
+        font-size: 15px;
+    }
+    #selDataset {
+        font-size: 14px;
+    }
+    .numBarsContainer {
+        font-size: 14px;
+    }
+    #stats-cal-link a.btn {
+        font-size: 15px;
+        font-weight: bolder;
+    }
+    #stats-deadline {
+        margin-top: 0;
+        padding-top: 0;
+        font-size: 15px;
+        font-family: 'Archivo';
+        text-align: center;
+        border: 4px solid #22262a;
+    }
+    #stats-deadline .emph {
+        font-size: 17px;
+        font-weight: bolder;
+    }
+    #userInputRow {
+        padding: 0;
+    }
+    #stats-currStreak {
+        font-size: 15px;
+        font-family: 'Archivo';
+        text-align: center;
+        border: 4px solid #22262a;
+    }
+    
+    #stats-currStreak .emph {
+        font-size: 17px;
+        font-weight: bolder;
+    }
+
+    #stats-longestStreak {
+        font-size: 15px;
+        font-family: 'Archivo';
+        text-align: center;
+        border: 4px solid #22262a;
+    }
+    
+    #stats-longestStreak .emph {
+        font-size: 17px;
+        font-weight: bolder;
+    }
+
+    #stats-barChart {
+        width: 67%;
+    }
+    #stats-sideBar {
+        width: 27%;
+    }
+    #stats-body {
+        padding-top: 10px;
+    }
+    #stats-mostActive {
+        position: relative;
+        margin: 2px 0;
+        border-radius: .45rem;
+        border: 4px solid #22262a;
+        text-align: center;
+    }
+}
